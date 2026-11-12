@@ -1,0 +1,12 @@
+# ==============================================================================
+# A8FUSION ROBOTS.TXT - SEARCH ENGINE CRAWLER DIRECTIVES
+# ==============================================================================
+User-agent: *
+Allow: /
+
+# Host specification
+Host: https://a8fusion.com
+
+# XML Sitemap Location
+Sitemap: https://a8fusion.com/sitemap.xml
+

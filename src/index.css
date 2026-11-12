@@ -1,0 +1,2267 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #0F172A;
+    background-color: #F8FAFC;
+    overflow-x: clip;
+    width: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    overflow-x: clip;
+    width: 100%;
+    max-width: 100vw;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Persistent Sticky Header */
+  header.sticky {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+  }
+  
+  /* Authoritative serif styling for Times New Roman */
+  .font-serif, h1, .font-times {
+    font-family: "Times New Roman", Times, "Baskerville", Georgia, serif;
+  }
+
+  /* Prevent automatic iOS Safari zoom on input focus for mobile devices */
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  ::selection {
+    background-color: #312E81;
+    color: #FFFFFF;
+  }
+}
+
+@layer utilities {
+  .bg-grid-slate {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  }
+
+  .bg-grid-dark {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .glass-card-dark {
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .text-glow-purple {
+    text-shadow: 0 0 25px rgba(124, 58, 237, 0.35);
+  }
+
+  .border-gradient-subtle {
+    border-image: linear-gradient(to right, #3B82F6, #8B5CF6) 1;
+  }
+
+  /* Admin & Dashboard Elegant Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #F1F5F9;
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 #F1F5F9;
+  }
+}
+
+/* ========================================================================= */
+/* UNIVERSAL SCROLL REVEAL (Site-Wide Smooth Fade/Entrance System)           */
+/* ========================================================================= */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-init.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Backward compatibility for any existing .reveal-3d */
+.reveal-3d {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.reveal-3d.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respect user accessibility motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init,
+  .reveal-3d {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* Custom crisp scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
+}
+
+/* ========================================================================= */
+/* EXECUTIVE PREMIUM CARD HOVER SYSTEM (Site-Wide Base System)               */
+/* ========================================================================= */
+.card-premium {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-premium:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 22px 38px -10px rgba(15, 23, 42, 0.08), 
+              0 10px 20px -6px rgba(79, 70, 229, 0.14),
+              0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+}
+
+/* High-End Refraction Top-Edge Light Accent */
+.card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #3B82F6, #6366F1, #8B5CF6);
+  opacity: 0;
+  transform: scaleX(0.3);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 9999px 9999px 0 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-premium:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Micro-interaction on card icon on hover */
+.card-premium:hover .card-icon-container,
+.card-premium:hover [class*="w-9"][class*="rounded"],
+.card-premium:hover [class*="w-10"][class*="rounded"],
+.card-premium:hover [class*="w-11"][class*="rounded"] {
+  transform: scale(1.08);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Micro-interaction on card arrow */
+.card-premium:hover svg[class*="group-hover:translate-x"] {
+  transform: translateX(4px);
+}
+
+/* ------------------------------------------------------------------------- */
+/* Dark Variant: Luminous Ambient Glow & Celestial Highlight                 */
+/* ------------------------------------------------------------------------- */
+.card-premium-dark {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-premium-dark:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 24px 45px -10px rgba(0, 0, 0, 0.75), 
+              0 10px 28px -5px rgba(99, 102, 241, 0.32),
+              0 0 0 1px rgba(129, 140, 248, 0.5) !important;
+  border-color: rgba(129, 140, 248, 0.6) !important;
+}
+
+.card-premium-dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #06B6D4, #818CF8, #A855F7);
+  opacity: 0;
+  transform: scaleX(0.3);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 9999px 9999px 0 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-premium-dark:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-premium-dark:hover [class*="w-9"][class*="rounded"],
+.card-premium-dark:hover [class*="w-10"][class*="rounded"],
+.card-premium-dark:hover [class*="w-11"][class*="rounded"] {
+  transform: scale(1.08);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================================================= */
+/* BESPOKE SECTION-BY-SECTION PREMIUM CARD HOVER SYSTEM (Home Page Tailored) */
+/* ========================================================================= */
+
+/* 1. SECTION 2: FOUNDATIONS (Architectural Solidity & Left Sovereign Laser) */
+.card-hover-foundation {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.35s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-foundation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5px;
+  height: 0%;
+  background: linear-gradient(180deg, #312E81, #6366F1, #38BDF8);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-foundation:hover {
+  transform: translateY(-4px) !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 18px 34px -8px rgba(15, 23, 42, 0.08),
+              0 6px 14px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(79, 70, 229, 0.3) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+}
+
+.card-hover-foundation:hover::before {
+  height: 100%;
+}
+
+.card-hover-foundation:hover [class*="w-9"][class*="rounded"] {
+  transform: scale(1.1) rotate(-3deg);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 2. SECTION 2: OPERATIONAL FACILITIES SHOWCASE (High-Spec Engineering Glass) */
+.card-hover-facility {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-facility:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(14, 165, 233, 0.45) !important;
+  box-shadow: 0 20px 38px -10px rgba(15, 23, 42, 0.12),
+              0 0 24px -2px rgba(14, 165, 233, 0.2),
+              0 0 0 1px rgba(14, 165, 233, 0.35) !important;
+}
+
+/* 3. SECTION 3: CORE TECHNOLOGY CAPABILITIES (Precision Cybernetic Glow & Circuit Line) */
+.card-hover-tech {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.35s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-tech::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #2563EB, #06B6D4, #3B82F6, #6366F1);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-tech::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -40%;
+  width: 180%;
+  height: 180%;
+  background: radial-gradient(circle at center, rgba(37, 99, 235, 0.05) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card-hover-tech:hover {
+  transform: translateY(-7px) !important;
+  border-color: rgba(37, 99, 235, 0.45) !important;
+  box-shadow: 0 24px 44px -12px rgba(37, 99, 235, 0.18),
+              0 8px 18px -6px rgba(6, 182, 212, 0.14),
+              0 0 0 1px rgba(59, 130, 246, 0.32) !important;
+}
+
+.card-hover-tech:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-tech:hover::after {
+  opacity: 1;
+}
+
+.card-hover-tech:hover [class*="w-11"][class*="rounded"] {
+  transform: scale(1.1) rotate(2deg);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 4. SECTION 4: ENTERPRISE SOFTWARE PLATFORMS (Executive Glass Shimmer & Sapphire Depth) */
+.card-hover-platform {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-platform::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #1E1B4B, #3B82F6, #6366F1, #06B6D4);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-platform::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 45%,
+    rgba(224, 231, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.55) 55%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.75s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.card-hover-platform:hover {
+  transform: translateY(-5px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.42) !important;
+  box-shadow: 0 22px 38px -10px rgba(30, 58, 138, 0.12),
+              0 8px 16px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.32) !important;
+}
+
+.card-hover-platform:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-platform:hover::after {
+  left: 200%;
+}
+
+/* 5. SECTION 5: INDUSTRIES WE SERVE (Dark Sovereign Atmosphere & Neon Bottom Horizon) */
+.card-hover-industry {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-industry::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #06B6D4, #6366F1, #A855F7);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-industry:hover {
+  transform: translateY(-8px) scale(1.01) !important;
+  border-color: rgba(129, 140, 248, 0.55) !important;
+  box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.85),
+              0 12px 28px -5px rgba(99, 102, 241, 0.35),
+              0 0 0 1px rgba(129, 140, 248, 0.5) !important;
+}
+
+.card-hover-industry:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* 6. SECTION 6: WHY A8FUSION (Institutional Trust, Emerald Assurance & Micro-Badge Animation) */
+.card-hover-governance {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-governance::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #059669, #10B981, #6366F1);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-governance:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: 0 22px 42px -10px rgba(16, 185, 129, 0.14),
+              0 10px 20px -5px rgba(15, 23, 42, 0.06),
+              0 0 0 1px rgba(16, 185, 129, 0.32) !important;
+}
+
+.card-hover-governance:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-governance:hover svg.text-emerald-500 {
+  transform: scale(1.22) rotate(8deg);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 7. SECTION 8: GLOBAL TECHNOLOGY INFRASTRUCTURE (Multi-Corridor Holographic Radiance) */
+.card-hover-global-collab,
+.card-hover-global-delivery,
+.card-hover-global-partner {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+/* Pillar 1: International Collaboration (Sovereign Indigo & Cyan Aura) */
+.card-hover-global-collab:hover {
+  transform: translateY(-6px) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(99, 102, 241, 0.55) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 32px rgba(99, 102, 241, 0.28),
+              0 0 0 1px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Pillar 2: Engineering Delivery (Dynamic Cyber Sky Blue Aura) */
+.card-hover-global-delivery:hover {
+  transform: translateY(-6px) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 32px rgba(14, 165, 233, 0.28),
+              0 0 0 1px rgba(56, 189, 248, 0.4) !important;
+}
+
+/* Pillar 3: Technology Partnerships (Imperial Purple & Violet Aura) */
+.card-hover-global-partner:hover {
+  transform: translateY(-6px) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(168, 85, 247, 0.55) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 32px rgba(168, 85, 247, 0.28),
+              0 0 0 1px rgba(168, 85, 247, 0.4) !important;
+}
+
+/* 8. SECTION 9: LATEST ENTERPRISE INSIGHTS (Editorial Luxury & Parallax Depth) */
+.card-hover-editorial {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-editorial:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 24px 45px -12px rgba(15, 23, 42, 0.12),
+              0 8px 18px -4px rgba(79, 70, 229, 0.1),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-editorial:hover img {
+  transform: scale(1.07);
+}
+
+.card-hover-editorial:hover span[class*="bg-indigo-600"] {
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+  transform: translateY(-1px);
+  transition: all 0.3s ease;
+}
+
+/* ========================================================================= */
+/* BESPOKE SECTION-BY-SECTION HOVER SYSTEMS FOR: ABOUT, LEADERSHIP, APPROACH, CAREERS */
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* ABOUT PAGE HOVER SYSTEMS                                                  */
+/* ------------------------------------------------------------------------- */
+
+/* About: Strategic Vision & Engineering Mission Cards */
+.card-hover-vision,
+.card-hover-mission,
+.card-hover-vision-mission {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-vision::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4F46E5, #8B5CF6, #C084FC);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-vision:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 24px 45px -10px rgba(79, 70, 229, 0.14),
+              0 8px 18px -4px rgba(15, 23, 42, 0.06),
+              0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+}
+
+.card-hover-vision:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-mission::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0284C7, #06B6D4, #3B82F6);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-mission:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(14, 165, 233, 0.45) !important;
+  box-shadow: 0 24px 45px -10px rgba(14, 165, 233, 0.14),
+              0 8px 18px -4px rgba(15, 23, 42, 0.06),
+              0 0 0 1px rgba(14, 165, 233, 0.3) !important;
+}
+
+.card-hover-mission:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-vision-mission::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4F46E5, #38BDF8, #818CF8);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-vision-mission:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 24px 45px -10px rgba(79, 70, 229, 0.12),
+              0 8px 18px -4px rgba(15, 23, 42, 0.06),
+              0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+}
+
+.card-hover-vision-mission:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-vision-mission:hover [class*="w-12"][class*="rounded"] {
+  transform: scale(1.1) rotate(4deg);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* About: Technology Philosophy & Corporate Values (4 Principles) */
+.card-hover-philosophy {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-philosophy::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5px;
+  height: 0%;
+  background: linear-gradient(180deg, #4338CA, #6366F1, #38BDF8);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-philosophy:hover {
+  transform: translateY(-4px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.38) !important;
+  box-shadow: 0 18px 34px -8px rgba(15, 23, 42, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.25) !important;
+}
+
+.card-hover-philosophy:hover::before {
+  height: 100%;
+}
+
+.card-hover-philosophy:hover span[class*="text-indigo-600"] {
+  letter-spacing: 0.1em;
+  transition: letter-spacing 0.3s ease;
+}
+
+/* About: Leadership Oversight Dark Enclave Card */
+.card-hover-about-governance {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-about-governance:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(129, 140, 248, 0.45) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7),
+              0 0 25px rgba(99, 102, 241, 0.22),
+              0 0 0 1px rgba(129, 140, 248, 0.35) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* LEADERSHIP PAGE HOVER SYSTEMS                                             */
+/* ------------------------------------------------------------------------- */
+
+/* Leadership: Executive Profiles (C-Suite Dossier Lift) */
+.card-hover-executive {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-executive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1E1B4B, #4F46E5, #38BDF8, #1E1B4B);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-executive:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 26px 50px -12px rgba(15, 23, 42, 0.12),
+              0 10px 22px -6px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-executive:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-executive:hover img {
+  transform: scale(1.03);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.25);
+}
+
+.card-hover-executive:hover .rounded-xl.bg-slate-50.border-l-4 {
+  background-color: #EEF2FF !important;
+  border-left-color: #4338CA !important;
+  transition: background-color 0.3s ease, border-left-color 0.3s ease;
+}
+
+/* Leadership: Corporate Governance & Ethics Cards */
+.card-hover-ethics {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-ethics::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #059669, #10B981, #0F172A);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-ethics:hover {
+  transform: translateY(-5px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(16, 185, 129, 0.42) !important;
+  box-shadow: 0 20px 38px -10px rgba(16, 185, 129, 0.12),
+              0 8px 16px -4px rgba(15, 23, 42, 0.05),
+              0 0 0 1px rgba(16, 185, 129, 0.3) !important;
+}
+
+.card-hover-ethics:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-ethics:hover svg.text-emerald-600 {
+  transform: translateX(2px) scale(1.15);
+  transition: transform 0.25s ease;
+}
+
+/* ------------------------------------------------------------------------- */
+/* OUR APPROACH PAGE HOVER SYSTEMS                                           */
+/* ------------------------------------------------------------------------- */
+
+/* Our Approach: Active Phase Detail Main Card */
+.card-hover-approach-detail {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-approach-detail:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* Our Approach: Gate Exit Criteria Card */
+.card-hover-gate-criteria {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-gate-criteria:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 16px 32px -8px rgba(79, 70, 229, 0.16),
+              0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* Our Approach: The 8 Pillars of Enterprise Delivery (8 Stage Narrative Cards) */
+.card-hover-stage-pillar {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-stage-pillar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #2563EB, #6366F1, #38BDF8);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-stage-pillar:hover {
+  transform: translateY(-5px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 20px 38px -10px rgba(15, 23, 42, 0.09),
+              0 6px 16px -4px rgba(79, 70, 229, 0.1),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-stage-pillar:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-stage-pillar:hover span[class*="text-indigo-600"] {
+  letter-spacing: 0.08em;
+  transition: letter-spacing 0.3s ease;
+}
+
+/* Our Approach: Milestone Documentation & QA Standards (3 Cards) */
+.card-hover-qa-spec {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-qa-spec:hover {
+  transform: translateY(-5px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.38) !important;
+  box-shadow: 0 20px 36px -10px rgba(15, 23, 42, 0.08),
+              0 6px 14px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.25) !important;
+}
+
+.card-hover-qa-spec:hover svg {
+  transform: scale(1.15) rotate(3deg);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ------------------------------------------------------------------------- */
+/* CAREERS PAGE HOVER SYSTEMS                                                */
+/* ------------------------------------------------------------------------- */
+
+/* Careers: Culture & Operating Standards (4 Principles) */
+.card-hover-culture {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-culture::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5px;
+  height: 0%;
+  background: linear-gradient(180deg, #0284C7, #4F46E5, #9333EA);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-culture:hover {
+  transform: translateY(-4px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(79, 70, 229, 0.38) !important;
+  box-shadow: 0 18px 34px -8px rgba(15, 23, 42, 0.08),
+              0 0 0 1px rgba(79, 70, 229, 0.25) !important;
+}
+
+.card-hover-culture:hover::before {
+  height: 100%;
+}
+
+.card-hover-culture:hover span[class*="text-indigo-600"] {
+  letter-spacing: 0.1em;
+  transition: letter-spacing 0.3s ease;
+}
+
+/* Careers: Open Technical Opportunities (Job Requisition Cards) */
+.card-hover-job {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+/* Angled subtle light refraction sheen */
+.card-hover-job::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 45%,
+    rgba(224, 231, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.55) 55%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.75s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.card-hover-job:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 24px 44px -10px rgba(15, 23, 42, 0.1),
+              0 8px 18px -4px rgba(79, 70, 229, 0.12),
+              0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+}
+
+.card-hover-job:hover::after {
+  left: 200%;
+}
+
+.card-hover-job:hover span[class*="bg-indigo-50"] {
+  background-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  transition: all 0.3s ease;
+}
+
+.card-hover-job:hover button[class*="bg-indigo-600"] {
+  transform: scale(1.02);
+  box-shadow: 0 10px 20px -4px rgba(79, 70, 229, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* ========================================================================= */
+/* BESPOKE SECTION-BY-SECTION HOVER SYSTEMS FOR: SERVICES & SERVICE DETAIL   */
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* SERVICES PAGE HOVER SYSTEMS                                               */
+/* ------------------------------------------------------------------------- */
+
+/* Services: Practice Area Catalog Cards */
+.card-hover-service-catalog {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              background-color 0.35s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-service-catalog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1E1B4B, #4F46E5, #06B6D4, #3B82F6);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-service-catalog:hover {
+  transform: translateY(-6px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 26px 50px -12px rgba(15, 23, 42, 0.1),
+              0 10px 22px -6px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-service-catalog:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-service-catalog:hover [class*="w-12"][class*="rounded"] {
+  transform: scale(1.1) rotate(2deg);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.35);
+}
+
+/* Services: Enterprise Engagement Models */
+.card-hover-engagement-model {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-engagement-model::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4F46E5, #38BDF8, #818CF8);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-engagement-model:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(99, 102, 241, 0.42) !important;
+  box-shadow: 0 22px 40px -10px rgba(15, 23, 42, 0.09),
+              0 8px 18px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-engagement-model:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-engagement-model:hover svg.text-indigo-600,
+.card-hover-engagement-model:hover svg.text-blue-600,
+.card-hover-engagement-model:hover svg.text-purple-600 {
+  transform: translateX(3px) scale(1.12);
+  transition: transform 0.25s ease;
+}
+
+/* ------------------------------------------------------------------------- */
+/* SERVICE DETAIL PAGE HOVER SYSTEMS                                         */
+/* ------------------------------------------------------------------------- */
+
+/* Service Detail: Tech Ecosystem Box */
+.card-hover-tech-ecosystem {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease !important;
+}
+
+.card-hover-tech-ecosystem:hover {
+  transform: translateY(-3px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* Service Detail: Technical Capability Pills */
+.card-hover-capability-pill {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease,
+              border-color 0.25s ease !important;
+}
+
+.card-hover-capability-pill:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.12), 0 0 0 1px rgba(99, 102, 241, 0.25) !important;
+}
+
+.card-hover-capability-pill:hover svg {
+  transform: scale(1.15);
+  transition: transform 0.2s ease;
+}
+
+/* Service Detail: Business Challenges We Mitigate (Rose Alert Glow & Barrier Line) */
+.card-hover-challenge {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-challenge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #E11D48, #F43F5E, #FB7185);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-challenge:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(244, 63, 94, 0.45) !important;
+  box-shadow: 0 20px 38px -10px rgba(225, 29, 72, 0.12),
+              0 8px 16px -4px rgba(15, 23, 42, 0.05),
+              0 0 0 1px rgba(244, 63, 94, 0.3) !important;
+}
+
+.card-hover-challenge:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-challenge:hover [class*="bg-rose-50"] {
+  transform: scale(1.12) rotate(-3deg);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 16px -3px rgba(225, 29, 72, 0.3);
+}
+
+/* Service Detail: Our Implementation Roadmap (Step Beam & Index Radiance) */
+.card-hover-roadmap-step {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-roadmap-step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5px;
+  height: 0%;
+  background: linear-gradient(180deg, #2563EB, #6366F1, #38BDF8);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-roadmap-step:hover {
+  transform: translateY(-5px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 20px 38px -10px rgba(15, 23, 42, 0.09),
+              0 6px 15px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-roadmap-step:hover::before {
+  height: 100%;
+}
+
+.card-hover-roadmap-step:hover span[class*="text-indigo-600"] {
+  transform: scale(1.08);
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+/* Service Detail: Sector Applicability Pills (Dark Section) */
+.card-hover-sector-pill {
+  position: relative;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.card-hover-sector-pill:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(129, 140, 248, 0.5) !important;
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.6), 0 0 12px rgba(99, 102, 241, 0.2) !important;
+}
+
+.card-hover-sector-pill:hover svg {
+  transform: scale(1.15);
+  transition: transform 0.2s ease;
+}
+
+/* Service Detail: Related Software Suite Links (Dark Section) */
+.card-hover-suite-link {
+  position: relative;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease !important;
+}
+
+.card-hover-suite-link:hover {
+  transform: translateX(4px) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(129, 140, 248, 0.5) !important;
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.7), 0 0 16px rgba(99, 102, 241, 0.22) !important;
+}
+
+/* Service Detail: Technical FAQ Cards */
+.card-hover-faq {
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-faq::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5px;
+  height: 0%;
+  background: linear-gradient(180deg, #4338CA, #6366F1);
+  transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-faq:hover {
+  transform: translateY(-3px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.38) !important;
+  box-shadow: 0 16px 30px -8px rgba(15, 23, 42, 0.07),
+              0 0 0 1px rgba(99, 102, 241, 0.22) !important;
+}
+
+.card-hover-faq:hover::before {
+  height: 100%;
+}
+
+.card-hover-faq:hover svg.text-indigo-600 {
+  transform: scale(1.15) rotate(6deg);
+  transition: transform 0.25s ease;
+}
+
+/* ========================================================================= */
+/* BESPOKE SECTION-BY-SECTION HOVER SYSTEMS FOR: SOLUTIONS & SOLUTION DETAIL */
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* SOLUTIONS PAGE HOVER SYSTEMS                                              */
+/* ------------------------------------------------------------------------- */
+
+/* Solutions: Platform Catalog Cards */
+.card-hover-platform-catalog {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              background-color 0.35s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-platform-catalog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1E1B4B, #3B82F6, #6366F1, #8B5CF6);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Diagonal glass glint refraction sweep */
+.card-hover-platform-catalog::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 45%,
+    rgba(224, 231, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.5) 55%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.75s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.card-hover-platform-catalog:hover {
+  transform: translateY(-6px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 24px 46px -12px rgba(30, 58, 138, 0.14),
+              0 8px 18px -4px rgba(99, 102, 241, 0.1),
+              0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+}
+
+.card-hover-platform-catalog:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-platform-catalog:hover::after {
+  left: 200%;
+}
+
+.card-hover-platform-catalog:hover span[class*="bg-indigo-50"] {
+  background-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+  border-color: #4338CA !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  transition: all 0.3s ease;
+}
+
+/* ------------------------------------------------------------------------- */
+/* SOLUTION DETAIL PAGE HOVER SYSTEMS                                        */
+/* ------------------------------------------------------------------------- */
+
+/* Solution Detail: Specification & Deployment Box */
+.card-hover-solution-spec {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease !important;
+}
+
+.card-hover-solution-spec:hover {
+  transform: translateY(-3px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.38) !important;
+  box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.07), 0 0 0 1px rgba(99, 102, 241, 0.22) !important;
+}
+
+.card-hover-solution-spec:hover svg.text-indigo-600 {
+  transform: scale(1.15) rotate(4deg);
+  transition: transform 0.25s ease;
+}
+
+/* Solution Detail: Use Case Interactive Row */
+.card-hover-usecase-row {
+  transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease !important;
+}
+
+.card-hover-usecase-row:hover {
+  transform: translateX(4px) !important;
+  background-color: #F8FAFC !important;
+}
+
+.card-hover-usecase-row:hover svg {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+/* Solution Detail: Integrated Modules (Pod Architecture) */
+.card-hover-solution-module {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-solution-module::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5px;
+  height: 0%;
+  background: linear-gradient(180deg, #3B82F6, #6366F1, #8B5CF6);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-solution-module:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(99, 102, 241, 0.42) !important;
+  box-shadow: 0 20px 36px -10px rgba(15, 23, 42, 0.09),
+              0 6px 14px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-solution-module:hover::before {
+  height: 100%;
+}
+
+.card-hover-solution-module:hover span[class*="text-indigo-600"] {
+  letter-spacing: 0.08em;
+  transition: letter-spacing 0.3s ease;
+}
+
+.card-hover-solution-module:hover .bg-emerald-500 {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+  transform: scale(1.3);
+  transition: all 0.3s ease;
+}
+
+.card-hover-solution-module:hover h3 {
+  color: #4F46E5 !important;
+  transition: color 0.3s ease;
+}
+
+/* ========================================================================= */
+/* BESPOKE SECTION-BY-SECTION HOVER SYSTEMS FOR: INDUSTRIES & INDUSTRY DETAIL*/
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* INDUSTRIES PAGE HOVER SYSTEMS                                             */
+/* ------------------------------------------------------------------------- */
+
+/* Industries: Sector Catalog Cards */
+.card-hover-industry-catalog {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-industry-catalog::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #06B6D4, #6366F1, #A855F7);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-industry-catalog:hover {
+  transform: translateY(-7px) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 26px 50px -12px rgba(15, 23, 42, 0.12),
+              0 10px 22px -6px rgba(79, 70, 229, 0.1),
+              0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+}
+
+.card-hover-industry-catalog:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-industry-catalog:hover img {
+  transform: scale(1.06);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-industry-catalog:hover [class*="bg-white/90"] {
+  transform: scale(1.12) rotate(3deg);
+  background-color: #FFFFFF !important;
+  box-shadow: 0 6px 16px -2px rgba(79, 70, 229, 0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ------------------------------------------------------------------------- */
+/* INDUSTRY DETAIL PAGE HOVER SYSTEMS                                        */
+/* ------------------------------------------------------------------------- */
+
+/* Industry Detail: Verified Real-World Deployments */
+.card-hover-deployment-row {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease,
+              border-color 0.25s ease,
+              background-color 0.25s ease !important;
+}
+
+.card-hover-deployment-row:hover {
+  transform: translateX(4px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(99, 102, 241, 0.2) !important;
+}
+
+.card-hover-deployment-row:hover svg {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+/* Industry Detail: Sector Operational Roadblocks (Rose Alert Glow & Pillar) */
+.card-hover-roadblock {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-roadblock::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5px;
+  height: 0%;
+  background: linear-gradient(180deg, #E11D48, #F43F5E, #FB7185);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-roadblock:hover {
+  transform: translateY(-4px) !important;
+  background-color: #FFFFFF !important;
+  border-color: rgba(244, 63, 94, 0.42) !important;
+  box-shadow: 0 18px 34px -8px rgba(225, 29, 72, 0.1),
+              0 0 0 1px rgba(244, 63, 94, 0.28) !important;
+}
+
+.card-hover-roadblock:hover::before {
+  height: 100%;
+}
+
+.card-hover-roadblock:hover [class*="text-rose-600"] {
+  letter-spacing: 0.08em;
+  transition: letter-spacing 0.3s ease;
+}
+
+/* Industry Detail: Technology Solutions & Software Platforms */
+.card-hover-sector-solution {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-sector-solution::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #2563EB, #6366F1, #38BDF8);
+  opacity: 0;
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-sector-solution:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 20px 38px -10px rgba(15, 23, 42, 0.09),
+              0 6px 14px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.28) !important;
+}
+
+.card-hover-sector-solution:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-sector-solution:hover [class*="bg-indigo-50"] {
+  background-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+  transform: scale(1.1) rotate(4deg);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  transition: all 0.3s ease;
+}
+
+.card-hover-sector-solution:hover h4 {
+  color: #4F46E5 !important;
+  transition: color 0.3s ease;
+}
+
+/* Industry Detail: Intelligent Process Automation (Dark Section) */
+.card-hover-sector-automation {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-sector-automation:hover {
+  transform: translateY(-6px) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(99, 102, 241, 0.55) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 30px rgba(99, 102, 241, 0.25),
+              0 0 0 1px rgba(129, 140, 248, 0.45) !important;
+}
+
+.card-hover-sector-automation:hover svg.text-indigo-400 {
+  transform: scale(1.15) rotate(5deg);
+  transition: transform 0.25s ease;
+}
+
+/* Industry Detail: Executive Telemetry & Analytics (Dark Section) */
+.card-hover-sector-analytics {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-sector-analytics:hover {
+  transform: translateY(-6px) !important;
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 30px rgba(56, 189, 248, 0.25),
+              0 0 0 1px rgba(56, 189, 248, 0.45) !important;
+}
+
+.card-hover-sector-analytics:hover svg.text-blue-400 {
+  transform: scale(1.15);
+  transition: transform 0.25s ease;
+}
+
+/* ========================================================================= */
+/* BESPOKE SECTION-BY-SECTION HOVER SYSTEMS FOR:                             */
+/* GLOBAL BUSINESS, CONTACT, REQUEST PROJECT & INSIGHTS                      */
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* 1. GLOBAL BUSINESS PAGE HOVER SYSTEMS                                     */
+/* ------------------------------------------------------------------------- */
+
+/* Global Business: Cross-Border Delivery Model Cards */
+.card-hover-delivery-model {
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease,
+              background-color 0.25s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-delivery-model::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, #6366F1, #8B5CF6);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-delivery-model:hover {
+  transform: translateY(-4px) !important;
+  background-color: #ffffff !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  box-shadow: 0 16px 30px -8px rgba(15, 23, 42, 0.08),
+              0 4px 12px -2px rgba(99, 102, 241, 0.06),
+              0 0 0 1px rgba(99, 102, 241, 0.15) !important;
+}
+
+.card-hover-delivery-model:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-delivery-model:hover svg {
+  transform: scale(1.18) rotate(5deg);
+  color: #4338CA !important;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+}
+
+/* Global Business: International Delivery Capabilities */
+.card-hover-global-cap {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-global-cap::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, #4F46E5, #06B6D4);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-global-cap:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 20px 36px -10px rgba(15, 23, 42, 0.09),
+              0 6px 14px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.2) !important;
+}
+
+.card-hover-global-cap:hover::before {
+  height: 100%;
+}
+
+.card-hover-global-cap:hover span.font-mono {
+  letter-spacing: 0.08em;
+  color: #4338CA !important;
+  transition: letter-spacing 0.25s ease, color 0.2s ease;
+}
+
+.card-hover-global-cap:hover h3 {
+  color: #4F46E5 !important;
+  transition: color 0.2s ease;
+}
+
+/* Global Business: Strategic Regional Jurisdictions */
+.card-hover-jurisdiction {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-jurisdiction::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #06B6D4, #6366F1, #A855F7);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: opacity 0.3s ease, transform 0.35s ease;
+}
+
+.card-hover-jurisdiction:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  box-shadow: 0 22px 42px -10px rgba(15, 23, 42, 0.12),
+              0 8px 18px -4px rgba(99, 102, 241, 0.1),
+              0 0 0 1px rgba(99, 102, 241, 0.25) !important;
+}
+
+.card-hover-jurisdiction:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-jurisdiction:hover img {
+  transform: scale(1.08) !important;
+}
+
+.card-hover-jurisdiction:hover span.text-indigo-300 {
+  letter-spacing: 0.12em;
+  color: #C7D2FE !important;
+  transition: letter-spacing 0.25s ease, color 0.2s ease;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 2. CONTACT PAGE HOVER SYSTEMS                                             */
+/* ------------------------------------------------------------------------- */
+
+/* Contact: Global Hub Location Cards */
+.card-hover-hub-location {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease,
+              background-color 0.25s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-hub-location::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3.5px;
+  background: linear-gradient(180deg, #2563EB, #6366F1, #8B5CF6);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-hub-location:hover {
+  transform: translateY(-4px) !important;
+  background-color: #ffffff !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.08),
+              0 6px 14px -3px rgba(79, 70, 229, 0.06),
+              0 0 0 1px rgba(99, 102, 241, 0.18) !important;
+}
+
+.card-hover-hub-location:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.card-hover-hub-location:hover .text-emerald-600 {
+  background-color: rgba(16, 185, 129, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+  transition: all 0.25s ease;
+}
+
+.card-hover-hub-location:hover .font-serif {
+  color: #4F46E5 !important;
+  transition: color 0.2s ease;
+}
+
+/* Contact: Dedicated Practice Inboxes Container */
+.card-hover-dedicated-inbox {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-dedicated-inbox:hover {
+  transform: translateY(-3px) !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7),
+              0 0 25px rgba(99, 102, 241, 0.22),
+              0 0 0 1px rgba(129, 140, 248, 0.35) !important;
+}
+
+.card-hover-dedicated-inbox a:hover {
+  color: #A5B4FC !important;
+  text-shadow: 0 0 8px rgba(165, 180, 252, 0.5);
+  transition: all 0.2s ease;
+}
+
+/* Contact: Direct Corporate Enquiry Form Container */
+.card-hover-contact-form {
+  position: relative;
+  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.card-hover-contact-form:focus-within,
+.card-hover-contact-form:hover {
+  border-color: rgba(99, 102, 241, 0.35) !important;
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.08),
+              0 4px 16px -4px rgba(99, 102, 241, 0.06),
+              0 0 0 1px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 3. ENTERPRISE PROJECT PAGE HOVER SYSTEMS                                  */
+/* ------------------------------------------------------------------------- */
+
+/* Request Project: Architecture Discovery Step Cards */
+.card-hover-discovery-step {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease,
+              background-color 0.25s ease !important;
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+.card-hover-discovery-step::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #4F46E5, #3B82F6);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-discovery-step:hover {
+  transform: translateY(-3px) translateX(2px) !important;
+  background-color: #ffffff !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.07),
+              0 4px 10px -2px rgba(79, 70, 229, 0.06),
+              0 0 0 1px rgba(99, 102, 241, 0.18) !important;
+}
+
+.card-hover-discovery-step:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.card-hover-discovery-step:hover > div:first-of-type {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.card-hover-discovery-step:hover h4 {
+  color: #4F46E5 !important;
+  transition: color 0.2s ease;
+}
+
+/* Request Project: Institutional Security Covenants Box */
+.card-hover-security-covenant {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-security-covenant:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 30px rgba(99, 102, 241, 0.25),
+              0 0 0 1px rgba(129, 140, 248, 0.4) !important;
+}
+
+.card-hover-security-covenant:hover svg.text-indigo-400 {
+  transform: scale(1.15) rotate(4deg);
+  transition: transform 0.25s ease;
+}
+
+/* Request Project: Verified Physical Corridors Notice */
+.card-hover-corridor-notice {
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease,
+              background-color 0.25s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-corridor-notice:hover {
+  transform: translateX(4px) !important;
+  background-color: #ffffff !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.06),
+              0 0 0 1px rgba(16, 185, 129, 0.2) !important;
+}
+
+.card-hover-corridor-notice:hover svg.text-emerald-600 {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 4. INSIGHTS PAGE HOVER SYSTEMS                                            */
+/* ------------------------------------------------------------------------- */
+
+/* Insights: Featured Headline Article Banner */
+.card-hover-insight-featured {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-insight-featured:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
+  box-shadow: 0 28px 60px -15px rgba(15, 23, 42, 0.8),
+              0 0 35px rgba(99, 102, 241, 0.28),
+              0 0 0 1px rgba(129, 140, 248, 0.35) !important;
+}
+
+.card-hover-insight-featured:hover img {
+  transform: scale(1.06) !important;
+}
+
+.card-hover-insight-featured:hover a[class*="bg-indigo-600"] {
+  background-color: #4338CA !important;
+  box-shadow: 0 0 18px rgba(99, 102, 241, 0.6);
+  transform: scale(1.02);
+  transition: all 0.25s ease;
+}
+
+/* Insights: Articles Listing Grid Cards */
+.card-hover-article-card {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.card-hover-article-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #4F46E5, #06B6D4);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-article-card:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 22px 42px -10px rgba(15, 23, 42, 0.1),
+              0 8px 18px -4px rgba(79, 70, 229, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.2) !important;
+}
+
+.card-hover-article-card:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-article-card:hover img {
+  transform: scale(1.07) !important;
+}
+
+.card-hover-article-card:hover h3 a {
+  color: #4F46E5 !important;
+  transition: color 0.2s ease;
+}
+
+.card-hover-article-card:hover span[class*="bg-indigo-600"] {
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+  transition: box-shadow 0.25s ease;
+}
+
+/* ========================================================================= */
+/* GOVERNMENT: Civic Project Implementation Methodology Hover System         */
+/* ========================================================================= */
+.card-hover-civic-methodology {
+  position: relative;
+  background-color: #ffffff;
+  border-color: rgba(226, 232, 240, 0.9);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              background-color 0.35s ease !important;
+  will-change: transform, box-shadow;
+}
+
+/* Institutional Laser Top Border Beam */
+.card-hover-civic-methodology::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4F46E5, #3B82F6, #10B981);
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: left;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 9999px 9999px 0 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card-hover-civic-methodology:hover {
+  transform: translateY(-8px) scale(1.01) !important;
+  box-shadow: 0 26px 46px -10px rgba(15, 23, 42, 0.08),
+              0 14px 26px -8px rgba(79, 70, 229, 0.16),
+              0 0 0 1px rgba(99, 102, 241, 0.35) !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
+}
+
+.card-hover-civic-methodology:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.card-hover-civic-methodology:hover .civic-phase-badge {
+  background-color: #4F46E5;
+  color: #ffffff !important;
+  border-color: #4338CA;
+  transform: scale(1.05);
+}
+
+.card-hover-civic-methodology:hover .civic-icon-emblem {
+  transform: scale(1.08) rotate(1deg);
+  background: linear-gradient(135deg, #4F46E5, #3B82F6);
+  color: #ffffff !important;
+  border-color: #6366F1;
+  box-shadow: 0 10px 22px -4px rgba(79, 70, 229, 0.35);
+}
+
+
+
