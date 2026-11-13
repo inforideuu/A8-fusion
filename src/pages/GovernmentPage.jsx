@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import PageHeader from '../components/common/PageHeader';
 import { useEnquiry } from '../context/EnquiryContext';
 import { 
@@ -18,45 +18,208 @@ import {
   AlertCircle,
   Scale,
   GitBranch,
-  GraduationCap
+  GraduationCap,
+  Edit2,
+  Trash2,
+  Plus,
+  Sparkles
 } from 'lucide-react';
+import {
+  LiveEditorToolbar,
+  CardActionOverlay,
+  AddCardButton,
+  SectionHeaderEditButton,
+  LiveEditorModal
+} from '../admin/components/LiveEditorControls';
+
+const DEFAULT_PAGE_HEADER = {
+  badge: 'Sovereign Digital Infrastructure',
+  title: 'Government & Public Sector Technology Solutions',
+  subtitle: 'Engineering resilient e-governance backbones, sovereign data platforms, and secure digital citizen services designed to withstand state-level threat vectors and adhere strictly to domestic data sovereignty laws.',
+  bgImage: '/government.png',
+  primaryCtaText: 'Submit Official Tender / RFP Enquiry',
+  primaryCtaLink: '#government-tender-form',
+  secondaryCtaText: 'Review Governance Philosophy',
+  secondaryCtaLink: '/company/our-approach'
+};
+
+const DEFAULT_GOV_PILLARS = [
+  { id: 'pillar-1', title: 'E-Governance Solutions', desc: 'Single-Sign-On citizen credentials, digital identity verification, and multi-departmental service integration.' },
+  { id: 'pillar-2', title: 'Smart City Platforms', desc: 'Municipal telemetry aggregating street lighting, water pressure, smart meters, and traffic dispatch.' },
+  { id: 'pillar-3', title: 'Public Administration Systems', desc: 'Secure civil registry databases, land titles, vital statistics, and judicial filing archives.' },
+  { id: 'pillar-4', title: 'Digital Citizen Services', desc: 'Intuitive web and mobile portals for business permits, licenses, birth registrations, and tax filing.' },
+  { id: 'pillar-5', title: 'Government Workflow Automation', desc: 'Automating multi-tier ministerial approval hierarchies with tamper-evident cryptographic logs.' },
+  { id: 'pillar-6', title: 'Public Infrastructure Management', desc: 'Asset lifecycle tracking for public transit networks, bridges, reservoirs, and public hospitals.' },
+  { id: 'pillar-7', title: 'Data Analytics & Dashboards', desc: 'Real-time cabinet decision boards tracking public budget expenditures, inflation indices, and health data.' },
+  { id: 'pillar-8', title: 'System Integration & Mainframe Bridges', desc: 'Secure middleware connecting legacy departmental mainframes with modern cloud citizen portals.' }
+];
 
 export default function GovernmentPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { submitEnquiry } = useEnquiry();
-  const [submittedRef, setSubmittedRef] = useState(null);
-  const [formData, setFormData] = useState({
-    organization: '',
-    contactPerson: '',
-    designation: '',
-    email: '',
-    phone: '',
-    country: '',
-    projectCategory: 'E-Governance & Digital Citizen Services',
-    description: '',
-    estimatedBudget: '',
-    tenderReference: '',
-    consent: false
-  });
 
-  const categories = [
-    'E-Governance & Digital Citizen Services',
-    'Smart City IoT & Municipal Platforms',
-    'Public Administration & Registry Core',
-    'Sovereign Cloud & In-Country Data Residency',
-    'Public Infrastructure & Utility Telemetry',
-    'Government Tender Architecture Advisory'
-  ];
+  // Mode States
+  const [editMode, setEditMode] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const govPillars = [
-    { title: 'E-Governance Solutions', desc: 'Single-Sign-On citizen credentials, digital identity verification, and multi-departmental service integration.' },
-    { title: 'Smart City Platforms', desc: 'Municipal telemetry aggregating street lighting, water pressure, smart meters, and traffic dispatch.' },
-    { title: 'Public Administration Systems', desc: 'Secure civil registry databases, land titles, vital statistics, and judicial filing archives.' },
-    { title: 'Digital Citizen Services', desc: 'Intuitive web and mobile portals for business permits, licenses, birth registrations, and tax filing.' },
-    { title: 'Government Workflow Automation', desc: 'Automating multi-tier ministerial approval hierarchies with tamper-evident cryptographic logs.' },
-    { title: 'Public Infrastructure Management', desc: 'Asset lifecycle tracking for public transit networks, bridges, reservoirs, and public hospitals.' },
-    { title: 'Data Analytics & Dashboards', desc: 'Real-time cabinet decision boards tracking public budget expenditures, inflation indices, and health data.' },
-    { title: 'System Integration & Mainframe Bridges', desc: 'Secure middleware connecting legacy departmental mainframes with modern cloud citizen portals.' }
-  ];
+  // Content States
+  const [pageHeader, setPageHeader] = useState(DEFAULT_PAGE_HEADER);
+  const [govPillars, setGovPillars] = useState(DEFAULT_GOV_PILLARS);
+
+  // Modal State
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState(null);
+  const [modalData, setModalData] = useState({});
+  const [editingIndex, setEditingIndex] = useState(null);
+
+  // Check URL query param for live_edit
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('live_edit') === 'true') {
+      setEditMode(true);
+    }
+  }, [location.search]);
+
+  // Load Content from Backend / LocalStorage
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/pages/get_live_content/?slug=government');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.live_data && Object.keys(json.live_data).length > 0) {
+            applyLoadedData(json.live_data);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Backend unavailable, checking localStorage...', e);
+      }
+
+      try {
+        const local = localStorage.getItem('a8_live_government_content');
+        if (local) {
+          const parsed = JSON.parse(local);
+          applyLoadedData(parsed);
+        }
+      } catch (err) {
+        console.error('Error loading local data', err);
+      }
+    };
+
+    loadContent();
+  }, []);
+
+  const applyLoadedData = (data) => {
+    if (data.pageHeader) setPageHeader(data.pageHeader);
+    if (Array.isArray(data.govPillars) && data.govPillars.length > 0) setGovPillars(data.govPillars);
+  };
+
+  const markDirty = () => {
+    setIsDirty(true);
+  };
+
+  const handleSaveAll = async () => {
+    setSaving(true);
+    const payload = {
+      pageHeader,
+      govPillars,
+      updated_at: new Date().toISOString()
+    };
+
+    try {
+      localStorage.setItem('a8_live_government_content', JSON.stringify(payload));
+    } catch (e) {
+      console.warn(e);
+    }
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/pages/save_live_content/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          slug: 'government',
+          live_data: payload
+        })
+      });
+      if (!res.ok) throw new Error('Failed to save to backend');
+      setIsDirty(false);
+      alert('Government & Public Sector specifications saved and synchronized with MySQL!');
+    } catch (e) {
+      console.warn('Backend save issue:', e);
+      setIsDirty(false);
+      alert('Changes saved in browser session.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    if (window.confirm('Reset all Government page content back to default factory settings?')) {
+      setPageHeader(DEFAULT_PAGE_HEADER);
+      setGovPillars(DEFAULT_GOV_PILLARS);
+      localStorage.removeItem('a8_live_government_content');
+      setIsDirty(true);
+    }
+  };
+
+  const handleExit = () => {
+    if (isDirty && !window.confirm('You have unsaved changes. Exit without saving?')) {
+      return;
+    }
+    setEditMode(false);
+    navigate('/government', { replace: true });
+  };
+
+  // Modal Handlers
+  const openModal = (type, data = {}, index = null) => {
+    setModalType(type);
+    setModalData(data);
+    setEditingIndex(index);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalType(null);
+    setModalData({});
+    setEditingIndex(null);
+  };
+
+  const handleModalSubmit = (e) => {
+    e.preventDefault();
+    markDirty();
+
+    if (modalType === 'header') {
+      setPageHeader({ ...modalData });
+    } else if (modalType === 'pillar_edit') {
+      const updated = [...govPillars];
+      updated[editingIndex] = { ...modalData };
+      setGovPillars(updated);
+    } else if (modalType === 'pillar_add') {
+      const newPillar = {
+        id: `pillar-${Date.now()}`,
+        title: modalData.title || 'New Civic Capability',
+        desc: modalData.desc || 'Public sector technology platform specification.'
+      };
+      setGovPillars([...govPillars, newPillar]);
+    }
+
+    closeModal();
+  };
+
+  const handleDeletePillar = (idx) => {
+    if (window.confirm(`Delete civic capability "${govPillars[idx].title}"?`)) {
+      const updated = govPillars.filter((_, i) => i !== idx);
+      setGovPillars(updated);
+      markDirty();
+    }
+  };
+
+  const isLive = editMode && !previewMode;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,20 +235,45 @@ export default function GovernmentPage() {
   };
 
   return (
-    <div className="bg-[#F8FAFC]">
-      <PageHeader
-        badge="Sovereign Digital Infrastructure"
-        title="Government &amp; Public Sector Technology Solutions"
-        subtitle="Engineering resilient e-governance backbones, sovereign data platforms, and secure digital citizen services designed to withstand state-level threat vectors and adhere strictly to domestic data sovereignty laws."
-        bgImage="/government.png"
-        breadcrumbs={[
-          { label: 'Government & Public Sector' }
-        ]}
-        primaryCtaText="Submit Official Tender / RFP Enquiry"
-        primaryCtaLink="#government-tender-form"
-        secondaryCtaText="Review Governance Philosophy"
-        secondaryCtaLink="/company/our-approach"
-      />
+    <div className={`bg-[#F8FAFC] min-h-screen ${editMode ? 'pt-14' : ''}`}>
+      {/* Live Editor Floating Toolbar */}
+      {editMode && (
+        <LiveEditorToolbar
+          pageName="Government & Public Sector (/government)"
+          isDirty={isDirty}
+          saving={saving}
+          previewMode={previewMode}
+          onTogglePreview={() => setPreviewMode(!previewMode)}
+          onReset={handleReset}
+          onSave={handleSaveAll}
+          onExit={handleExit}
+        />
+      )}
+
+      {/* Hero Header with in-context live editing */}
+      <div className="relative group">
+        {isLive && (
+          <div className="absolute top-6 right-6 z-40 bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-indigo-200 shadow-lg flex items-center gap-2">
+            <SectionHeaderEditButton
+              onClick={() => openModal('header', { ...pageHeader })}
+              label="Edit Hero Header"
+            />
+          </div>
+        )}
+        <PageHeader
+          badge={pageHeader.badge}
+          title={pageHeader.title}
+          subtitle={pageHeader.subtitle}
+          bgImage={pageHeader.bgImage}
+          breadcrumbs={[
+            { label: 'Government & Public Sector' }
+          ]}
+          primaryCtaText={pageHeader.primaryCtaText}
+          primaryCtaLink={pageHeader.primaryCtaLink}
+          secondaryCtaText={pageHeader.secondaryCtaText}
+          secondaryCtaLink={pageHeader.secondaryCtaLink}
+        />
+      </div>
 
       {/* 1. Sovereign Government Technology Introduction */}
       <section className="py-20 bg-white border-b border-slate-200">
@@ -200,18 +388,33 @@ export default function GovernmentPage() {
               Government Technology Capabilities
             </h2>
             <p className="text-sm text-slate-600 font-sans">
-              Eight integrated solution domains engineered for municipal councils, state departments, and federal ministries.
+              Integrated solution domains engineered for municipal councils, state departments, and federal ministries.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {govPillars.map((pillar, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-3 card-premium">
+              <div key={pillar.id || i} className="relative bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-3 card-premium group">
+                {isLive && (
+                  <CardActionOverlay
+                    title={pillar.title}
+                    onEdit={() => openModal('pillar_edit', { ...pillar }, i)}
+                    onDelete={() => handleDeletePillar(i)}
+                  />
+                )}
                 <span className="text-xs font-mono font-bold text-indigo-600">CAPABILITY 0{i + 1}</span>
                 <h3 className="text-base font-serif font-bold text-slate-900">{pillar.title}</h3>
                 <p className="text-xs text-slate-600 font-sans leading-relaxed">{pillar.desc}</p>
               </div>
             ))}
+
+            {isLive && (
+              <AddCardButton
+                onClick={() => openModal('pillar_add', {})}
+                label="Add Capability Domain"
+                subtitle="Add another sovereign solution or civic capability"
+              />
+            )}
           </div>
         </div>
       </section>
@@ -540,6 +743,97 @@ export default function GovernmentPage() {
           )}
         </div>
       </section>
+
+      {/* Live Editor Modal Dialog */}
+      <LiveEditorModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onSave={handleModalSubmit}
+        title={
+          modalType === 'header' ? 'Edit Hero Header' :
+          modalType === 'pillar_edit' ? `Edit Capability: ${modalData.title || ''}` :
+          modalType === 'pillar_add' ? 'Add Civic Capability' : 'Edit Section'
+        }
+      >
+        {modalType === 'header' && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Badge</label>
+              <input
+                type="text"
+                value={modalData.badge || ''}
+                onChange={(e) => setModalData({ ...modalData, badge: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Title</label>
+              <input
+                type="text"
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Subtitle</label>
+              <textarea
+                rows={3}
+                value={modalData.subtitle || ''}
+                onChange={(e) => setModalData({ ...modalData, subtitle: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Primary CTA Text</label>
+                <input
+                  type="text"
+                  value={modalData.primaryCtaText || ''}
+                  onChange={(e) => setModalData({ ...modalData, primaryCtaText: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Primary CTA Link</label>
+                <input
+                  type="text"
+                  value={modalData.primaryCtaLink || ''}
+                  onChange={(e) => setModalData({ ...modalData, primaryCtaLink: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {(modalType === 'pillar_edit' || modalType === 'pillar_add') && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Capability Title</label>
+              <input
+                type="text"
+                required
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                placeholder="e.g. Sovereign Civil Registry"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Description</label>
+              <textarea
+                rows={4}
+                required
+                value={modalData.desc || ''}
+                onChange={(e) => setModalData({ ...modalData, desc: e.target.value })}
+                placeholder="Institutional civic capabilities, security parameters, and data architecture..."
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+          </>
+        )}
+      </LiveEditorModal>
     </div>
   );
 }
