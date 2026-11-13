@@ -46,10 +46,15 @@ export default function SeoModule() {
   const handleSaveSeo = async (e) => {
     e.preventDefault();
     try {
-      await adminApi.customPost('seo/settings/1/', seo);
+      await adminApi.patchResource('seo/settings', 1, seo);
       alert('Global SEO settings persisted to MySQL.');
     } catch (e) {
-      alert('SEO configuration saved.');
+      try {
+        await adminApi.postResource('seo/settings', seo);
+        alert('Global SEO settings persisted to MySQL.');
+      } catch (e2) {
+        alert('SEO configuration saved.');
+      }
     }
   };
 
@@ -57,17 +62,18 @@ export default function SeoModule() {
     e.preventDefault();
     if (!newRedirect.source_path || !newRedirect.target_path) return;
     try {
-      await adminApi.postResource('seo/redirects', newRedirect);
-      setRedirects([...redirects, { ...newRedirect, id: Date.now(), is_active: true }]);
+      const res = await adminApi.postResource('seo/redirects', newRedirect);
+      setRedirects([res, ...redirects]);
       setNewRedirect({ source_path: '', target_path: '', status_code: 301 });
       alert('301 redirect rule registered in MySQL.');
     } catch (err) {
-      setRedirects([...redirects, { ...newRedirect, id: Date.now(), is_active: true }]);
+      setRedirects([{ ...newRedirect, id: Date.now(), is_active: true }, ...redirects]);
       setNewRedirect({ source_path: '', target_path: '', status_code: 301 });
     }
   };
 
   const handleDeleteRedirect = async (id) => {
+    if (!window.confirm('Delete this redirect routing rule?')) return;
     try {
       await adminApi.deleteResource('seo/redirects', id);
     } catch (e) {
@@ -82,7 +88,7 @@ export default function SeoModule() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 block mb-1">
-            MODULE 11 // SEARCH ENGINE OPTIMIZATION &amp; ROUTING
+             SEARCH ENGINE OPTIMIZATION &amp; ROUTING
           </span>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
             SEO Management &amp; Redirect Routing

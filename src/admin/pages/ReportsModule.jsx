@@ -64,7 +64,7 @@ export default function ReportsModule() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <span className="text-xs font-sans font-semibold uppercase tracking-wider text-indigo-600 block mb-1">
-            Module 13 · Business Intelligence &amp; Analytics
+            Business Intelligence &amp; Analytics
           </span>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
             Institutional Reports &amp; Exports

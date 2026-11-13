@@ -668,6 +668,14 @@ class SEOSettingViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(setting)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        setting, _ = SEOSetting.objects.get_or_create(id=1)
+        serializer = self.get_serializer(setting, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        create_audit(request, 'UPDATE_SEO', 'SEO', "Updated global SEO configurations")
+        return Response(serializer.data)
+
     def update(self, request, *args, **kwargs):
         setting, _ = SEOSetting.objects.get_or_create(id=1)
         serializer = self.get_serializer(setting, data=request.data, partial=True)
@@ -686,6 +694,15 @@ class RedirectRuleViewSet(viewsets.ModelViewSet):
         rule = serializer.save()
         create_audit(self.request, 'CREATE_REDIRECT', 'SEO', f"Created redirect: {rule.source_path} -> {rule.target_path}")
 
+    def perform_update(self, serializer):
+        rule = serializer.save()
+        create_audit(self.request, 'UPDATE_REDIRECT', 'SEO', f"Updated redirect: {rule.source_path} -> {rule.target_path}")
+
+    def perform_destroy(self, instance):
+        sp = instance.source_path
+        instance.delete()
+        create_audit(self.request, 'DELETE_REDIRECT', 'SEO', f"Deleted redirect rule for {sp}", 'WARNING')
+
 
 # =============================================================================
 # MODULE 12: WEBSITE SETTINGS
@@ -698,6 +715,14 @@ class WebsiteSettingViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         setting, _ = WebsiteSetting.objects.get_or_create(id=1)
         serializer = self.get_serializer(setting)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        setting, _ = WebsiteSetting.objects.get_or_create(id=1)
+        serializer = self.get_serializer(setting, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        create_audit(request, 'UPDATE_SETTINGS', 'Settings', "Updated corporate website settings")
         return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):

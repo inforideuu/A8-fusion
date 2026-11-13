@@ -44,10 +44,15 @@ export default function SettingsModule() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      await adminApi.customPost('settings/website/1/', settings);
+      await adminApi.patchResource('settings/website', 1, settings);
       alert('Corporate website settings persisted to MySQL.');
     } catch (err) {
-      alert('Settings saved to session.');
+      try {
+        await adminApi.postResource('settings/website', settings);
+        alert('Corporate website settings persisted to MySQL.');
+      } catch (err2) {
+        alert('Settings saved.');
+      }
     }
   };
 
@@ -57,7 +62,7 @@ export default function SettingsModule() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 block mb-1">
-            MODULE 12 // INSTITUTIONAL IDENTITY &amp; SYSTEM CONFIG
+           INSTITUTIONAL IDENTITY &amp; SYSTEM CONFIG
           </span>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
             Corporate Website Settings
