@@ -15,7 +15,8 @@ import {
   Briefcase, 
   PhoneCall,
   Search,
-  Lock
+  Lock,
+  Handshake
 } from 'lucide-react';
 import { navigationLinks } from '../../data/navigationData';
 
@@ -85,6 +86,11 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-5 text-slate-400">
+            <Link to="/partnerships" className="hover:text-white transition-colors flex items-center gap-1.5">
+              <Handshake className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Partnerships</span>
+            </Link>
+            <span className="text-slate-600">|</span>
             <Link to="/government" className="hover:text-white transition-colors flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
               <span>Sovereign Enquiries</span>

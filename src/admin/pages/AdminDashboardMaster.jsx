@@ -38,27 +38,14 @@ export default function AdminDashboardMaster() {
           </AdminProtectedRoute>
         );
       case 'pages':
+      case 'services':
+      case 'solutions':
+      case 'industries':
+      case 'insights':
+      case 'media':
         return (
           <AdminProtectedRoute module="pages">
             <PagesModule />
-          </AdminProtectedRoute>
-        );
-      case 'services':
-        return (
-          <AdminProtectedRoute module="services">
-            <ServicesModule />
-          </AdminProtectedRoute>
-        );
-      case 'solutions':
-        return (
-          <AdminProtectedRoute module="solutions">
-            <SolutionsModule />
-          </AdminProtectedRoute>
-        );
-      case 'industries':
-        return (
-          <AdminProtectedRoute module="industries">
-            <IndustriesModule />
           </AdminProtectedRoute>
         );
       case 'crm':
@@ -71,18 +58,6 @@ export default function AdminDashboardMaster() {
         return (
           <AdminProtectedRoute module="careers">
             <CareersModule />
-          </AdminProtectedRoute>
-        );
-      case 'insights':
-        return (
-          <AdminProtectedRoute module="insights">
-            <InsightsModule />
-          </AdminProtectedRoute>
-        );
-      case 'media':
-        return (
-          <AdminProtectedRoute module="media">
-            <MediaLibraryModule />
           </AdminProtectedRoute>
         );
       case 'seo':

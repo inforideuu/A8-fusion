@@ -167,23 +167,18 @@ export default function PagesModule() {
             Page Management &amp; Navigation Hierarchy
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
-            Create corporate pages, modify hero typography, adjust navigation orders, and configure SEO tags.
+            Manage corporate pages, customize SEO metadata, and configure live in-context visual content.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={loadPages}
-            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 shadow-xs hover:bg-slate-50 transition-colors"
+            title="Reload Pages from Database"
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 shadow-xs hover:bg-slate-50 text-xs font-semibold transition-colors"
           >
-            <RefreshCw className="w-4 h-4" />
-          </button>
-          <button
-            onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-sans font-semibold uppercase tracking-wider text-white shadow-sm shadow-indigo-600/30 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Create New Page</span>
+            <RefreshCw className="w-4 h-4 text-indigo-600" />
+            <span>Sync Pages</span>
           </button>
         </div>
       </div>

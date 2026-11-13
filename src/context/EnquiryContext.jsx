@@ -100,11 +100,11 @@ export function EnquiryProvider({ children }) {
   };
 
   const submitEnquiry = (data) => {
-    const prefix = data.type === 'Government' 
+    const prefix = (data.type === 'Government' || data.type === 'government')
       ? 'A8F-GOV' 
-      : data.type === 'Strategic Partnership' 
+      : (data.type === 'Strategic Partnership' || data.type === 'partnership')
         ? 'A8F-PART' 
-        : data.type === 'Enterprise Project'
+        : (data.type === 'Enterprise Project' || data.type === 'project')
           ? 'A8F-ENT'
           : 'A8F-GEN';
     
@@ -122,6 +122,47 @@ export function EnquiryProvider({ children }) {
 
     setEnquiries(prev => [newEnquiry, ...prev]);
     showNotification(`Enquiry submitted successfully! Reference: ${id}`, 'success');
+
+    // Asynchronously dispatch to Django backend MySQL API
+    const mappedType = (data.type === 'Government' || data.type === 'government')
+      ? 'government'
+      : (data.type === 'Enterprise Project' || data.type === 'project')
+        ? 'project'
+        : (data.type === 'Strategic Partnership' || data.type === 'partnership')
+          ? 'partnership'
+          : 'general';
+
+    const payload = {
+      reference_code: id,
+      enquiry_type: mappedType,
+      full_name: data.full_name || data.name || data.contactPerson || 'Prospective Client',
+      email: data.email || 'client@a8fusion.com',
+      phone: data.phone || '',
+      organization: data.organization || data.company || '',
+      country: data.country || 'Global',
+      industry: data.industry || (data.projectCategory || ''),
+      estimated_budget: data.estimated_budget || data.budgetRange || data.estimatedBudget || '',
+      timeframe: data.timeframe || data.timeline || '',
+      message: data.message || data.description || data.proposedCollaboration || `Enquiry category: ${data.projectCategory || data.partnershipCategory || 'General'}`,
+      status: 'New',
+      priority: data.type === 'Government' ? 'Urgent' : 'Medium',
+      internal_notes: `Submitted via website form. Designation: ${data.designation || 'N/A'}. Tender ref: ${data.tenderReference || 'N/A'}`
+    };
+
+    fetch('http://127.0.0.1:8000/api/enquiries/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(res => {
+      if (res.ok) {
+        console.log(`[EnquiryCRM] Successfully synced ${id} to Django backend.`);
+      } else {
+        console.warn(`[EnquiryCRM] Backend responded with HTTP ${res.status}`);
+      }
+    }).catch(err => {
+      console.warn('[EnquiryCRM] Offline or backend unreachable, saved to local store.', err);
+    });
+
     return id;
   };
 
@@ -151,6 +192,34 @@ export function EnquiryProvider({ children }) {
     };
     setApplications(prev => [newApp, ...prev]);
     showNotification(`Application received! Reference ID: ${id}`, 'success');
+
+    // Asynchronously dispatch to Django backend MySQL API
+    const payload = {
+      candidate_name: data.candidateName || data.candidate_name || data.name || 'Candidate',
+      email: data.email || 'applicant@a8fusion.com',
+      phone: data.phone || '',
+      experience_years: data.experience || data.experience_years || 'Not specified',
+      current_company: data.currentCompany || data.current_company || '',
+      linkedin_url: data.linkedin || data.linkedin_url || '',
+      cover_letter: `Position: ${data.jobTitle || data.position || 'General Engineering Role'}\nSkills: ${data.skills || 'Not specified'}\n\n${data.coverLetter || ''}`,
+      status: 'New',
+      internal_notes: `Application ref: ${id}. Position applied: ${data.jobTitle || data.position || 'Open Role'}`
+    };
+
+    fetch('http://127.0.0.1:8000/api/careers/applications/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(res => {
+      if (res.ok) {
+        console.log(`[Careers] Successfully synced ${id} to Django backend.`);
+      } else {
+        console.warn(`[Careers] Backend responded with HTTP ${res.status}`);
+      }
+    }).catch(err => {
+      console.warn('[Careers] Offline or backend unreachable, saved to local store.', err);
+    });
+
     return id;
   };
 

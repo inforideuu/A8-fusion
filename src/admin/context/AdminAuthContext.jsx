@@ -4,9 +4,9 @@ import { adminApi } from '../services/adminApi';
 const AdminAuthContext = createContext(null);
 
 const DEFAULT_PERMISSIONS = {
-  'SUPER_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'services', 'solutions', 'industries', 'crm', 'careers', 'insights', 'media', 'seo', 'settings', 'reports', 'audit-logs'],
-  'WEBSITE_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'services', 'solutions', 'industries', 'crm', 'careers', 'insights', 'media', 'seo', 'settings', 'reports', 'audit-logs'],
-  'CONTENT_MANAGER': ['dashboard', 'pages', 'services', 'solutions', 'industries', 'insights', 'media', 'seo'],
+  'SUPER_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs'],
+  'WEBSITE_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs'],
+  'CONTENT_MANAGER': ['dashboard', 'pages', 'seo'],
   'SALES_MANAGER': ['dashboard', 'crm', 'reports', 'audit-logs'],
   'HR_MANAGER': ['dashboard', 'careers', 'reports'],
   'BD_MANAGER': ['dashboard', 'crm', 'reports'],

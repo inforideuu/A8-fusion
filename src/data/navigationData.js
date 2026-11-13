@@ -23,6 +23,11 @@ export const navigationLinks = [
         title: 'Careers',
         href: '/careers',
         desc: 'Global talent acquisition for software architects and systems engineers'
+      },
+      {
+        title: 'Strategic Partnerships',
+        href: '/partnerships',
+        desc: 'Global alliance networks, joint engineering ventures & institutional ecosystems'
       }
     ]
   },

@@ -261,17 +261,17 @@ DEFAULT_RBAC_MATRIX = {
     'SUPER_ADMIN': {
         'name': 'Super Admin',
         'level': 'Level 1 - Sovereign',
-        'modules': ['dashboard', 'users', 'rbac', 'pages', 'services', 'solutions', 'industries', 'crm', 'careers', 'insights', 'media', 'seo', 'settings', 'reports', 'audit-logs']
+        'modules': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs']
     },
     'WEBSITE_ADMIN': {
         'name': 'Website Administrator',
         'level': 'Level 2 - Infrastructure',
-        'modules': ['dashboard', 'users', 'rbac', 'pages', 'services', 'solutions', 'industries', 'crm', 'careers', 'insights', 'media', 'seo', 'settings', 'reports', 'audit-logs']
+        'modules': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs']
     },
     'CONTENT_MANAGER': {
         'name': 'Content Manager',
         'level': 'Level 3 - Editorial',
-        'modules': ['dashboard', 'pages', 'services', 'solutions', 'industries', 'insights', 'media', 'seo']
+        'modules': ['dashboard', 'pages', 'seo']
     },
     'SALES_MANAGER': {
         'name': 'Sales Manager',

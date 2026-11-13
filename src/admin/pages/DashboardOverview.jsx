@@ -101,7 +101,7 @@ export default function DashboardOverview({ setActiveTab }) {
       sub: 'Live architectural papers',
       icon: BookOpen,
       color: 'teal',
-      tab: 'insights'
+      tab: 'pages'
     },
   ];
 
