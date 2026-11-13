@@ -310,6 +310,7 @@ export default function IndustriesPage() {
                   {isLive && (
                     <CardActionOverlay
                       title={ind.title}
+                      detailUrl={ind.id === 'government' ? '/government?live_edit=true' : `/industries/${ind.slug}?live_edit=true`}
                       onEdit={() => openModal('industry_edit', {
                         ...ind,
                         challenges: Array.isArray(ind.challenges) ? ind.challenges.join('\n') : (ind.challenges || '')

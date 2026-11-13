@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { adminApi } from '../services/adminApi';
-import { Building2, Plus, Edit2, Eye, RefreshCw, X } from 'lucide-react';
+import { Building2, Plus, Edit2, Eye, RefreshCw, X, Sparkles } from 'lucide-react';
 
 export default function IndustriesModule() {
   const [industries, setIndustries] = useState([]);
@@ -146,9 +146,17 @@ export default function IndustriesModule() {
                 PUBLISHED
               </span>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <a
-                  href={`/industries/${ind.slug}`}
+                  href={ind.slug === 'government' ? '/government?live_edit=true' : `/industries/${ind.slug}?live_edit=true`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-mono font-bold transition-colors shadow-xs"
+                  title="Open Live In-Context Visual Editor for this sector"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>Live Editor</span>
+                </a>
+                <a
+                  href={ind.slug === 'government' ? '/government' : `/industries/${ind.slug}`}
                   target="_blank"
                   rel="noreferrer"
                   className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200"

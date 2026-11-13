@@ -87,9 +87,20 @@ export function LiveEditorToolbar({
   );
 }
 
-export function CardActionOverlay({ onEdit, onDelete, title = 'Card' }) {
+export function CardActionOverlay({ onEdit, onDelete, detailUrl, title = 'Card' }) {
   return (
     <div className="absolute top-3 right-3 z-30 flex items-center gap-1 bg-white/95 backdrop-blur-xs p-1 rounded-xl border border-slate-200 shadow-md">
+      {detailUrl && (
+        <a
+          href={detailUrl}
+          onClick={(e) => e.stopPropagation()}
+          className="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 hover:text-emerald-800 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono font-bold px-2"
+          title={`Open Live Editor for ${title} detail page`}
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Edit Detail</span>
+        </a>
+      )}
       <button
         type="button"
         onClick={(e) => {

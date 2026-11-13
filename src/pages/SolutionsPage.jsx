@@ -316,6 +316,7 @@ export default function SolutionsPage() {
                 {isLive && (
                   <CardActionOverlay
                     title={sol.title}
+                    detailUrl={`/solutions/${sol.slug}?live_edit=true`}
                     onEdit={() => openModal('solution_edit', {
                       ...sol,
                       modules: Array.isArray(sol.modules) ? sol.modules.map(m => m.name || m).join('\n') : ''

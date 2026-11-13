@@ -366,6 +366,7 @@ export default function InsightsPage() {
                 {isLive && (
                   <CardActionOverlay
                     title={article.title}
+                    detailUrl={`/insights/${article.slug}?live_edit=true`}
                     onEdit={() => openModal('article_edit', { ...article }, idx)}
                     onDelete={() => handleDeleteArticle(idx)}
                   />

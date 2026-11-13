@@ -75,7 +75,7 @@ export default function Footer({ hidePreFooterCard = false }) {
           <div className="lg:col-span-2 space-y-5">
             <Logo variant="light" size="lg" />
             
-            <p className="text-slate-400 text-sm leading-relaxed pr-6 font-sans font-light">
+            <p className="text-slate-400 text-sm leading-relaxed pr-6 font-sans font-light text-justify">
               A8Fusion is a global enterprise technology and sovereign digital transformation firm. We design, engineer, and operate mission-critical software platforms, private artificial intelligence infrastructure, and digital citizen backbones for multinational organizations and sovereign public institutions.
             </p>
 

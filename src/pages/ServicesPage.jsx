@@ -305,6 +305,7 @@ export default function ServicesPage() {
                   {isLive && (
                     <CardActionOverlay
                       title={service.title}
+                      detailUrl={`/services/${service.slug}?live_edit=true`}
                       onEdit={() => openModal('service_edit', {
                         ...service,
                         capabilities: Array.isArray(service.capabilities) ? service.capabilities.join('\n') : (service.capabilities || '')

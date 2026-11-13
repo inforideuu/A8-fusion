@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { adminApi } from '../services/adminApi';
 import {
   BookOpen, Plus, Edit2, Eye, RefreshCw, X, Calendar,
-  CheckCircle2, Clock, FileText, Search
+  CheckCircle2, Clock, FileText, Search, Sparkles
 } from 'lucide-react';
 
 export default function InsightsModule() {
@@ -173,7 +173,15 @@ export default function InsightsModule() {
                 {art.status}
               </span>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <a
+                  href={`/insights/${art.slug}?live_edit=true`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-mono font-bold transition-colors shadow-xs"
+                  title="Open Live In-Context Visual Editor for this article"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>Live Editor</span>
+                </a>
                 <a
                   href={`/insights/${art.slug}`}
                   target="_blank"
