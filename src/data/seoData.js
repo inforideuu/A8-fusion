@@ -363,7 +363,7 @@ export function generateStructuredData(pathname, seo) {
         '@type': 'Offer',
         availability: 'https://schema.org/InStock',
         price: 'Contact for Enterprise Tier',
-        priceCurrency: 'USD'
+        priceCurrency: 'INR'
       },
       publisher: {
         '@id': `${SITE_URL}/#organization`

@@ -8,6 +8,7 @@ import {
 
 export default function EnquiryCrmModule() {
   const [enquiries, setEnquiries] = useState([]);
+  const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -19,6 +20,7 @@ export default function EnquiryCrmModule() {
   const [updating, setUpdating] = useState(false);
 
   const statuses = ['New', 'Contacted', 'Qualified', 'Proposal Sent', 'Negotiation', 'Won', 'Lost'];
+  const priorities = ['Low', 'Medium', 'High', 'Urgent'];
 
   const loadEnquiries = async () => {
     setLoading(true);
@@ -28,6 +30,10 @@ export default function EnquiryCrmModule() {
         setEnquiries(data);
       } else {
         setEnquiries([]);
+      }
+      const usersData = await adminApi.getResource('users');
+      if (Array.isArray(usersData)) {
+        setStaffList(usersData);
       }
     } catch (e) {
       console.error(e);
@@ -53,6 +59,52 @@ export default function EnquiryCrmModule() {
     );
     if (selectedEnquiry && selectedEnquiry.id === enquiryId) {
       setSelectedEnquiry((prev) => ({ ...prev, status: newStatus }));
+    }
+    setUpdating(false);
+  };
+
+  const handlePriorityChange = async (enquiryId, newPriority) => {
+    setUpdating(true);
+    try {
+      await adminApi.patchResource('enquiries', enquiryId, { priority: newPriority });
+    } catch (e) {
+      console.warn('Backend update fallback', e);
+    }
+    setEnquiries((prev) =>
+      prev.map((e) => (e.id === enquiryId ? { ...e, priority: newPriority } : e))
+    );
+    if (selectedEnquiry && selectedEnquiry.id === enquiryId) {
+      setSelectedEnquiry((prev) => ({ ...prev, priority: newPriority }));
+    }
+    setUpdating(false);
+  };
+
+  const handleAssignStaff = async (enquiryId, userId) => {
+    setUpdating(true);
+    const assignedUserId = userId && userId !== 'unassigned' ? parseInt(userId) : null;
+    const staffMember = staffList.find((u) => u.id === assignedUserId);
+    const assignedName = staffMember
+      ? (`${staffMember.first_name || ''} ${staffMember.last_name || ''}`.trim() || staffMember.username)
+      : 'Unassigned';
+
+    try {
+      await adminApi.patchResource('enquiries', enquiryId, { assigned_to: assignedUserId });
+    } catch (e) {
+      console.warn('Backend update fallback', e);
+    }
+    setEnquiries((prev) =>
+      prev.map((e) =>
+        e.id === enquiryId
+          ? { ...e, assigned_to: assignedUserId, assigned_to_name: assignedName }
+          : e
+      )
+    );
+    if (selectedEnquiry && selectedEnquiry.id === enquiryId) {
+      setSelectedEnquiry((prev) => ({
+        ...prev,
+        assigned_to: assignedUserId,
+        assigned_to_name: assignedName
+      }));
     }
     setUpdating(false);
   };
@@ -243,22 +295,52 @@ export default function EnquiryCrmModule() {
                   <td className="py-3.5 px-4 text-slate-700 whitespace-nowrap">
                     {enq.country || 'Global'}
                   </td>
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                      enq.priority === 'Urgent' ? 'bg-red-50 text-red-700 border border-red-200' :
-                      enq.priority === 'High' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                      'bg-slate-100 text-slate-700'
-                    }`}>
-                      {enq.priority || 'Normal'}
-                    </span>
+                  <td className="py-3.5 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    <select
+                      value={enq.priority || 'Medium'}
+                      onChange={(e) => handlePriorityChange(enq.id, e.target.value)}
+                      className={`px-2.5 py-1 rounded text-[11px] font-bold border outline-none cursor-pointer font-sans transition-colors ${
+                        enq.priority === 'Urgent'
+                          ? 'bg-red-50 text-red-700 border-red-300'
+                          : enq.priority === 'High'
+                          ? 'bg-amber-50 text-amber-700 border-amber-300'
+                          : enq.priority === 'Low'
+                          ? 'bg-slate-100 text-slate-600 border-slate-300'
+                          : 'bg-blue-50 text-blue-700 border-blue-300'
+                      }`}
+                    >
+                      <option value="Urgent">Urgent</option>
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
                   </td>
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                      {enq.status}
-                    </span>
+                  <td className="py-3.5 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    <select
+                      value={enq.status || 'New'}
+                      onChange={(e) => handleStatusChange(enq.id, e.target.value)}
+                      className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 outline-none cursor-pointer font-sans"
+                    >
+                      {statuses.map((st) => (
+                        <option key={st} value={st}>
+                          {st}
+                        </option>
+                      ))}
+                    </select>
                   </td>
-                  <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap text-[11px]">
-                    {enq.assigned_to_name || 'Unassigned'}
+                  <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap text-[11px]" onClick={(e) => e.stopPropagation()}>
+                    <select
+                      value={enq.assigned_to || 'unassigned'}
+                      onChange={(e) => handleAssignStaff(enq.id, e.target.value)}
+                      className="px-2.5 py-1 rounded-lg text-xs bg-slate-50 border border-slate-200 text-slate-700 font-semibold outline-none cursor-pointer font-sans hover:border-indigo-400"
+                    >
+                      <option value="unassigned">— Unassigned —</option>
+                      {staffList.map((st) => (
+                        <option key={st.id} value={st.id}>
+                          {`${st.first_name || ''} ${st.last_name || ''}`.trim() || st.username} ({st.role})
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td className="py-3.5 px-4 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-1.5">
@@ -352,6 +434,37 @@ export default function EnquiryCrmModule() {
                 </div>
               </div>
 
+              {/* Priority Selection Bar */}
+              <div>
+                <span className="text-[10px] uppercase text-slate-500 block mb-2 font-bold">
+                  PRIORITY LEVEL
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {priorities.map((pr) => {
+                    const isCurrent = (selectedEnquiry.priority || 'Medium') === pr;
+                    return (
+                      <button
+                        key={pr}
+                        onClick={() => handlePriorityChange(selectedEnquiry.id, pr)}
+                        className={`py-1.5 px-3 rounded-lg text-center text-[11px] font-bold transition-all ${
+                          isCurrent
+                            ? pr === 'Urgent'
+                              ? 'bg-red-600 text-white shadow-sm'
+                              : pr === 'High'
+                              ? 'bg-amber-600 text-white shadow-sm'
+                              : pr === 'Low'
+                              ? 'bg-slate-600 text-white shadow-sm'
+                              : 'bg-indigo-600 text-white shadow-sm'
+                            : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        {pr}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Stakeholder Info Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
                 <div>
@@ -377,8 +490,19 @@ export default function EnquiryCrmModule() {
                   <span className="text-slate-800">{selectedEnquiry.timeframe || 'Immediate'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[10px]">ASSIGNED RECIPIENT</span>
-                  <span className="text-indigo-700 font-bold">{selectedEnquiry.assigned_to_name || 'Unassigned'}</span>
+                  <span className="text-slate-400 block text-[10px] mb-1">ASSIGNED STAFF / RECIPIENT</span>
+                  <select
+                    value={selectedEnquiry.assigned_to || 'unassigned'}
+                    onChange={(e) => handleAssignStaff(selectedEnquiry.id, e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg text-xs bg-white border border-slate-200 text-slate-800 font-semibold outline-none focus:border-indigo-600 cursor-pointer font-sans"
+                  >
+                    <option value="unassigned">— Unassigned —</option>
+                    {staffList.map((st) => (
+                      <option key={st.id} value={st.id}>
+                        {`${st.first_name || ''} ${st.last_name || ''}`.trim() || st.username} ({st.role})
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

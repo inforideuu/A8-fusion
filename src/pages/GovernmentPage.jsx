@@ -150,7 +150,7 @@ export default function GovernmentPage() {
     phone: '',
     country: '',
     projectCategory: 'E-Governance Platform & Civil Registry',
-    estimatedBudget: '$500,000 - $1,000,000',
+    estimatedBudget: '₹5 Crores – ₹10 Crores',
     tenderReference: '',
     description: '',
     consent: false,
@@ -836,10 +836,10 @@ export default function GovernmentPage() {
                     onChange={(e) => setFormData({ ...formData, estimatedBudget: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
                   >
-                    <option>$250,000 - $500,000</option>
-                    <option>$500,000 - $1,000,000</option>
-                    <option>$1,000,000 - $5,000,000</option>
-                    <option>$5,000,000+ (Institutional Tender)</option>
+                    <option>₹2 Crores – ₹5 Crores</option>
+                    <option>₹5 Crores – ₹10 Crores</option>
+                    <option>₹10 Crores – ₹50 Crores</option>
+                    <option>₹50 Crores+ (Sovereign Tender)</option>
                     <option>To Be Determined / Formal RFP Stage</option>
                   </select>
                 </div>
@@ -871,11 +871,38 @@ export default function GovernmentPage() {
                   />
                 </div>
 
-                {/* Simulated Tender Document Upload Field */}
-                <div className="sm:col-span-2 p-4 rounded-xl border border-dashed border-slate-700 bg-slate-950/60 text-center">
+                {/* Tender Document Upload Field */}
+                <div className="sm:col-span-2 p-4 rounded-xl border border-dashed border-slate-700 bg-slate-950/60 text-center relative hover:border-indigo-500 transition-colors">
+                  <input
+                    type="file"
+                    id="gov-tender-file"
+                    accept=".pdf,.docx,.zip,.doc"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setFormData({
+                          ...formData,
+                          attachedFileName: file.name,
+                          attachedFileSize: `${Math.round(file.size / 1024)} KB`
+                        });
+                      }
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
                   <Upload className="w-5 h-5 text-indigo-400 mx-auto mb-2" />
-                  <span className="text-xs text-slate-300 font-semibold block">Attach Official RFP or Scope Documentation (Simulated)</span>
-                  <span className="text-[10px] text-slate-500 font-mono">Supported formats: PDF, DOCX, ZIP (Encrypted transfer)</span>
+                  {formData.attachedFileName ? (
+                    <div className="space-y-1">
+                      <span className="text-xs text-emerald-400 font-bold block">
+                        Attached: {formData.attachedFileName} ({formData.attachedFileSize})
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">Click to replace file</span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="text-xs text-slate-300 font-semibold block">Attach Official RFP or Scope Documentation</span>
+                      <span className="text-[10px] text-slate-500 font-mono">Supported formats: PDF, DOCX, ZIP (Up to 25MB)</span>
+                    </>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">

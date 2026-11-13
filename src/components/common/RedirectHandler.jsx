@@ -36,3 +36,4 @@ export default function RedirectHandler() {
 
   return null;
 }
+

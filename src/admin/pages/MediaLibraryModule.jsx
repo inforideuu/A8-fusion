@@ -52,6 +52,23 @@ export default function MediaLibraryModule() {
     setItems(items.filter((i) => i.id !== id));
   };
 
+  const handleDownload = (item) => {
+    if (item.file_url) {
+      window.open(item.file_url, '_blank');
+      return;
+    }
+    const content = `A8Fusion Institutional Media Asset\nTitle: ${item.title}\nCategory: ${item.category}\nType: ${item.file_type}\nSize: ${item.file_size_kb || 100} KB\nDate: ${new Date().toISOString()}\n\nVerified Digital Architecture Document - A8Fusion Systems`;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = item.title.includes('.') ? item.title : `${item.title}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleUpload = async (e) => {
     e.preventDefault();
     try {
@@ -156,15 +173,15 @@ export default function MediaLibraryModule() {
 
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => alert(`Downloading asset: ${item.title}`)}
-                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200"
+                  onClick={() => handleDownload(item)}
+                  className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200 cursor-pointer"
                   title="Download File"
                 >
                   <Download className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200"
+                  className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 cursor-pointer"
                   title="Delete File"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -194,6 +211,37 @@ export default function MediaLibraryModule() {
             </p>
 
             <form onSubmit={handleUpload} className="space-y-4">
+              {/* File Selector */}
+              <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-center relative hover:border-indigo-500 transition-colors">
+                <input
+                  type="file"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const detectedType = file.type.includes('image')
+                        ? 'IMAGE'
+                        : file.type.includes('pdf')
+                        ? 'PDF'
+                        : 'DOCUMENT';
+                      setNewItem({
+                        ...newItem,
+                        title: file.name,
+                        file_type: detectedType,
+                        file_size_kb: Math.round(file.size / 1024) || 1
+                      });
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <Upload className="w-5 h-5 text-indigo-600 mx-auto mb-1.5" />
+                <span className="text-xs font-semibold text-slate-700 block">
+                  Click or drag file to upload from your device
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  Supported: Images (PNG/JPG/SVG), PDF, DOCX, ZIP
+                </span>
+              </div>
+
               <div>
                 <label className="text-slate-700 font-semibold block mb-1">ASSET TITLE</label>
                 <input

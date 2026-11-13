@@ -136,7 +136,7 @@ export default function EnterpriseProjectPage() {
     projectCategory: preselectedService || preselectedSolution || 'Enterprise Software Development',
     description: '',
     timeline: '3 – 6 Months',
-    budgetRange: '$500K – $1M USD',
+    budgetRange: '₹50 Lakhs – ₹1 Crore',
     consent: false
   });
 
@@ -175,11 +175,11 @@ export default function EnterpriseProjectPage() {
   ];
 
   const budgetRanges = [
-    'Below $250K USD',
-    '$250K – $500K USD',
-    '$500K – $1M USD',
-    '$1M – $3M USD',
-    '$3M – $10M+ USD',
+    'Below ₹25 Lakhs',
+    '₹25 Lakhs – ₹50 Lakhs',
+    '₹50 Lakhs – ₹1 Crore',
+    '₹1 Crore – ₹5 Crores',
+    '₹5 Crores – ₹25 Crores+',
     'Undetermined / Tender Formulation'
   ];
 
@@ -722,6 +722,43 @@ export default function EnterpriseProjectPage() {
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 focus:outline-hidden focus:border-indigo-600 text-xs"
                       />
+                    </div>
+
+                    {/* Architecture Specification / RFP File Upload */}
+                    <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-center relative hover:border-indigo-500 transition-colors">
+                      <input
+                        type="file"
+                        accept=".pdf,.docx,.zip,.doc"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setFormData({
+                              ...formData,
+                              attachedFileName: file.name,
+                              attachedFileSize: `${Math.round(file.size / 1024)} KB`
+                            });
+                          }
+                        }}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      <Upload className="w-5 h-5 text-indigo-600 mx-auto mb-1.5" />
+                      {formData.attachedFileName ? (
+                        <div className="space-y-1">
+                          <span className="text-xs text-emerald-600 font-bold block">
+                            Attached: {formData.attachedFileName} ({formData.attachedFileSize})
+                          </span>
+                          <span className="text-[10px] text-slate-500 font-mono">Click to replace file</span>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="text-xs text-slate-700 font-semibold block">
+                            Attach Architecture Specifications or RFP Document
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            Supported: PDF, DOCX, ZIP (Up to 25MB)
+                          </span>
+                        </>
+                      )}
                     </div>
 
                     <div className="p-3 bg-white border border-slate-200 rounded-lg">

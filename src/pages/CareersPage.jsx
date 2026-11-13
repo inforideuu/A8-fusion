@@ -642,6 +642,43 @@ export default function CareersPage() {
                 />
               </div>
 
+              {/* Resume / CV Document Upload */}
+              <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-center relative hover:border-indigo-500 transition-colors">
+                <input
+                  type="file"
+                  accept=".pdf,.docx,.doc"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setFormData({
+                        ...formData,
+                        attachedResumeName: file.name,
+                        attachedResumeSize: `${Math.round(file.size / 1024)} KB`
+                      });
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <Upload className="w-5 h-5 text-indigo-600 mx-auto mb-1.5" />
+                {formData.attachedResumeName ? (
+                  <div className="space-y-1">
+                    <span className="text-xs text-emerald-600 font-bold block">
+                      Attached: {formData.attachedResumeName} ({formData.attachedResumeSize})
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-mono">Click to replace file</span>
+                  </div>
+                ) : (
+                  <>
+                    <span className="text-xs text-slate-700 font-semibold block">
+                      Upload Curriculum Vitae / Resume
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      Supported: PDF, DOCX (Up to 15MB)
+                    </span>
+                  </>
+                )}
+              </div>
+
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
                 <label className="flex items-start gap-2 text-xs text-slate-600 cursor-pointer">
                   <input

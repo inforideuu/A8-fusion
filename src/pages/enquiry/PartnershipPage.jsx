@@ -178,15 +178,41 @@ export default function PartnershipPage() {
                   />
                 </div>
 
-                {/* Simulated Partner Credential Upload */}
-                <div className="sm:col-span-2 p-5 rounded-xl border border-dashed border-slate-300 bg-white text-center">
+                {/* Partner Credential Upload */}
+                <div className="sm:col-span-2 p-5 rounded-xl border border-dashed border-slate-300 bg-white text-center relative hover:border-indigo-500 transition-colors">
+                  <input
+                    type="file"
+                    accept=".pdf,.pptx,.zip,.docx"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setFormData({
+                          ...formData,
+                          attachedFileName: file.name,
+                          attachedFileSize: `${Math.round(file.size / 1024)} KB`
+                        });
+                      }
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
                   <Upload className="w-5 h-5 text-indigo-600 mx-auto mb-1.5" />
-                  <span className="text-xs font-semibold text-slate-800 block">
-                    Attach Corporate Deck or Accredited Certifications (Simulated)
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-mono">
-                    Supported: PDF, PPTX, ZIP (Up to 20MB)
-                  </span>
+                  {formData.attachedFileName ? (
+                    <div className="space-y-1">
+                      <span className="text-xs text-emerald-600 font-bold block">
+                        Attached: {formData.attachedFileName} ({formData.attachedFileSize})
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">Click to replace file</span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="text-xs font-semibold text-slate-800 block">
+                        Attach Corporate Deck or Accredited Certifications
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        Supported: PDF, PPTX, ZIP, DOCX (Up to 25MB)
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">

@@ -778,6 +778,30 @@ class AuditLogViewSet(viewsets.ModelViewSet):
             qs = qs.filter(Q(username__icontains=search_q) | Q(details__icontains=search_q))
         return qs
 
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        create_audit(request, 'EXPORT_DATA', 'Audit', "Exported institutional audit logs to CSV")
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="a8fusion_audit_trail.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow([
+            'Timestamp', 'Action', 'Module', 'User',
+            'IP Address', 'Status', 'Details'
+        ])
+
+        for log in self.get_queryset():
+            writer.writerow([
+                log.created_at.strftime('%Y-%m-%d %H:%M:%S') if log.created_at else '',
+                log.action,
+                log.module,
+                log.username,
+                log.ip_address or '',
+                log.status,
+                log.details
+            ])
+        return response
+
     @action(detail=False, methods=['post', 'delete'])
     def clear_logs(self, request):
         count = AuditLog.objects.count()

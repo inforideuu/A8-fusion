@@ -44,6 +44,10 @@ export default function AuditLogsModule() {
     }
   };
 
+  const handleExportCSV = () => {
+    window.open('http://127.0.0.1:8000/api/audit-logs/export_csv/', '_blank');
+  };
+
   useEffect(() => {
     loadLogs();
   }, []);
@@ -81,6 +85,14 @@ export default function AuditLogsModule() {
             title="Refresh Logs"
           >
             <RefreshCw className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold font-sans shadow-sm shadow-indigo-600/30 transition-colors cursor-pointer"
+            title="Export Institutional Audit Trail as CSV"
+          >
+            <FileDown className="w-4 h-4" />
+            <span>Export Audit Trail CSV</span>
           </button>
           <button
             onClick={handleClearLogs}

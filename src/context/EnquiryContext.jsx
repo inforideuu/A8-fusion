@@ -14,7 +14,7 @@ const INITIAL_ENQUIRIES = [
     country: 'United Arab Emirates',
     projectCategory: 'Digital Citizen Identity & E-Permit Core',
     description: 'Procuring architecture advisory and implementation framework for unified digital citizen credentials across 14 municipal departments with domestic data residency.',
-    estimatedBudget: '$5M - $10M USD',
+    estimatedBudget: '₹50 Crores – ₹100 Crores',
     tenderReference: 'TND-2026-MDD-044',
     status: 'In Technical Review',
     submittedAt: '2026-02-10T09:30:00Z',
@@ -33,7 +33,7 @@ const INITIAL_ENQUIRIES = [
     projectCategory: 'Custom Multi-Port Telemetry & ERP Integration',
     description: 'Replacing legacy fractured dispatch databases across Singapore, Port Klang, and Tanjung Pelepas with a real-time event-driven freight orchestration platform.',
     timeline: '6 - 9 Months',
-    budgetRange: '$1M - $3M USD',
+    budgetRange: '₹10 Crores – ₹25 Crores',
     status: 'Qualified',
     submittedAt: '2026-02-08T14:15:00Z',
     notes: 'Executive presentation requested for Q1 Board meeting.'
