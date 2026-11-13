@@ -127,7 +127,7 @@ export default function PagesModule() {
     if (slug === 'industries') return '/industries?live_edit=true';
     if (slug === 'government' || slug === 'government-public-sector') return '/government?live_edit=true';
     if (slug === 'global-business') return '/global-business?live_edit=true';
-    if (slug === 'insights') return '/insights?live_edit=true';
+    if (slug === 'insights' || slug === 'insight' || slug === 'insights-publications' || slug === 'articles') return '/insights?live_edit=true';
     if (slug === 'contact') return '/contact?live_edit=true';
     if (slug === 'request-project' || slug === 'request-enterprise-project' || slug === 'enterprise-project') return '/request-project?live_edit=true';
     if (slug === 'partnerships') return '/partnerships?live_edit=true';
@@ -147,7 +147,7 @@ export default function PagesModule() {
     if (slug === 'industries') return '/industries';
     if (slug === 'government' || slug === 'government-public-sector') return '/government';
     if (slug === 'global-business') return '/global-business';
-    if (slug === 'insights') return '/insights';
+    if (slug === 'insights' || slug === 'insight' || slug === 'insights-publications' || slug === 'articles') return '/insights';
     if (slug === 'contact') return '/contact';
     if (slug === 'request-project' || slug === 'request-enterprise-project' || slug === 'enterprise-project') return '/request-project';
     if (slug === 'partnerships') return '/partnerships';

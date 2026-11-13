@@ -505,10 +505,10 @@ export default function AboutPage() {
                 {introData.title}
               </h2>
               <div className="w-16 h-1 bg-indigo-600 rounded"></div>
-              <p className="text-sm text-slate-600 font-sans leading-relaxed">
+              <p className="text-sm text-slate-600 font-sans leading-relaxed text-justify">
                 {introData.desc1}
               </p>
-              <p className="text-sm text-slate-600 font-sans leading-relaxed">
+              <p className="text-sm text-slate-600 font-sans leading-relaxed text-justify">
                 {introData.desc2}
               </p>
 

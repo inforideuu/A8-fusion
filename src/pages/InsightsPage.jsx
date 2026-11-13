@@ -33,6 +33,20 @@ const DEFAULT_PAGE_HEADER = {
   primaryCtaLink: '/request-project'
 };
 
+const getAuthorName = (author) => {
+  if (!author) return 'Principal Systems Architect';
+  if (typeof author === 'object') return author.name || 'Principal Systems Architect';
+  return String(author);
+};
+
+const getArticleDate = (article) => {
+  return article?.publishedAt || article?.date || '2026';
+};
+
+const getArticleImage = (article) => {
+  return article?.image || article?.coverImage || '/insight.png';
+};
+
 export default function InsightsPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -177,19 +191,25 @@ export default function InsightsPage() {
       setPageHeader({ ...modalData });
     } else if (modalType === 'article_edit') {
       const updated = [...articlesList];
-      updated[editingIndex] = { ...modalData };
+      updated[editingIndex] = {
+        ...updated[editingIndex],
+        ...modalData,
+        author: modalData.author || getAuthorName(updated[editingIndex].author)
+      };
       setArticlesList(updated);
     } else if (modalType === 'article_add') {
-      const generatedSlug = modalData.slug || modalData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const generatedSlug = modalData.slug || (modalData.title || 'briefing').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       const newArticle = {
         id: generatedSlug || `article-${Date.now()}`,
         slug: generatedSlug,
         title: modalData.title || 'New Architectural Briefing',
         category: modalData.category || 'Cloud Architecture',
         author: modalData.author || 'Principal Systems Architect',
+        publishedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         readTime: modalData.readTime || '6 min read',
         excerpt: modalData.excerpt || 'Executive overview of institutional architectural principles and engineering practices.',
+        content: modalData.excerpt || 'Executive overview of institutional architectural principles and engineering practices.',
         tags: [modalData.category || 'Architecture', 'Enterprise'],
         featured: false
       };
@@ -200,7 +220,7 @@ export default function InsightsPage() {
   };
 
   const handleDeleteArticle = (idx) => {
-    if (window.confirm(`Delete article "${articlesList[idx].title}"?`)) {
+    if (window.confirm(`Delete article "${articlesList[idx]?.title}"?`)) {
       const updated = articlesList.filter((_, i) => i !== idx);
       setArticlesList(updated);
       markDirty();
@@ -208,15 +228,20 @@ export default function InsightsPage() {
   };
 
   const filteredArticles = articlesList.filter((article) => {
-    const matchesCategory = selectedCategory === 'All Insights' || article.category === selectedCategory;
+    if (!article) return false;
+    const category = article.category || '';
+    const matchesCategory = selectedCategory === 'All Insights' || category === selectedCategory;
+    const query = searchQuery.toLowerCase();
+    const title = (article.title || '').toLowerCase();
+    const excerpt = (article.excerpt || '').toLowerCase();
     const matchesSearch = 
-      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (article.tags && article.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())));
+      title.includes(query) ||
+      excerpt.includes(query) ||
+      (Array.isArray(article.tags) && article.tags.some(t => String(t || '').toLowerCase().includes(query)));
     return matchesCategory && matchesSearch;
   });
 
-  const featuredArticle = articlesList.find(a => a.featured) || articlesList[0];
+  const featuredArticle = articlesList.find(a => a?.featured) || articlesList[0];
   const isLive = editMode && !previewMode;
 
   return (
@@ -268,9 +293,9 @@ export default function InsightsPage() {
                   <span className="px-3 py-1 rounded-full bg-indigo-600 text-white text-[10px] font-mono font-bold uppercase tracking-wider">
                     FEATURED BRIEFING
                   </span>
-                  <span className="text-xs text-indigo-300 font-mono">{featuredArticle.category}</span>
+                  <span className="text-xs text-indigo-300 font-mono">{featuredArticle.category || 'Architecture'}</span>
                   <span className="text-slate-500">•</span>
-                  <span className="text-xs text-slate-400 font-mono">{featuredArticle.readTime}</span>
+                  <span className="text-xs text-slate-400 font-mono">{featuredArticle.readTime || '6 min read'}</span>
                 </div>
 
                 <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white group-hover:text-indigo-400 transition-colors">
@@ -284,14 +309,14 @@ export default function InsightsPage() {
                 <div className="pt-2 flex items-center gap-4 text-xs font-mono text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>{featuredArticle.author}</span>
+                    <span>{getAuthorName(featuredArticle.author)}</span>
                   </span>
-                  <span>{featuredArticle.date}</span>
+                  <span>{getArticleDate(featuredArticle)}</span>
                 </div>
 
                 <div className="pt-4">
                   <Link
-                    to={`/insights/${featuredArticle.slug}`}
+                    to={`/insights/${featuredArticle.slug || featuredArticle.id}`}
                     className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition-all"
                   >
                     <span>Read Executive Analysis</span>
@@ -302,7 +327,7 @@ export default function InsightsPage() {
 
               <div className="lg:col-span-5 h-64 lg:h-full relative overflow-hidden bg-slate-950">
                 <img
-                  src={featuredArticle.image || '/insight.png'}
+                  src={getArticleImage(featuredArticle)}
                   alt={featuredArticle.title}
                   className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
                   onError={(e) => {
@@ -355,6 +380,24 @@ export default function InsightsPage() {
             </div>
           </div>
 
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            {insightCategories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer ${
+                  selectedCategory === cat
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/90'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
           {/* Articles Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredArticles.map((article, idx) => (
@@ -366,8 +409,13 @@ export default function InsightsPage() {
                 {isLive && (
                   <CardActionOverlay
                     title={article.title}
-                    detailUrl={`/insights/${article.slug}?live_edit=true`}
-                    onEdit={() => openModal('article_edit', { ...article }, idx)}
+                    detailUrl={`/insights/${article.slug || article.id}?live_edit=true`}
+                    onEdit={() => openModal('article_edit', {
+                      ...article,
+                      author: getAuthorName(article.author),
+                      date: getArticleDate(article),
+                      image: getArticleImage(article)
+                    }, idx)}
                     onDelete={() => handleDeleteArticle(idx)}
                   />
                 )}
@@ -375,7 +423,7 @@ export default function InsightsPage() {
                 <div className="space-y-4">
                   <div className="relative h-44 w-full overflow-hidden bg-slate-900">
                     <img
-                      src={article.image || '/insight.png'}
+                      src={getArticleImage(article)}
                       alt={article.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                       onError={(e) => {
@@ -384,15 +432,15 @@ export default function InsightsPage() {
                       }}
                     />
                     <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded text-[10px] font-mono font-bold text-indigo-700 shadow-xs uppercase">
-                      {article.category}
+                      {article.category || 'Briefing'}
                     </div>
                   </div>
 
                   <div className="p-6 pt-0 space-y-3">
                     <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400">
-                      <span>{article.date}</span>
+                      <span>{getArticleDate(article)}</span>
                       <span>•</span>
-                      <span>{article.readTime}</span>
+                      <span>{article.readTime || '6 min read'}</span>
                     </div>
 
                     <h3 className="text-lg font-serif font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2">
@@ -407,9 +455,9 @@ export default function InsightsPage() {
 
                 <div className="p-6 pt-0 border-t border-slate-100 mt-2">
                   <div className="pt-4 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-slate-500">By {article.author}</span>
+                    <span className="text-[10px] font-mono text-slate-500">By {getAuthorName(article.author)}</span>
                     <Link
-                      to={`/insights/${article.slug}`}
+                      to={`/insights/${article.slug || article.id}`}
                       className="text-xs font-bold uppercase tracking-wider text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1"
                     >
                       <span>Read Briefing</span>
@@ -524,7 +572,7 @@ export default function InsightsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Author</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Author Name</label>
                 <input
                   type="text"
                   value={modalData.author || ''}

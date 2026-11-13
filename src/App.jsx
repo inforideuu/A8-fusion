@@ -140,7 +140,9 @@ export default function App() {
 
           {/* Insights */}
           <Route path="/insights" element={<CorporateLayout><InsightsPage /></CorporateLayout>} />
+          <Route path="/insight" element={<CorporateLayout><InsightsPage /></CorporateLayout>} />
           <Route path="/insights/:slug" element={<CorporateLayout><InsightDetailPage /></CorporateLayout>} />
+          <Route path="/insight/:slug" element={<CorporateLayout><InsightDetailPage /></CorporateLayout>} />
 
           {/* Contact Us */}
           <Route path="/contact" element={<CorporateLayout><ContactPage /></CorporateLayout>} />

@@ -31,11 +31,41 @@ export default function InsightDetailPage() {
   const navigate = useNavigate();
 
   const [copied, setCopied] = useState(false);
-  const defaultArticle = insightsData.find(a => a.slug === slug);
 
-  if (!defaultArticle) {
-    return <Navigate to="/insights" replace />;
+  // Look in static data, or in localStorage saved articles
+  let initialArticle = insightsData.find(a => a.slug === slug || a.id === slug);
+  if (!initialArticle) {
+    try {
+      const local = localStorage.getItem('a8_live_insights_content');
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (Array.isArray(parsed.articlesList)) {
+          initialArticle = parsed.articlesList.find(a => a.slug === slug || a.id === slug);
+        }
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   }
+
+  const defaultArticle = initialArticle || {
+    id: slug || 'article',
+    slug: slug || 'article',
+    title: slug ? slug.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase()) : 'Architectural Briefing',
+    category: 'Enterprise Technology',
+    featured: false,
+    publishedAt: '2026-02-14',
+    readTime: '6 min read',
+    coverImage: '/insight.png',
+    author: {
+      name: 'Principal Systems Architect',
+      role: 'A8Fusion Research',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80'
+    },
+    excerpt: 'Executive analysis and technical specifications regarding sovereign technology platforms and enterprise software engineering.',
+    content: '### Strategic Architecture & Operational Rigor\n\nDetailed operational analysis and architectural specifications regarding modern enterprise software platforms.\n\n### Implementation Rigor & Governance\n\n- Zero-trust network verification\n- Full audit trail logging\n- Sovereign data compliance guarantee',
+    tags: ['Architecture', 'Enterprise', 'Technology']
+  };
 
   // Live Editor State
   const [editMode, setEditMode] = useState(false);
@@ -45,9 +75,9 @@ export default function InsightDetailPage() {
 
   // Content States
   const [pageHeader, setPageHeader] = useState({
-    badge: defaultArticle.category,
-    title: defaultArticle.title,
-    subtitle: defaultArticle.excerpt,
+    badge: defaultArticle.category || 'Briefing',
+    title: defaultArticle.title || 'Architectural Briefing',
+    subtitle: defaultArticle.excerpt || '',
     bgImage: '/insight.png',
     primaryCtaText: 'Discuss With Authoring Team',
     primaryCtaLink: '/request-project',
@@ -56,11 +86,11 @@ export default function InsightDetailPage() {
   });
 
   const [metadata, setMetadata] = useState({
-    authorName: defaultArticle.author.name,
-    authorRole: defaultArticle.author.role,
-    authorAvatar: defaultArticle.author.avatar,
-    publishedAt: defaultArticle.publishedAt,
-    readTime: defaultArticle.readTime
+    authorName: (typeof defaultArticle.author === 'object' ? defaultArticle.author?.name : defaultArticle.author) || 'Principal Systems Architect',
+    authorRole: (typeof defaultArticle.author === 'object' ? defaultArticle.author?.role : '') || 'A8Fusion Research',
+    authorAvatar: (typeof defaultArticle.author === 'object' ? defaultArticle.author?.avatar : '') || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+    publishedAt: defaultArticle.publishedAt || defaultArticle.date || '2026-02-14',
+    readTime: defaultArticle.readTime || '6 min read'
   });
 
   const [takeaway, setTakeaway] = useState({
@@ -182,11 +212,11 @@ export default function InsightDetailPage() {
         secondaryCtaLink: '/insights'
       });
       setMetadata({
-        authorName: defaultArticle.author.name,
-        authorRole: defaultArticle.author.role,
-        authorAvatar: defaultArticle.author.avatar,
-        publishedAt: defaultArticle.publishedAt,
-        readTime: defaultArticle.readTime
+        authorName: (typeof defaultArticle.author === 'object' ? defaultArticle.author?.name : defaultArticle.author) || 'Principal Systems Architect',
+        authorRole: (typeof defaultArticle.author === 'object' ? defaultArticle.author?.role : '') || 'A8Fusion Research',
+        authorAvatar: (typeof defaultArticle.author === 'object' ? defaultArticle.author?.avatar : '') || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+        publishedAt: defaultArticle.publishedAt || defaultArticle.date || '2026-02-14',
+        readTime: defaultArticle.readTime || '6 min read'
       });
       setTakeaway({
         tag: 'Executive Takeaway',
