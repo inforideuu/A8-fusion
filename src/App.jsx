@@ -105,12 +105,17 @@ export default function App() {
 
             {/* Flagship Corporate Pages */}
           <Route path="/" element={<CorporateLayout><HomePage /></CorporateLayout>} />
+          <Route path="/home" element={<CorporateLayout><HomePage /></CorporateLayout>} />
           
           {/* Company */}
           <Route path="/about" element={<CorporateLayout><AboutPage /></CorporateLayout>} />
           <Route path="/company/about" element={<CorporateLayout><AboutPage /></CorporateLayout>} />
+          <Route path="/leadership" element={<CorporateLayout><LeadershipPage /></CorporateLayout>} />
           <Route path="/company/leadership" element={<CorporateLayout><LeadershipPage /></CorporateLayout>} />
+          <Route path="/company-leadership" element={<CorporateLayout><LeadershipPage /></CorporateLayout>} />
+          <Route path="/our-approach" element={<CorporateLayout><OurApproachPage /></CorporateLayout>} />
           <Route path="/company/our-approach" element={<CorporateLayout><OurApproachPage /></CorporateLayout>} />
+          <Route path="/company-our-approach" element={<CorporateLayout><OurApproachPage /></CorporateLayout>} />
           <Route path="/careers" element={<CorporateLayout><CareersPage /></CorporateLayout>} />
 
           {/* Services */}

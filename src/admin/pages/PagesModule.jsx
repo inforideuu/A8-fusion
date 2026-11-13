@@ -115,6 +115,42 @@ export default function PagesModule() {
     setModalOpen(true);
   };
 
+  const getPageLiveUrl = (page) => {
+    const slug = page?.slug || '';
+    if (!slug || slug === 'home') return '/?live_edit=true';
+    if (slug === 'about' || slug === 'company-about') return '/company/about?live_edit=true';
+    if (slug === 'company-leadership' || slug === 'leadership') return '/company/leadership?live_edit=true';
+    if (slug === 'company-our-approach' || slug === 'our-approach') return '/company/our-approach?live_edit=true';
+    if (slug === 'careers') return '/careers?live_edit=true';
+    if (slug === 'services') return '/services?live_edit=true';
+    if (slug === 'solutions') return '/solutions?live_edit=true';
+    if (slug === 'industries') return '/industries?live_edit=true';
+    if (slug === 'government') return '/government?live_edit=true';
+    if (slug === 'global-business') return '/global-business?live_edit=true';
+    if (slug === 'insights') return '/insights?live_edit=true';
+    if (slug === 'contact') return '/contact?live_edit=true';
+    if (slug.startsWith('/')) return `${slug}?live_edit=true`;
+    return `/${slug}?live_edit=true`;
+  };
+
+  const getPagePublicUrl = (page) => {
+    const slug = page?.slug || '';
+    if (!slug || slug === 'home') return '/';
+    if (slug === 'about' || slug === 'company-about') return '/company/about';
+    if (slug === 'company-leadership' || slug === 'leadership') return '/company/leadership';
+    if (slug === 'company-our-approach' || slug === 'our-approach') return '/company/our-approach';
+    if (slug === 'careers') return '/careers';
+    if (slug === 'services') return '/services';
+    if (slug === 'solutions') return '/solutions';
+    if (slug === 'industries') return '/industries';
+    if (slug === 'government') return '/government';
+    if (slug === 'global-business') return '/global-business';
+    if (slug === 'insights') return '/insights';
+    if (slug === 'contact') return '/contact';
+    if (slug.startsWith('/')) return slug;
+    return `/${slug}`;
+  };
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-sans">
       {/* Header */}
@@ -225,7 +261,7 @@ export default function PagesModule() {
                   <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       <a
-                        href={p.slug ? `/${p.slug}?live_edit=true` : `/?live_edit=true`}
+                        href={getPageLiveUrl(p)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors"
                         title="Open Live In-Context Visual Editor"
                       >
@@ -242,7 +278,7 @@ export default function PagesModule() {
                       </button>
 
                       <a
-                        href={p.slug ? `/${p.slug}` : '/'}
+                        href={getPagePublicUrl(p)}
                         target="_blank"
                         rel="noreferrer"
                         className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors"

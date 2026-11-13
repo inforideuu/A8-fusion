@@ -365,20 +365,30 @@ class PageViewSet(viewsets.ModelViewSet):
     def save_live_content(self, request):
         slug = request.data.get('slug', 'home')
         data = request.data.get('live_data', {})
-        page, _ = Page.objects.get_or_create(slug=slug, defaults={'title': 'Home Page', 'heading': 'Engineering Intelligence.'})
+        page = Page.objects.filter(slug=slug).first()
+        if not page:
+            friendly_title = slug.replace('-', ' ').replace('_', ' ').title() + " Page"
+            page = Page.objects.create(slug=slug, title=friendly_title, heading='')
         page.live_data = data
         page.save()
         create_audit(request, 'LIVE_EDIT_PAGE', 'Pages', f"Saved live visual editor modifications for page '{page.title}' (/{slug})", 'SUCCESS')
-        return Response({'detail': f"Live content saved for {page.title}", 'live_data': page.live_data})
+        return Response({'detail': f"Live content saved for {page.title}", 'slug': slug, 'live_data': page.live_data})
 
     @action(detail=False, methods=['get'], url_path='get_live_content')
     def get_live_content(self, request):
         slug = request.query_params.get('slug', 'home')
-        try:
-            page = Page.objects.get(slug=slug)
-            return Response({'slug': slug, 'title': page.title, 'live_data': page.live_data or {}})
-        except Page.DoesNotExist:
-            return Response({'slug': slug, 'title': 'Home Page', 'live_data': {}})
+        slug_candidates = [slug]
+        if slug in ['company-leadership', 'leadership']:
+            slug_candidates = ['company-leadership', 'leadership']
+        elif slug in ['about', 'company-about']:
+            slug_candidates = ['company-about', 'about']
+        elif slug in ['company-our-approach', 'our-approach']:
+            slug_candidates = ['company-our-approach', 'our-approach']
+
+        page = Page.objects.filter(slug__in=slug_candidates).first()
+        if page:
+            return Response({'slug': page.slug, 'title': page.title, 'live_data': page.live_data or {}})
+        return Response({'slug': slug, 'title': slug.replace('-', ' ').title(), 'live_data': {}})
 
 
 # =============================================================================
