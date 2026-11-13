@@ -384,6 +384,10 @@ class PageViewSet(viewsets.ModelViewSet):
             slug_candidates = ['company-about', 'about']
         elif slug in ['company-our-approach', 'our-approach']:
             slug_candidates = ['company-our-approach', 'our-approach']
+        elif slug in ['government', 'government-public-sector']:
+            slug_candidates = ['government', 'government-public-sector']
+        elif slug in ['request-project', 'request-enterprise-project', 'enterprise-project']:
+            slug_candidates = ['request-project', 'request-enterprise-project', 'enterprise-project']
 
         page = Page.objects.filter(slug__in=slug_candidates).first()
         if page:

@@ -133,6 +133,7 @@ export default function App() {
           {/* Government & Public Sector */}
           <Route path="/government" element={<CorporateLayout><GovernmentPage /></CorporateLayout>} />
           <Route path="/government/enquiry" element={<CorporateLayout><GovernmentPage /></CorporateLayout>} />
+          <Route path="/government-public-sector" element={<CorporateLayout><GovernmentPage /></CorporateLayout>} />
 
           {/* Global Business */}
           <Route path="/global-business" element={<CorporateLayout><GlobalBusinessPage /></CorporateLayout>} />
@@ -146,6 +147,8 @@ export default function App() {
 
           {/* Dedicated Enquiry Portals */}
           <Route path="/request-project" element={<CorporateLayout><EnterpriseProjectPage /></CorporateLayout>} />
+          <Route path="/request-enterprise-project" element={<CorporateLayout><EnterpriseProjectPage /></CorporateLayout>} />
+          <Route path="/enterprise-project" element={<CorporateLayout><EnterpriseProjectPage /></CorporateLayout>} />
           <Route path="/partnerships" element={<CorporateLayout><PartnershipPage /></CorporateLayout>} />
 
           {/* Fallback to Home */}

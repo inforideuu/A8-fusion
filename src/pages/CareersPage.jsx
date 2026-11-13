@@ -38,6 +38,12 @@ const DEFAULT_PAGE_HEADER = {
   secondaryCtaLink: '/company/our-approach'
 };
 
+const DEFAULT_CULTURE_HEADER = {
+  tag: 'Engineering Ethos',
+  title: 'Our Culture & Operating Standards',
+  desc: 'We cultivate a culture of deep intellectual honesty, architectural autonomy, and absolute dedication to system stability.'
+};
+
 export default function CareersPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -51,8 +57,9 @@ export default function CareersPage() {
 
   // Content States
   const [pageHeader, setPageHeader] = useState(DEFAULT_PAGE_HEADER);
-  const [jobsList, setJobsList] = useState(defaultCareersData);
+  const [cultureHeader, setCultureHeader] = useState(DEFAULT_CULTURE_HEADER);
   const [cultureList, setCultureList] = useState(defaultCultureValues);
+  const [jobsList, setJobsList] = useState(defaultCareersData);
 
   // Application Form States
   const [selectedJob, setSelectedJob] = useState(null);
@@ -123,6 +130,7 @@ export default function CareersPage() {
 
   const applyLoadedData = (data) => {
     if (data.pageHeader) setPageHeader(data.pageHeader);
+    if (data.cultureHeader) setCultureHeader(data.cultureHeader);
     if (Array.isArray(data.jobsList) && data.jobsList.length > 0) setJobsList(data.jobsList);
     if (Array.isArray(data.cultureList) && data.cultureList.length > 0) setCultureList(data.cultureList);
   };
@@ -135,6 +143,7 @@ export default function CareersPage() {
     setSaving(true);
     const payload = {
       pageHeader,
+      cultureHeader,
       jobsList,
       cultureList,
       updated_at: new Date().toISOString()
@@ -157,7 +166,7 @@ export default function CareersPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Careers opportunities saved and synchronized with MySQL!');
+      alert('Careers opportunities and culture standards saved and synchronized with MySQL!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);
@@ -170,6 +179,7 @@ export default function CareersPage() {
   const handleReset = () => {
     if (window.confirm('Reset all Careers requisitions and values back to factory defaults?')) {
       setPageHeader(DEFAULT_PAGE_HEADER);
+      setCultureHeader(DEFAULT_CULTURE_HEADER);
       setJobsList(defaultCareersData);
       setCultureList(defaultCultureValues);
       localStorage.removeItem('a8_live_careers_content');
@@ -206,6 +216,18 @@ export default function CareersPage() {
 
     if (modalType === 'header') {
       setPageHeader({ ...modalData });
+    } else if (modalType === 'culture_header') {
+      setCultureHeader({ ...modalData });
+    } else if (modalType === 'culture_edit') {
+      const updated = [...cultureList];
+      updated[editingIndex] = { ...modalData };
+      setCultureList(updated);
+    } else if (modalType === 'culture_add') {
+      const newPrinciple = {
+        title: modalData.title || 'New Operating Standard',
+        desc: modalData.desc || 'Core architectural or cultural principle guiding enterprise engineering.'
+      };
+      setCultureList([...cultureList, newPrinciple]);
     } else if (modalType === 'job_edit') {
       const updated = [...jobsList];
       const reqsArray = typeof modalData.requirements === 'string'
@@ -233,6 +255,14 @@ export default function CareersPage() {
     }
 
     closeModal();
+  };
+
+  const handleDeleteCulture = (idx) => {
+    if (window.confirm(`Delete culture principle "${cultureList[idx].title}"?`)) {
+      const updated = cultureList.filter((_, i) => i !== idx);
+      setCultureList(updated);
+      markDirty();
+    }
   };
 
   const handleDeleteJob = (idx) => {
@@ -313,26 +343,49 @@ export default function CareersPage() {
       {/* Culture & Engineering Values */}
       <section className="py-20 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3 relative">
+            {isLive && (
+              <div className="mb-2">
+                <SectionHeaderEditButton
+                  onClick={() => openModal('culture_header', { ...cultureHeader })}
+                  label="Edit Culture Heading"
+                />
+              </div>
+            )}
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-serif">
-              Engineering Ethos
+              {cultureHeader.tag}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900">
-              Our Culture &amp; Operating Standards
+              {cultureHeader.title}
             </h2>
             <p className="text-sm text-slate-600 font-sans">
-              We cultivate a culture of deep intellectual honesty, architectural autonomy, and absolute dedication to system stability.
+              {cultureHeader.desc}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {cultureList.map((val, i) => (
-              <div key={i} className="bg-slate-50 rounded-xl p-6 border border-slate-200 space-y-3 card-hover-culture">
+              <div key={val.id || i} className="relative bg-slate-50 rounded-xl p-6 border border-slate-200 space-y-3 card-hover-culture group transition-all">
+                {isLive && (
+                  <CardActionOverlay
+                    title={val.title}
+                    onEdit={() => openModal('culture_edit', { ...val }, i)}
+                    onDelete={() => handleDeleteCulture(i)}
+                  />
+                )}
                 <span className="text-xs font-mono font-bold text-indigo-600">PRINCIPLE 0{i+1}</span>
                 <h3 className="text-base font-serif font-bold text-slate-900">{val.title}</h3>
                 <p className="text-xs text-slate-600 font-sans leading-relaxed">{val.desc}</p>
               </div>
             ))}
+
+            {isLive && (
+              <AddCardButton
+                onClick={() => openModal('culture_add', {})}
+                label="Add Operating Principle"
+                subtitle="Add an engineering standard or culture tenet"
+              />
+            )}
           </div>
         </div>
       </section>
@@ -631,6 +684,9 @@ export default function CareersPage() {
         onSave={handleModalSubmit}
         title={
           modalType === 'header' ? 'Edit Hero Header' :
+          modalType === 'culture_header' ? 'Edit Culture Section Header' :
+          modalType === 'culture_edit' ? `Edit Principle: ${modalData.title || ''}` :
+          modalType === 'culture_add' ? 'Add Operating Principle' :
           modalType === 'job_edit' ? `Edit Requisition: ${modalData.title || ''}` :
           modalType === 'job_add' ? 'Post New Requisition' : 'Edit Section'
         }
@@ -684,6 +740,67 @@ export default function CareersPage() {
                   className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
                 />
               </div>
+            </div>
+          </>
+        )}
+
+        {/* Culture Header Modal */}
+        {modalType === 'culture_header' && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Badge Tag</label>
+              <input
+                type="text"
+                value={modalData.tag || ''}
+                onChange={(e) => setModalData({ ...modalData, tag: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Section Title</label>
+              <input
+                type="text"
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Description Paragraph</label>
+              <textarea
+                rows={3}
+                value={modalData.desc || ''}
+                onChange={(e) => setModalData({ ...modalData, desc: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+          </>
+        )}
+
+        {/* Culture Principle Add / Edit Modal */}
+        {(modalType === 'culture_edit' || modalType === 'culture_add') && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Principle Title</label>
+              <input
+                type="text"
+                required
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                placeholder="e.g. Intellectual Rigor & Formality"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Description Paragraph</label>
+              <textarea
+                rows={3}
+                required
+                value={modalData.desc || ''}
+                onChange={(e) => setModalData({ ...modalData, desc: e.target.value })}
+                placeholder="Core architectural standard or operating discipline..."
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
             </div>
           </>
         )}

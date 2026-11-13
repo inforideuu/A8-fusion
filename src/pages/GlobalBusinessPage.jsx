@@ -37,6 +37,50 @@ const DEFAULT_PAGE_HEADER = {
   secondaryCtaLink: '/request-project'
 };
 
+const DEFAULT_POSITIONING = {
+  tag: 'International Positioning',
+  title: 'Engineering Discipline Without Geographical Boundaries',
+  p1: 'As multinational corporations expand across Southeast Asia, the Middle East, and Europe, they face severe architectural fragmentation: divergent statutory reporting rules, varying data residency mandates, and incompatible regional software silos.',
+  p2: 'A8Fusion acts as the central engineering backbone. We unify global technology roadmaps while respecting domestic sovereignty laws, providing international enterprises with the architectural predictability required for sustainable global scale.',
+  disclosureTitle: 'ETHICAL DISCLOSURE PRINCIPLE:',
+  disclosureDesc: 'A8Fusion lists only verified operational presence and authorized delivery hubs in Singapore, the UAE, and the UK. We reject artificial international representations.'
+};
+
+const DEFAULT_TOPOLOGY = {
+  tag: 'Real-Time Sovereign Topology',
+  title: 'Verified International Delivery Mesh',
+  desc: 'Interactive 3D representation of our cross-border engineering corridors and synchronized sovereign data centers.'
+};
+
+const DEFAULT_CAPS_HEADER = {
+  tag: 'Global Operations',
+  title: 'International Delivery Capabilities',
+  desc: 'Predictable, milestone-gated software engineering orchestrated across distributed international squads.'
+};
+
+const DEFAULT_DELIVERY_CAPS = [
+  {
+    id: 'cap-1',
+    title: 'Dedicated Engineering Squads',
+    desc: 'Cross-functional engineering pods (Lead Architect, 4 Senior Engineers, DevOps Lead, QA Specialist) assigned exclusively to client portfolios.'
+  },
+  {
+    id: 'cap-2',
+    title: 'Cross-Border System Integration',
+    desc: 'Synchronizing multi-currency ledgers, disparate regional subsidiaries, and cross-border regulatory reporting pipelines in real-time.'
+  },
+  {
+    id: 'cap-3',
+    title: 'Enterprise Software Contracts',
+    desc: 'Formal master services agreements (MSAs) featuring transparent milestone definitions, performance SLAs, and source code protection.'
+  },
+  {
+    id: 'cap-4',
+    title: 'International Partner Ecosystem',
+    desc: 'Structured co-delivery consortiums with accredited local system integrators, compliance auditors, and sovereign cloud infrastructure providers.'
+  }
+];
+
 const DEFAULT_MARKETS = [
   { 
     id: 'mkt-1',
@@ -94,6 +138,10 @@ export default function GlobalBusinessPage() {
 
   // Content States
   const [pageHeader, setPageHeader] = useState(DEFAULT_PAGE_HEADER);
+  const [positioning, setPositioning] = useState(DEFAULT_POSITIONING);
+  const [topology, setTopology] = useState(DEFAULT_TOPOLOGY);
+  const [capsHeader, setCapsHeader] = useState(DEFAULT_CAPS_HEADER);
+  const [deliveryCaps, setDeliveryCaps] = useState(DEFAULT_DELIVERY_CAPS);
   const [targetMarkets, setTargetMarkets] = useState(DEFAULT_MARKETS);
 
   // Modal State
@@ -101,25 +149,6 @@ export default function GlobalBusinessPage() {
   const [modalType, setModalType] = useState(null);
   const [modalData, setModalData] = useState({});
   const [editingIndex, setEditingIndex] = useState(null);
-
-  const deliveryCapabilities = [
-    {
-      title: 'Dedicated Engineering Squads',
-      desc: 'Cross-functional engineering pods (Lead Architect, 4 Senior Engineers, DevOps Lead, QA Specialist) assigned exclusively to client portfolios.'
-    },
-    {
-      title: 'Cross-Border System Integration',
-      desc: 'Synchronizing multi-currency ledgers, disparate regional subsidiaries, and cross-border regulatory reporting pipelines in real-time.'
-    },
-    {
-      title: 'Enterprise Software Contracts',
-      desc: 'Formal master services agreements (MSAs) featuring transparent milestone definitions, performance SLAs, and source code protection.'
-    },
-    {
-      title: 'International Partner Ecosystem',
-      desc: 'Structured co-delivery consortiums with accredited local system integrators, compliance auditors, and sovereign cloud infrastructure providers.'
-    }
-  ];
 
   // URL query check for live_edit
   useEffect(() => {
@@ -161,6 +190,10 @@ export default function GlobalBusinessPage() {
 
   const applyLoadedData = (data) => {
     if (data.pageHeader) setPageHeader(data.pageHeader);
+    if (data.positioning) setPositioning(data.positioning);
+    if (data.topology) setTopology(data.topology);
+    if (data.capsHeader) setCapsHeader(data.capsHeader);
+    if (Array.isArray(data.deliveryCaps) && data.deliveryCaps.length > 0) setDeliveryCaps(data.deliveryCaps);
     if (Array.isArray(data.targetMarkets) && data.targetMarkets.length > 0) setTargetMarkets(data.targetMarkets);
   };
 
@@ -172,6 +205,10 @@ export default function GlobalBusinessPage() {
     setSaving(true);
     const payload = {
       pageHeader,
+      positioning,
+      topology,
+      capsHeader,
+      deliveryCaps,
       targetMarkets,
       updated_at: new Date().toISOString()
     };
@@ -204,8 +241,12 @@ export default function GlobalBusinessPage() {
   };
 
   const handleReset = () => {
-    if (window.confirm('Reset all Global Business jurisdictions back to factory defaults?')) {
+    if (window.confirm('Reset all Global Business sections back to factory defaults?')) {
       setPageHeader(DEFAULT_PAGE_HEADER);
+      setPositioning(DEFAULT_POSITIONING);
+      setTopology(DEFAULT_TOPOLOGY);
+      setCapsHeader(DEFAULT_CAPS_HEADER);
+      setDeliveryCaps(DEFAULT_DELIVERY_CAPS);
       setTargetMarkets(DEFAULT_MARKETS);
       localStorage.removeItem('a8_live_global_content');
       setIsDirty(true);
@@ -241,6 +282,23 @@ export default function GlobalBusinessPage() {
 
     if (modalType === 'header') {
       setPageHeader({ ...modalData });
+    } else if (modalType === 'positioning') {
+      setPositioning({ ...modalData });
+    } else if (modalType === 'topology') {
+      setTopology({ ...modalData });
+    } else if (modalType === 'caps_header') {
+      setCapsHeader({ ...modalData });
+    } else if (modalType === 'cap_edit') {
+      const updated = [...deliveryCaps];
+      updated[editingIndex] = { ...modalData };
+      setDeliveryCaps(updated);
+    } else if (modalType === 'cap_add') {
+      const newCap = {
+        id: `cap-${Date.now()}`,
+        title: modalData.title || 'New Delivery Capability',
+        desc: modalData.desc || 'Delivery methodology and operational framework.'
+      };
+      setDeliveryCaps([...deliveryCaps, newCap]);
     } else if (modalType === 'market_edit') {
       const updated = [...targetMarkets];
       updated[editingIndex] = { ...modalData };
@@ -257,6 +315,14 @@ export default function GlobalBusinessPage() {
     }
 
     closeModal();
+  };
+
+  const handleDeleteCap = (idx) => {
+    if (window.confirm(`Delete capability "${deliveryCaps[idx].title}"?`)) {
+      const updated = deliveryCaps.filter((_, i) => i !== idx);
+      setDeliveryCaps(updated);
+      markDirty();
+    }
   };
 
   const handleDeleteMarket = (idx) => {
@@ -310,31 +376,39 @@ export default function GlobalBusinessPage() {
         />
       </div>
 
-      {/* 1. Global Business Introduction */}
-      <section className="py-20 bg-white border-b border-slate-200">
+      {/* 1. Global Business Introduction: Engineering Discipline Without Geographical Boundaries */}
+      <section className="py-20 bg-white border-b border-slate-200 relative group">
+        {isLive && (
+          <div className="absolute top-6 right-8 z-30">
+            <SectionHeaderEditButton
+              onClick={() => openModal('positioning', { ...positioning })}
+              label="Edit Positioning Section"
+            />
+          </div>
+        )}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Left Column: International Positioning Narrative */}
             <div className="lg:col-span-6 space-y-6">
               <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-serif">
-                International Positioning
+                {positioning.tag}
               </span>
               <h2 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900 leading-tight">
-                Engineering Discipline Without Geographical Boundaries
+                {positioning.title}
               </h2>
               <div className="w-16 h-1 bg-indigo-600 rounded"></div>
               
               <p className="text-sm text-slate-600 font-sans leading-relaxed">
-                As multinational corporations expand across Southeast Asia, the Middle East, and Europe, they face severe architectural fragmentation: divergent statutory reporting rules, varying data residency mandates, and incompatible regional software silos.
+                {positioning.p1}
               </p>
               <p className="text-sm text-slate-600 font-sans leading-relaxed">
-                A8Fusion acts as the central engineering backbone. We unify global technology roadmaps while respecting domestic sovereignty laws, providing international enterprises with the architectural predictability required for sustainable global scale.
+                {positioning.p2}
               </p>
 
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-600 space-y-1">
-                <div className="text-indigo-700 font-bold">ETHICAL DISCLOSURE PRINCIPLE:</div>
+                <div className="text-indigo-700 font-bold">{positioning.disclosureTitle}</div>
                 <p>
-                  A8Fusion lists only verified operational presence and authorized delivery hubs in Singapore, the UAE, and the UK. We reject artificial international representations.
+                  {positioning.disclosureDesc}
                 </p>
               </div>
             </div>
@@ -409,52 +483,83 @@ export default function GlobalBusinessPage() {
         </div>
       </section>
 
-      {/* Global 3D Mesh Infrastructure Section */}
-      <section className="py-20 bg-[#060B18] text-white border-b border-slate-800">
+      {/* 2. Global 3D Mesh Infrastructure Section: Verified International Delivery Mesh */}
+      <section className="py-20 bg-[#060B18] text-white border-b border-slate-800 relative group">
+        {isLive && (
+          <div className="absolute top-6 right-8 z-30">
+            <SectionHeaderEditButton
+              onClick={() => openModal('topology', { ...topology })}
+              label="Edit Mesh Section"
+            />
+          </div>
+        )}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 font-serif">
-              Real-Time Sovereign Topology
+              {topology.tag}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif font-normal text-white">
-              Verified International Delivery Mesh
+              {topology.title}
             </h2>
             <p className="text-sm text-slate-300 font-sans">
-              Interactive 3D representation of our cross-border engineering corridors and synchronized sovereign data centers.
+              {topology.desc}
             </p>
           </div>
           <GlobalGlobe3D />
         </div>
       </section>
 
-      {/* 2 to 7. Delivery Capabilities & Dedicated Squads */}
-      <section className="py-20 bg-[#F8FAFC] border-b border-slate-200">
+      {/* 3. Delivery Capabilities: International Delivery Capabilities */}
+      <section className="py-20 bg-[#F8FAFC] border-b border-slate-200 relative group">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3 relative">
+            {isLive && (
+              <div className="mb-2">
+                <SectionHeaderEditButton
+                  onClick={() => openModal('caps_header', { ...capsHeader })}
+                  label="Edit Capabilities Header"
+                />
+              </div>
+            )}
             <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-serif">
-              Global Operations
+              {capsHeader.tag}
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900">
-              International Delivery Capabilities
+              {capsHeader.title}
             </h2>
             <p className="text-sm text-slate-600 font-sans">
-              Predictable, milestone-gated software engineering orchestrated across distributed international squads.
+              {capsHeader.desc}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {deliveryCapabilities.map((cap, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-3 card-hover-global-cap">
+            {deliveryCaps.map((cap, i) => (
+              <div key={cap.id || i} className="relative bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-3 card-hover-global-cap group transition-all">
+                {isLive && (
+                  <CardActionOverlay
+                    title={cap.title}
+                    onEdit={() => openModal('cap_edit', { ...cap }, i)}
+                    onDelete={() => handleDeleteCap(i)}
+                  />
+                )}
                 <span className="text-xs font-mono font-bold text-indigo-600">CAPABILITY 0{i + 1}</span>
                 <h3 className="text-base font-serif font-bold text-slate-900">{cap.title}</h3>
                 <p className="text-xs text-slate-600 font-sans leading-relaxed">{cap.desc}</p>
               </div>
             ))}
+
+            {isLive && (
+              <AddCardButton
+                onClick={() => openModal('cap_add', {})}
+                label="Add Delivery Capability"
+                subtitle="Add another international operational capability"
+              />
+            )}
           </div>
         </div>
       </section>
 
-      {/* 8. Regional Market Focus with In-Context CRUD */}
+      {/* 4. Regional Market Focus with In-Context CRUD */}
       <section className="py-20 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-12 pb-4 border-b border-slate-200">
@@ -535,7 +640,7 @@ export default function GlobalBusinessPage() {
         </div>
       </section>
 
-      {/* 9. International Enquiry CTA */}
+      {/* 5. International Enquiry CTA */}
       <section className="py-20 bg-[#0B172A] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <h2 className="text-3xl sm:text-4xl font-serif font-normal text-white">
@@ -569,6 +674,11 @@ export default function GlobalBusinessPage() {
         onSave={handleModalSubmit}
         title={
           modalType === 'header' ? 'Edit Hero Header' :
+          modalType === 'positioning' ? 'Edit International Positioning Section' :
+          modalType === 'topology' ? 'Edit Verified Delivery Mesh Header' :
+          modalType === 'caps_header' ? 'Edit Capabilities Section Header' :
+          modalType === 'cap_edit' ? `Edit Capability: ${modalData.title || ''}` :
+          modalType === 'cap_add' ? 'Add Delivery Capability' :
           modalType === 'market_edit' ? `Edit Jurisdiction: ${modalData.country || ''}` :
           modalType === 'market_add' ? 'Add Jurisdiction Node' : 'Edit Section'
         }
@@ -622,6 +732,162 @@ export default function GlobalBusinessPage() {
                   className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
                 />
               </div>
+            </div>
+          </>
+        )}
+
+        {/* Positioning Section Modal */}
+        {modalType === 'positioning' && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Badge Tag</label>
+              <input
+                type="text"
+                value={modalData.tag || ''}
+                onChange={(e) => setModalData({ ...modalData, tag: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Section Title</label>
+              <input
+                type="text"
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Paragraph 1</label>
+              <textarea
+                rows={3}
+                value={modalData.p1 || ''}
+                onChange={(e) => setModalData({ ...modalData, p1: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Paragraph 2</label>
+              <textarea
+                rows={3}
+                value={modalData.p2 || ''}
+                onChange={(e) => setModalData({ ...modalData, p2: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Disclosure Title</label>
+                <input
+                  type="text"
+                  value={modalData.disclosureTitle || ''}
+                  onChange={(e) => setModalData({ ...modalData, disclosureTitle: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Disclosure Details</label>
+                <textarea
+                  rows={2}
+                  value={modalData.disclosureDesc || ''}
+                  onChange={(e) => setModalData({ ...modalData, disclosureDesc: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Topology Mesh Modal */}
+        {modalType === 'topology' && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Badge Tag</label>
+              <input
+                type="text"
+                value={modalData.tag || ''}
+                onChange={(e) => setModalData({ ...modalData, tag: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Title</label>
+              <input
+                type="text"
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Description</label>
+              <textarea
+                rows={3}
+                value={modalData.desc || ''}
+                onChange={(e) => setModalData({ ...modalData, desc: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+          </>
+        )}
+
+        {/* Capabilities Header Modal */}
+        {modalType === 'caps_header' && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Badge Tag</label>
+              <input
+                type="text"
+                value={modalData.tag || ''}
+                onChange={(e) => setModalData({ ...modalData, tag: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Section Title</label>
+              <input
+                type="text"
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Description</label>
+              <textarea
+                rows={3}
+                value={modalData.desc || ''}
+                onChange={(e) => setModalData({ ...modalData, desc: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+          </>
+        )}
+
+        {/* Capability Add / Edit Modal */}
+        {(modalType === 'cap_edit' || modalType === 'cap_add') && (
+          <>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Capability Title</label>
+              <input
+                type="text"
+                required
+                value={modalData.title || ''}
+                onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                placeholder="e.g. Dedicated Engineering Squads"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Description</label>
+              <textarea
+                rows={3}
+                required
+                value={modalData.desc || ''}
+                onChange={(e) => setModalData({ ...modalData, desc: e.target.value })}
+                placeholder="Operational scope, team constitution, and delivery standards..."
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
             </div>
           </>
         )}
