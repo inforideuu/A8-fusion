@@ -215,7 +215,6 @@ export default function PagesModule() {
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-600">
                 <th className="py-3.5 px-4 font-bold">Page Title &amp; Slug</th>
-                <th className="py-3.5 px-4 font-bold">Hero Heading</th>
                 <th className="py-3.5 px-4 font-bold">Navigation Structure</th>
                 <th className="py-3.5 px-4 font-bold">Publish Status</th>
                 <th className="py-3.5 px-4 font-bold">Order</th>
@@ -228,9 +227,6 @@ export default function PagesModule() {
                   <td className="py-3.5 px-4">
                     <div className="font-sans font-bold text-slate-900 text-sm">{p.title}</div>
                     <div className="text-[11px] text-indigo-600 font-bold">/{p.slug}</div>
-                  </td>
-                  <td className="py-3.5 px-4 text-slate-600 font-sans max-w-xs truncate">
-                    {p.heading || '—'}
                   </td>
                   <td className="py-3.5 px-4">
                     {p.in_navigation ? (
