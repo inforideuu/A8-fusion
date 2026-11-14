@@ -1,4 +1,4 @@
-const API_BASE = 'http://127.0.0.1:8000/api';
+import { API_BASE } from './apiconfig';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('a8_admin_token');
@@ -7,6 +7,7 @@ const getAuthHeaders = () => {
     ...(token ? { 'Authorization': `Token ${token}` } : {})
   };
 };
+
 
 export const adminApi = {
   // Auth

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const EnquiryContext = createContext();
+import { BACKEND_URL } from '../admin/services/apiconfig';
 
 const INITIAL_ENQUIRIES = [
   {
@@ -243,7 +244,7 @@ export function EnquiryProvider({ children }) {
       internal_notes: `Submitted via website form. Designation: ${data.designation || 'N/A'}. Tender ref: ${data.tenderReference || 'N/A'}`
     };
 
-    fetch('http://127.0.0.1:8000/api/enquiries/', {
+    fetch(`${BACKEND_URL}/api/enquiries/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -316,7 +317,7 @@ export function EnquiryProvider({ children }) {
       payload.vacancy = data.jobId;
     }
 
-    fetch('http://127.0.0.1:8000/api/careers/applications/', {
+    fetch(`${BACKEND_URL}/api/careers/applications/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
