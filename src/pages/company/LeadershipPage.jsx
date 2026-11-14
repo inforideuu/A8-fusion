@@ -177,7 +177,7 @@ export default function LeadershipPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Leadership page changes successfully saved and synchronized with MySQL!');
+      alert('Leadership page changes successfully saved and synchronized!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);

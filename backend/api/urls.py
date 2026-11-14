@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from .views import (
-    login_view, logout_view, me_view, dashboard_overview, reports_summary,
+    login_view, logout_view, me_view, dashboard_overview, reports_summary, notifications_view,
     UserViewSet, RolePermissionViewSet, PageViewSet, ServiceViewSet, SolutionViewSet, IndustryViewSet,
     EnquiryViewSet, JobVacancyViewSet, JobApplicationViewSet, ArticleViewSet,
     MediaItemViewSet, SEOSettingViewSet, RedirectRuleViewSet, WebsiteSettingViewSet,
@@ -35,6 +35,7 @@ urlpatterns = [
     # Analytics & Reports
     path('dashboard/overview/', dashboard_overview, name='dashboard-overview'),
     path('reports/summary/', reports_summary, name='reports-summary'),
+    path('notifications/', notifications_view, name='notifications-list'),
 
     # Router endpoints
     path('', include(router.urls)),

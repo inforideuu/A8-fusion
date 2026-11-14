@@ -119,7 +119,7 @@ export default function DashboardOverview({ setActiveTab }) {
               Live Telemetry
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             Institutional Dashboard Overview
           </h1>
         </div>
@@ -166,7 +166,7 @@ export default function DashboardOverview({ setActiveTab }) {
               </div>
 
               <div>
-                <div className="text-3xl font-serif font-bold text-slate-900 tracking-tight mb-1">
+                <div className="text-3xl font-sans font-bold text-slate-900 tracking-tight mb-1">
                   {card.value}
                 </div>
                 <div className="text-xs font-sans font-bold text-slate-800">
@@ -190,7 +190,7 @@ export default function DashboardOverview({ setActiveTab }) {
               <span className="text-xs font-sans uppercase tracking-wider text-indigo-600 font-bold block mb-1">
                 System Influx Trends
               </span>
-              <h3 className="text-lg font-serif font-bold text-slate-900">
+              <h3 className="text-lg font-sans font-bold text-slate-900">
                 Monthly Enquiries &amp; Career Applications (Last 6 Months)
               </h3>
             </div>
@@ -207,43 +207,87 @@ export default function DashboardOverview({ setActiveTab }) {
           </div>
 
           {/* Clean Interactive Chart */}
-          <div className="h-64 w-full flex items-end gap-3 sm:gap-6 pt-4 pb-2 border-b border-slate-200 bg-slate-50/50 rounded-xl px-4">
-            {monthly_trends.map((item, idx) => {
-              const maxVal = 28;
-              const enqHeight = Math.max((item.enquiries / maxVal) * 100, 8);
-              const appHeight = Math.max((item.applications / maxVal) * 100, 8);
+          <div className="relative h-64 w-full pt-6 pb-2 border-b border-slate-200 bg-slate-50/50 rounded-xl px-4 flex flex-col justify-end">
+            {/* Horizontal Gridlines */}
+            <div className="absolute inset-x-4 top-6 bottom-8 flex flex-col justify-between pointer-events-none opacity-40">
+              <div className="border-b border-dashed border-slate-300 w-full" />
+              <div className="border-b border-dashed border-slate-300 w-full" />
+              <div className="border-b border-dashed border-slate-300 w-full" />
+              <div className="border-b border-slate-300 w-full" />
+            </div>
 
-              return (
-                <div key={idx} className="flex-1 flex flex-col items-center justify-end h-full group">
-                  {/* Bars container */}
-                  <div className="w-full flex items-end justify-center gap-1.5 h-full relative">
-                    {/* Tooltip */}
-                    <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs font-sans py-1 px-2.5 rounded-md shadow-lg pointer-events-none z-10 whitespace-nowrap">
-                      {item.month}: {item.enquiries} Enquiries / {item.applications} Applications
+            <div className="relative z-10 h-full w-full flex items-end gap-2 sm:gap-5">
+              {(() => {
+                const maxDataVal = Math.max(
+                  ...monthly_trends.flatMap((d) => [Number(d.enquiries) || 0, Number(d.applications) || 0]),
+                  1
+                );
+                const maxVal = Math.max(Math.ceil(maxDataVal * 1.25), 10);
+
+                return monthly_trends.map((item, idx) => {
+                  const enqVal = Number(item.enquiries) || 0;
+                  const appVal = Number(item.applications) || 0;
+                  const enqHeight = enqVal > 0 ? Math.max((enqVal / maxVal) * 100, 10) : 0;
+                  const appHeight = appVal > 0 ? Math.max((appVal / maxVal) * 100, 10) : 0;
+
+                  return (
+                    <div key={idx} className="flex-1 flex flex-col items-center justify-end h-full group">
+                      {/* Bars container */}
+                      <div className="w-full flex items-end justify-center gap-1 sm:gap-2 h-full relative pb-1">
+                        {/* Hover Tooltip */}
+                        <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs font-sans py-1.5 px-3 rounded-lg shadow-xl pointer-events-none z-20 whitespace-nowrap">
+                          <span className="font-bold text-white block">{item.month}</span>
+                          <span className="text-indigo-300">{enqVal} Enquiries</span> · <span className="text-rose-300">{appVal} Applications</span>
+                        </div>
+
+                        {/* Enquiry Bar Column */}
+                        <div className="flex-1 max-w-[24px] flex flex-col items-center justify-end h-full">
+                          {enqVal > 0 && (
+                            <span className="text-[10px] font-sans font-bold text-indigo-700 mb-0.5 leading-none">
+                              {enqVal}
+                            </span>
+                          )}
+                          <div
+                            style={{ height: `${enqHeight}%` }}
+                            className={`w-full rounded-t transition-all duration-300 ${
+                              enqVal > 0
+                                ? 'bg-gradient-to-t from-indigo-700 to-indigo-500 group-hover:from-indigo-600 group-hover:to-indigo-400 shadow-xs'
+                                : 'h-1 bg-slate-200'
+                            }`}
+                          />
+                        </div>
+
+                        {/* Application Bar Column */}
+                        <div className="flex-1 max-w-[24px] flex flex-col items-center justify-end h-full">
+                          {appVal > 0 && (
+                            <span className="text-[10px] font-sans font-bold text-rose-600 mb-0.5 leading-none">
+                              {appVal}
+                            </span>
+                          )}
+                          <div
+                            style={{ height: `${appHeight}%` }}
+                            className={`w-full rounded-t transition-all duration-300 ${
+                              appVal > 0
+                                ? 'bg-gradient-to-t from-rose-600 to-rose-400 group-hover:from-rose-500 group-hover:to-rose-300 shadow-xs'
+                                : 'h-1 bg-slate-200'
+                            }`}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Month label */}
+                      <span className="text-[11px] sm:text-xs font-sans text-slate-600 font-semibold mt-2 truncate block w-full text-center">
+                        {item.month.split(' ')[0]}
+                      </span>
                     </div>
-
-                    {/* Enquiry Bar */}
-                    <div
-                      style={{ height: `${enqHeight}%` }}
-                      className="w-full max-w-[22px] bg-gradient-to-t from-indigo-700 to-indigo-500 rounded-t group-hover:from-indigo-600 group-hover:to-indigo-400 transition-all duration-300"
-                    />
-                    {/* Application Bar */}
-                    <div
-                      style={{ height: `${appHeight}%` }}
-                      className="w-full max-w-[22px] bg-gradient-to-t from-rose-600 to-rose-400 rounded-t group-hover:from-rose-500 group-hover:to-rose-300 transition-all duration-300"
-                    />
-                  </div>
-
-                  <span className="text-xs font-sans text-slate-600 font-semibold mt-3 truncate block w-full text-center">
-                    {item.month.split(' ')[0]}
-                  </span>
-                </div>
-              );
-            })}
+                  );
+                });
+              })()}
+            </div>
           </div>
 
           <div className="flex items-center justify-between text-xs font-sans text-slate-500 pt-3">
-            <span>Aggregated from live MySQL records</span>
+            <span>Aggregated from live system records</span>
             <span className="text-emerald-700 font-semibold">+18.4% month-over-month influx</span>
           </div>
         </div>
@@ -254,7 +298,7 @@ export default function DashboardOverview({ setActiveTab }) {
             <span className="text-xs font-sans uppercase tracking-wider text-indigo-600 font-bold block mb-1">
               CRM Lifecycle Funnel
             </span>
-            <h3 className="text-lg font-serif font-bold text-slate-900 mb-4">
+            <h3 className="text-lg font-sans font-bold text-slate-900 mb-4">
               Enquiry Status Distribution
             </h3>
 
@@ -305,7 +349,7 @@ export default function DashboardOverview({ setActiveTab }) {
               <span className="text-xs font-sans uppercase tracking-wider text-indigo-600 font-bold block mb-1">
                 Incoming Influx
               </span>
-              <h3 className="text-lg font-serif font-bold text-slate-900">
+              <h3 className="text-lg font-sans font-bold text-slate-900">
                 Recent Stakeholder Enquiries
               </h3>
             </div>
@@ -367,7 +411,7 @@ export default function DashboardOverview({ setActiveTab }) {
                 <span className="text-xs font-sans uppercase tracking-wider text-indigo-600 font-bold block mb-1">
                   Security &amp; Audit Trail
                 </span>
-                <h3 className="text-lg font-serif font-bold text-slate-900">
+                <h3 className="text-lg font-sans font-bold text-slate-900">
                   Recent Privileged Activity
                 </h3>
               </div>
@@ -402,7 +446,7 @@ export default function DashboardOverview({ setActiveTab }) {
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
               <span>Audit Logging Active</span>
             </span>
-            <span>MySQL Synced</span>
+            <span>System Synced</span>
           </div>
         </div>
       </div>

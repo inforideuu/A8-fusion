@@ -230,7 +230,7 @@ export default function GlobalBusinessPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Global Business specifications saved and synchronized with MySQL!');
+      alert('Global Business specifications saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);

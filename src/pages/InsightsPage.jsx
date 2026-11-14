@@ -109,7 +109,17 @@ export default function InsightsPage() {
 
   const applyLoadedData = (data) => {
     if (data.pageHeader) setPageHeader(data.pageHeader);
-    if (Array.isArray(data.articlesList) && data.articlesList.length > 0) setArticlesList(data.articlesList);
+    if (Array.isArray(data.articlesList) && data.articlesList.length > 0) {
+      const sanitized = data.articlesList.map(item => {
+        if (item.slug === 'private-on-premise-llm-deployment') {
+          return { ...item, coverImage: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80' };
+        }
+        return item;
+      });
+      const existingSlugs = new Set(sanitized.map(a => a.slug));
+      const missingDefaults = defaultInsightsData.filter(d => !existingSlugs.has(d.slug));
+      setArticlesList([...sanitized, ...missingDefaults]);
+    }
   };
 
   const markDirty = () => {
@@ -141,7 +151,7 @@ export default function InsightsPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Insights articles saved and synchronized with MySQL!');
+      alert('Insights articles saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);

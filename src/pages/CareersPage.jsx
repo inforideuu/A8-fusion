@@ -84,7 +84,13 @@ export default function CareersPage() {
   const [modalData, setModalData] = useState({});
   const [editingIndex, setEditingIndex] = useState(null);
 
-  const departments = ['All', 'Architecture & Engineering', 'Artificial Intelligence Practice', 'Enterprise Solutions', 'Cybersecurity Practice'];
+  const departments = ['All', ...Array.from(new Set([
+    'Architecture & Engineering',
+    'Artificial Intelligence Practice',
+    'Enterprise Solutions',
+    'Cybersecurity Practice',
+    ...jobsList.map(j => j.department)
+  ].filter(Boolean)))];
 
   const filteredJobs = jobsList.filter(job => 
     departmentFilter === 'All' || job.department === departmentFilter
@@ -101,6 +107,37 @@ export default function CareersPage() {
   // Load Content from Backend / LocalStorage
   useEffect(() => {
     const loadContent = async () => {
+      // 1. Fetch live vacancies directly from Django MySQL
+      try {
+        const vacRes = await fetch('http://127.0.0.1:8000/api/careers/vacancies/');
+        if (vacRes.ok) {
+          const vacData = await vacRes.json();
+          if (Array.isArray(vacData) && vacData.length > 0) {
+            const published = vacData.filter(v => v.status === 'Published');
+            const targetVacancies = published.length > 0 ? published : vacData;
+            const mapped = targetVacancies.map(v => ({
+              id: v.slug || `req-${v.id}`,
+              dbId: v.id,
+              title: v.title,
+              department: v.department,
+              location: v.location,
+              type: v.job_type || 'Full-Time',
+              job_type: v.job_type || 'Full-Time',
+              experience: v.experience,
+              openings: v.openings,
+              overview: v.overview,
+              responsibilities: Array.isArray(v.responsibilities) ? v.responsibilities : [],
+              requirements: Array.isArray(v.requirements) ? v.requirements : [],
+              status: v.status
+            }));
+            setJobsList(mapped);
+          }
+        }
+      } catch (err) {
+        console.warn('Could not fetch live vacancies from API, using default data:', err);
+      }
+
+      // 2. Fetch page header and culture standards from CMS page content
       try {
         const res = await fetch('http://127.0.0.1:8000/api/pages/get_live_content/?slug=careers');
         if (res.ok) {
@@ -131,7 +168,6 @@ export default function CareersPage() {
   const applyLoadedData = (data) => {
     if (data.pageHeader) setPageHeader(data.pageHeader);
     if (data.cultureHeader) setCultureHeader(data.cultureHeader);
-    if (Array.isArray(data.jobsList) && data.jobsList.length > 0) setJobsList(data.jobsList);
     if (Array.isArray(data.cultureList) && data.cultureList.length > 0) setCultureList(data.cultureList);
   };
 
@@ -166,7 +202,7 @@ export default function CareersPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Careers opportunities and culture standards saved and synchronized with MySQL!');
+      alert('Careers opportunities and culture standards saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);
@@ -290,6 +326,7 @@ export default function CareersPage() {
     const id = submitApplication({
       ...formData,
       jobId: selectedJob?.id || 'open-req',
+      vacancyId: selectedJob?.dbId || (typeof selectedJob?.id === 'number' ? selectedJob.id : null),
       jobTitle: formData.position
     });
     setSubmittedAppId(id);
@@ -520,7 +557,7 @@ export default function CareersPage() {
                     <ArrowRight className="w-4 h-4" />
                   </button>
                   <span className="text-[10px] font-mono text-slate-400 text-center lg:text-right">
-                    Ref: {job.id.toUpperCase()}
+                    Ref: {String(job.id || job.dbId || idx).toUpperCase()}
                   </span>
                 </div>
               </div>
@@ -650,11 +687,17 @@ export default function CareersPage() {
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      setFormData({
-                        ...formData,
-                        attachedResumeName: file.name,
-                        attachedResumeSize: `${Math.round(file.size / 1024)} KB`
-                      });
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          attachedResumeName: file.name,
+                          attachedResumeSize: `${Math.round(file.size / 1024)} KB`,
+                          resume_url: event.target.result,
+                          resumeData: event.target.result
+                        }));
+                      };
+                      reader.readAsDataURL(file);
                     }
                   }}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

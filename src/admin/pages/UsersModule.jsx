@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { adminApi } from '../services/adminApi';
 import {
   Users, UserPlus, KeyRound, Ban, CheckCircle,
-  Edit2, RefreshCw, X, Shield
+  Edit2, RefreshCw, X, Shield, Trash2
 } from 'lucide-react';
 
 export default function UsersModule() {
@@ -64,6 +64,26 @@ export default function UsersModule() {
     setUsers(users.map((u) => (u.id === user.id ? { ...u, is_disabled: updated } : u)));
   };
 
+  const handleDeleteUser = async (user) => {
+    if (user.username === 'admin' || user.is_superuser) {
+      if (!window.confirm(`Warning: "${user.username}" is a primary system administrator account. Are you sure you want to permanently delete this user?`)) {
+        return;
+      }
+    } else {
+      if (!window.confirm(`Are you sure you want to permanently delete user "${user.username}" (${user.first_name || ''} ${user.last_name || ''})?`)) {
+        return;
+      }
+    }
+
+    try {
+      await adminApi.deleteResource('users', user.id);
+      setUsers(prev => prev.filter(u => u.id !== user.id));
+      alert(`User "${user.username}" was permanently deleted from database.`);
+    } catch (err) {
+      alert(err.message || 'Error deleting user.');
+    }
+  };
+
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword || newPassword.length < 6) {
@@ -85,10 +105,10 @@ export default function UsersModule() {
     try {
       if (editingUser) {
         await adminApi.patchResource('users', editingUser.id, formData);
-        alert('User details updated in MySQL.');
+        alert('User details updated successfully.');
       } else {
         await adminApi.postResource('users', formData);
-        alert('New admin user created in MySQL.');
+        alert('New admin user created successfully.');
       }
       setModalOpen(false);
       setEditingUser(null);
@@ -134,9 +154,9 @@ export default function UsersModule() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <span className="text-xs font-sans font-semibold uppercase tracking-wider text-indigo-600 block mb-1">
-            Module 01 &amp; 02 · Identity &amp; RBAC Governance
+            Identity &amp; RBAC Governance
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             User Management &amp; Role Assignments
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
@@ -248,13 +268,20 @@ export default function UsersModule() {
                       <button
                         onClick={() => handleToggleStatus(u)}
                         title={u.is_disabled ? 'Enable Account' : 'Disable Account'}
-                        className={`p-1.5 rounded-lg text-xs font-bold transition-colors ${
+                        className={`p-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                           u.is_disabled
                             ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white'
-                            : 'bg-red-50 text-red-700 hover:bg-red-600 hover:text-white'
+                            : 'bg-amber-50 text-amber-700 hover:bg-amber-600 hover:text-white'
                         }`}
                       >
                         {u.is_disabled ? <CheckCircle className="w-3.5 h-3.5" /> : <Ban className="w-3.5 h-3.5" />}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(u)}
+                        title="Delete User"
+                        className="p-1.5 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </td>
@@ -283,7 +310,7 @@ export default function UsersModule() {
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-serif font-bold text-slate-900 mb-1">
+            <h3 className="text-xl font-sans font-bold text-slate-900 mb-1">
               {editingUser ? 'Edit User Details' : 'Create New User Account'}
             </h3>
             <p className="text-xs text-slate-500 font-sans mb-5">
@@ -406,7 +433,7 @@ export default function UsersModule() {
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-serif font-bold text-slate-900 mb-1">
+            <h3 className="text-xl font-sans font-bold text-slate-900 mb-1">
               Reset Password for @{passwordModal.username}
             </h3>
             <p className="text-xs text-slate-500 font-sans mb-4">

@@ -218,7 +218,7 @@ export default function AboutPage() {
 
       if (res.ok) {
         setIsDirty(false);
-        alert('About Us page live changes permanently saved to MySQL and published!');
+        alert('About Us page live changes permanently saved and published!');
       } else {
         alert('Changes saved locally.');
       }

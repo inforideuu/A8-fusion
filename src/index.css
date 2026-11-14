@@ -28,9 +28,29 @@
     z-index: 50 !important;
   }
   
-  /* Authoritative serif styling for Times New Roman */
-  .font-serif, h1, .font-times {
+  /* Authoritative serif styling for Times New Roman (Only where explicitly requested) */
+  .font-serif, .font-times {
     font-family: "Times New Roman", Times, "Baskerville", Georgia, serif;
+  }
+
+  /* Enforce Website Font (Plus Jakarta Sans) throughout Admin Console */
+  .admin-console,
+  .admin-console h1,
+  .admin-console h2,
+  .admin-console h3,
+  .admin-console h4,
+  .admin-console h5,
+  .admin-console h6,
+  .admin-console th,
+  .admin-console td,
+  .admin-console span,
+  .admin-console p,
+  .admin-console div,
+  .admin-console button,
+  .admin-console input,
+  .admin-console select,
+  .admin-console textarea {
+    font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif !important;
   }
 
   /* Prevent automatic iOS Safari zoom on input focus for mobile devices */

@@ -270,6 +270,18 @@ class JobVacancy(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            base_slug = slugify(self.title) or f"vacancy-{uuid.uuid4().hex[:6]}"
+            unique_slug = base_slug
+            counter = 1
+            while JobVacancy.objects.filter(slug=unique_slug).exclude(pk=self.pk).exists():
+                unique_slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = unique_slug
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
@@ -291,7 +303,9 @@ class JobApplication(models.Model):
     current_company = models.CharField(max_length=255, blank=True)
     linkedin_url = models.CharField(max_length=512, blank=True)
     portfolio_url = models.CharField(max_length=512, blank=True)
-    resume_url = models.CharField(max_length=512, blank=True)
+    resume_url = models.TextField(blank=True)
+    resume_name = models.CharField(max_length=255, blank=True)
+    resume_size = models.CharField(max_length=64, blank=True)
     cover_letter = models.TextField(blank=True)
     status = models.CharField(max_length=32, choices=STATUS_CHOICES, default='New')
     assigned_recruiter = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='recruited_applications')

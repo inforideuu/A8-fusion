@@ -87,11 +87,13 @@ export default function ContactPage() {
     email: '',
     phone: '',
     country: '',
-    enquiryType: 'Enterprise Project',
+    enquiryType: 'General Corporate Enquiry',
     subject: '',
     message: '',
     consent: false
   });
+  const [isCustomDomain, setIsCustomDomain] = useState(false);
+  const [customDomainValue, setCustomDomainValue] = useState('');
 
   // Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -100,13 +102,16 @@ export default function ContactPage() {
   const [editingIndex, setEditingIndex] = useState(null);
 
   const enquiryTypes = [
-    'Enterprise Project',
-    'Government Project',
-    'Software Development',
-    'Technology Consulting',
-    'Strategic Partnership',
-    'Career',
-    'General Enquiry'
+    'General Corporate Enquiry',
+    'Enterprise Software Development',
+    'AI & Machine Learning Solutions',
+    'Cloud Architecture & Infrastructure Engineering',
+    'Cybersecurity, SOC & Zero-Trust Governance',
+    'Enterprise System Integration (ERP / CRM / ESB)',
+    'Digital Transformation & Legacy Modernization',
+    'Technology Strategy & Architectural Consulting',
+    'Media & Press Relations',
+    'Custom'
   ];
 
   // URL query check for live_edit
@@ -181,7 +186,7 @@ export default function ContactPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Contact corporate specifications saved and synchronized with MySQL!');
+      alert('Contact corporate specifications saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);
@@ -262,12 +267,21 @@ export default function ContactPage() {
       alert('Please confirm your consent to proceed.');
       return;
     }
+    const resolvedDomain = isCustomDomain
+      ? (customDomainValue.trim() || 'Custom Enquiry Domain')
+      : formData.enquiryType;
+
     const ref = submitEnquiry({
       ...formData,
       contactPerson: formData.name,
+      full_name: formData.name,
       organization: formData.company,
-      type: formData.enquiryType,
-      description: `[Subject: ${formData.subject}] ${formData.message}`
+      type: 'General Contact',
+      enquiry_type: 'general',
+      enquiryDomain: resolvedDomain,
+      subject: formData.subject,
+      description: `[Enquiry Domain: ${resolvedDomain}] [Subject: ${formData.subject}] ${formData.message}`,
+      message: `[Enquiry Domain: ${resolvedDomain}] [Subject: ${formData.subject}] ${formData.message}`
     });
     setSubmittedRef(ref);
   };
@@ -413,7 +427,11 @@ export default function ContactPage() {
                     <div className="pt-2">
                       <button
                         type="button"
-                        onClick={() => setSubmittedRef(null)}
+                        onClick={() => {
+                          setSubmittedRef(null);
+                          setIsCustomDomain(false);
+                          setCustomDomainValue('');
+                        }}
                         className="px-6 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
                       >
                         Submit Another Inquiry
@@ -490,14 +508,41 @@ export default function ContactPage() {
                       <div>
                         <label className="block text-slate-700 font-bold mb-1">Enquiry Domain *</label>
                         <select
-                          value={formData.enquiryType}
-                          onChange={(e) => setFormData({ ...formData, enquiryType: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 focus:outline-hidden focus:border-indigo-600 text-xs text-slate-800"
+                          value={isCustomDomain ? 'Custom' : formData.enquiryType}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === 'Custom') {
+                              setIsCustomDomain(true);
+                            } else {
+                              setIsCustomDomain(false);
+                              setFormData({ ...formData, enquiryType: val });
+                            }
+                          }}
+                          className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 focus:outline-hidden focus:border-indigo-600 text-xs text-slate-800 cursor-pointer font-sans"
                         >
                           {enquiryTypes.map((t) => (
-                            <option key={t} value={t}>{t}</option>
+                            <option key={t} value={t}>
+                              {t === 'Custom' ? 'Custom Enquiry Domain (Specify)' : t}
+                            </option>
                           ))}
                         </select>
+
+                        {isCustomDomain && (
+                          <div className="mt-2 space-y-1">
+                            <input
+                              type="text"
+                              required
+                              placeholder="e.g. IoT Edge Computing, Sovereign Telemetry, Quantum Resilience..."
+                              value={customDomainValue}
+                              onChange={(e) => setCustomDomainValue(e.target.value)}
+                              className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-indigo-500 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 font-sans shadow-2xs"
+                              autoFocus
+                            />
+                            <span className="text-[11px] text-slate-500 font-sans block">
+                              Specify your customized corporate technical requirement or domain.
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
 

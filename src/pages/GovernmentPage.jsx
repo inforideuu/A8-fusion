@@ -155,7 +155,24 @@ export default function GovernmentPage() {
     description: '',
     consent: false,
   });
+  const [isCustomBudget, setIsCustomBudget] = useState(false);
+  const [customBudgetValue, setCustomBudgetValue] = useState('');
+  const [isCustomCivicClass, setIsCustomCivicClass] = useState(false);
+  const [customCivicClassValue, setCustomCivicClassValue] = useState('');
   const [submittedRef, setSubmittedRef] = useState(null);
+
+  const civicClassifications = [
+    'E-Governance Platform & Civil Registry',
+    'Municipal Smart City Telemetry Network',
+    'Judicial & Public Records Data Pipeline',
+    'Legacy Mainframe Strangler Modernization',
+    'Sovereign Cloud & National Data Residency',
+    'Unified Citizen Digital Identity (SSO & Biometrics)',
+    'Public Health & Automated Clinical Surveillance',
+    'Automated Civil Permitting & Tax Administration',
+    'General Public Sector RFP / Sovereign Tender',
+    'Custom'
+  ];
 
   // Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -247,7 +264,7 @@ export default function GovernmentPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Government & Public Sector specifications saved and synchronized with MySQL!');
+      alert('Government & Public Sector specifications saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);
@@ -380,8 +397,21 @@ export default function GovernmentPage() {
       alert('Please confirm official government authorization and consent.');
       return;
     }
+    const finalBudget = isCustomBudget
+      ? (customBudgetValue.trim() ? customBudgetValue.trim() : 'Custom Budget Envelope')
+      : formData.estimatedBudget;
+
+    const resolvedCivicClass = isCustomCivicClass
+      ? (customCivicClassValue.trim() || 'Custom Civic Project Classification')
+      : formData.projectCategory;
+
     const ref = submitEnquiry({
       ...formData,
+      projectCategory: resolvedCivicClass,
+      industry: resolvedCivicClass,
+      estimated_budget: finalBudget,
+      estimatedBudget: finalBudget,
+      budget: finalBudget,
       type: 'Government'
     });
     setSubmittedRef(ref);
@@ -715,7 +745,13 @@ export default function GovernmentPage() {
               <div className="pt-2">
                 <button
                   type="button"
-                  onClick={() => setSubmittedRef(null)}
+                  onClick={() => {
+                    setSubmittedRef(null);
+                    setIsCustomBudget(false);
+                    setCustomBudgetValue('');
+                    setIsCustomCivicClass(false);
+                    setCustomCivicClassValue('');
+                  }}
                   className="px-6 py-2.5 rounded-lg bg-slate-800 text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-700 uppercase tracking-wider"
                 >
                   Submit Another Government Enquiry
@@ -814,17 +850,43 @@ export default function GovernmentPage() {
                     Civic Project Classification *
                   </label>
                   <select
-                    value={formData.projectCategory}
-                    onChange={(e) => setFormData({ ...formData, projectCategory: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    value={isCustomCivicClass ? 'Custom' : formData.projectCategory}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === 'Custom') {
+                        setIsCustomCivicClass(true);
+                      } else {
+                        setIsCustomCivicClass(false);
+                        setFormData({ ...formData, projectCategory: val });
+                      }
+                    }}
+                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans cursor-pointer"
                   >
-                    <option>E-Governance Platform & Civil Registry</option>
-                    <option>Municipal Smart City Telemetry Network</option>
-                    <option>Judicial / Public Records Data Pipeline</option>
-                    <option>Legacy Mainframe Strangler Migration</option>
-                    <option>Sovereign Cloud Data Residency Audit</option>
-                    <option>General Public Sector RFP / Tender Consultation</option>
+                    {civicClassifications.map((c) => (
+                      <option key={c} value={c}>
+                        {c === 'Custom' ? 'Custom Civic Project Classification (Specify)' : c}
+                      </option>
+                    ))}
                   </select>
+
+                  {isCustomCivicClass && (
+                    <div className="mt-2.5 space-y-1">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Sovereign Satellite Telemetry, National Border Grid, Civil Drone Defense..."
+                          value={customCivicClassValue}
+                          onChange={(e) => setCustomCivicClassValue(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-indigo-500/80 text-white text-xs focus:outline-none focus:border-indigo-400 font-sans placeholder:text-slate-500 shadow-inner"
+                          autoFocus
+                        />
+                      </div>
+                      <span className="text-[11px] text-slate-400 font-mono block">
+                        Specify your custom government ministry directive or municipal scope.
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -832,16 +894,44 @@ export default function GovernmentPage() {
                     Estimated Procurement Envelope
                   </label>
                   <select
-                    value={formData.estimatedBudget}
-                    onChange={(e) => setFormData({ ...formData, estimatedBudget: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    value={isCustomBudget ? 'Custom' : formData.estimatedBudget}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === 'Custom') {
+                        setIsCustomBudget(true);
+                      } else {
+                        setIsCustomBudget(false);
+                        setFormData({ ...formData, estimatedBudget: val });
+                      }
+                    }}
+                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans cursor-pointer"
                   >
-                    <option>₹2 Crores – ₹5 Crores</option>
-                    <option>₹5 Crores – ₹10 Crores</option>
-                    <option>₹10 Crores – ₹50 Crores</option>
-                    <option>₹50 Crores+ (Sovereign Tender)</option>
-                    <option>To Be Determined / Formal RFP Stage</option>
+                    <option value="₹10,000 – ₹15,000">₹10,000 – ₹15,000</option>
+                    <option value="₹15,000 – ₹20,000">₹15,000 – ₹20,000</option>
+                    <option value="₹20,000 – ₹25,000">₹20,000 – ₹25,000</option>
+                    <option value="₹25,000+">₹25,000+</option>
+                    <option value="To Be Determined / Formal RFP Stage">To Be Determined / Formal RFP Stage</option>
+                    <option value="Custom">Custom Budget Envelope (Specify Amount)</option>
                   </select>
+
+                  {isCustomBudget && (
+                    <div className="mt-2.5 space-y-1">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. ₹50,000, ₹10 Crores, $25K USD, or custom grant"
+                          value={customBudgetValue}
+                          onChange={(e) => setCustomBudgetValue(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-indigo-500/80 text-white text-xs focus:outline-none focus:border-indigo-400 font-sans placeholder:text-slate-500 shadow-inner"
+                          autoFocus
+                        />
+                      </div>
+                      <span className="text-[11px] text-slate-400 font-mono block">
+                        Specify exact budget allocation, sovereign grant, or custom threshold figure.
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">
@@ -880,11 +970,24 @@ export default function GovernmentPage() {
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        setFormData({
-                          ...formData,
-                          attachedFileName: file.name,
-                          attachedFileSize: `${Math.round(file.size / 1024)} KB`
-                        });
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            attachedFileName: file.name,
+                            attachedFileSize: `${Math.round(file.size / 1024)} KB`,
+                            attachedFileData: event.target.result,
+                            attachedFileType: file.type || 'application/pdf',
+                            document_attachments: [{
+                              name: file.name,
+                              size: `${Math.round(file.size / 1024)} KB`,
+                              type: file.type || 'application/pdf',
+                              data: event.target.result,
+                              uploaded_at: new Date().toISOString()
+                            }]
+                          }));
+                        };
+                        reader.readAsDataURL(file);
                       }
                     }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

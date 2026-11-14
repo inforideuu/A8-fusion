@@ -7,6 +7,7 @@ import NotificationToast from './components/common/NotificationToast';
 import ScrollRevealManager from './components/common/ScrollRevealManager';
 import CookieConsentBanner from './components/common/CookieConsentBanner';
 import RedirectHandler from './components/common/RedirectHandler';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { EnquiryProvider } from './context/EnquiryContext';
 import { AdminAuthProvider } from './admin/context/AdminAuthContext';
 
@@ -71,16 +72,17 @@ function CorporateLayout({ children }) {
 
 export default function App() {
   return (
-    <AdminAuthProvider>
-      <EnquiryProvider>
-        <Router>
-          <SEO />
-          <RedirectHandler />
-          <ScrollRevealManager />
-          <NotificationToast />
-          <CookieConsentBanner />
+    <ErrorBoundary>
+      <AdminAuthProvider>
+        <EnquiryProvider>
+          <Router>
+            <SEO />
+            <RedirectHandler />
+            <ScrollRevealManager />
+            <NotificationToast />
+            <CookieConsentBanner />
 
-          <Routes>
+            <Routes>
             {/* Dedicated Secure Admin Interface */}
             <Route
               path="/admin/login"
@@ -163,5 +165,6 @@ export default function App() {
       </Router>
     </EnquiryProvider>
   </AdminAuthProvider>
+</ErrorBoundary>
   );
 }

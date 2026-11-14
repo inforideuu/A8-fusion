@@ -73,7 +73,7 @@ export default function MediaLibraryModule() {
     e.preventDefault();
     try {
       await adminApi.postResource('media', newItem);
-      alert('Asset uploaded and recorded in MySQL media library.');
+      alert('Asset uploaded successfully.');
       setUploadModal(false);
       loadMedia();
     } catch (err) {
@@ -91,10 +91,10 @@ export default function MediaLibraryModule() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 block mb-1">
+          <span className="text-xs font-sans font-bold uppercase tracking-wider text-indigo-600 block mb-1">
             MODULE 10 // DIGITAL ASSET INFRASTRUCTURE
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             Institutional Media &amp; Document Library
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
@@ -111,7 +111,7 @@ export default function MediaLibraryModule() {
           </button>
           <button
             onClick={() => setUploadModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-mono font-bold uppercase tracking-wider text-white shadow-sm shadow-indigo-600/30"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-sans font-bold uppercase tracking-wider text-white shadow-sm shadow-indigo-600/30"
           >
             <Upload className="w-4 h-4" />
             <span>Upload New Asset</span>
@@ -125,7 +125,7 @@ export default function MediaLibraryModule() {
           <button
             key={c}
             onClick={() => setActiveCategory(c)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-sans transition-colors ${
               activeCategory === c
                 ? 'bg-indigo-600 text-white font-bold shadow-xs'
                 : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50'
@@ -145,10 +145,10 @@ export default function MediaLibraryModule() {
           >
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase font-bold">
+                <span className="text-[10px] font-sans px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase font-bold">
                   {item.file_type}
                 </span>
-                <span className="text-[11px] font-mono text-slate-400">
+                <span className="text-[11px] font-sans text-slate-400">
                   {item.file_size_kb} KB
                 </span>
               </div>
@@ -158,17 +158,17 @@ export default function MediaLibraryModule() {
                   {item.file_type === 'IMAGE' ? <ImageIcon className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-sm font-serif font-bold text-slate-900 truncate" title={item.title}>
+                  <h4 className="text-sm font-sans font-bold text-slate-900 truncate" title={item.title}>
                     {item.title}
                   </h4>
-                  <span className="text-[10px] font-mono text-slate-500 block mt-0.5">
+                  <span className="text-[10px] font-sans text-slate-500 block mt-0.5">
                     Category: {item.category}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-mono">
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-sans">
               <span className="text-slate-400 text-[10px]">By {item.uploaded_by_name}</span>
 
               <div className="flex items-center gap-2">
@@ -195,7 +195,7 @@ export default function MediaLibraryModule() {
       {/* UPLOAD MODAL */}
       {uploadModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md p-6 shadow-2xl relative text-xs font-mono text-slate-900">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md p-6 shadow-2xl relative text-xs font-sans text-slate-900">
             <button
               onClick={() => setUploadModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-700"
@@ -203,11 +203,11 @@ export default function MediaLibraryModule() {
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-serif font-bold text-slate-900 mb-1">
+            <h3 className="text-xl font-sans font-bold text-slate-900 mb-1">
               Upload Document / Asset
             </h3>
             <p className="text-xs text-slate-500 font-sans mb-4">
-              Add brochures, whitepapers, or diagrams to the MySQL media registry.
+              Add brochures, whitepapers, or diagrams to the media registry.
             </p>
 
             <form onSubmit={handleUpload} className="space-y-4">
@@ -237,7 +237,7 @@ export default function MediaLibraryModule() {
                 <span className="text-xs font-semibold text-slate-700 block">
                   Click or drag file to upload from your device
                 </span>
-                <span className="text-[10px] text-slate-400 font-mono">
+                <span className="text-[10px] text-slate-400 font-sans">
                   Supported: Images (PNG/JPG/SVG), PDF, DOCX, ZIP
                 </span>
               </div>

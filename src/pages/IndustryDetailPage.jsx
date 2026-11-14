@@ -207,7 +207,7 @@ export default function IndustryDetailPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert(`Sector specifications for "${defaultIndustry.title}" saved and synchronized with MySQL!`);
+      alert(`Sector specifications for "${defaultIndustry.title}" saved and synchronized successfully!`);
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);

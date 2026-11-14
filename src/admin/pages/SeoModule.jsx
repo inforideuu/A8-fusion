@@ -47,11 +47,11 @@ export default function SeoModule() {
     e.preventDefault();
     try {
       await adminApi.patchResource('seo/settings', 1, seo);
-      alert('Global SEO settings persisted to MySQL.');
+      alert('Global SEO settings saved successfully.');
     } catch (e) {
       try {
         await adminApi.postResource('seo/settings', seo);
-        alert('Global SEO settings persisted to MySQL.');
+        alert('Global SEO settings saved successfully.');
       } catch (e2) {
         alert('SEO configuration saved.');
       }
@@ -65,7 +65,7 @@ export default function SeoModule() {
       const res = await adminApi.postResource('seo/redirects', newRedirect);
       setRedirects([res, ...redirects]);
       setNewRedirect({ source_path: '', target_path: '', status_code: 301 });
-      alert('301 redirect rule registered in MySQL.');
+      alert('301 redirect rule registered successfully.');
     } catch (err) {
       setRedirects([{ ...newRedirect, id: Date.now(), is_active: true }, ...redirects]);
       setNewRedirect({ source_path: '', target_path: '', status_code: 301 });
@@ -87,10 +87,10 @@ export default function SeoModule() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 block mb-1">
+          <span className="text-xs font-sans font-bold uppercase tracking-wider text-indigo-600 block mb-1">
              SEARCH ENGINE OPTIMIZATION &amp; ROUTING
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             SEO Management &amp; Redirect Routing
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
@@ -101,7 +101,7 @@ export default function SeoModule() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('settings')}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-colors ${
+            className={`px-4 py-2 rounded-xl text-xs font-sans font-bold uppercase transition-colors ${
               activeTab === 'settings' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50'
             }`}
           >
@@ -109,7 +109,7 @@ export default function SeoModule() {
           </button>
           <button
             onClick={() => setActiveTab('redirects')}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-colors ${
+            className={`px-4 py-2 rounded-xl text-xs font-sans font-bold uppercase transition-colors ${
               activeTab === 'redirects' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50'
             }`}
           >
@@ -121,8 +121,8 @@ export default function SeoModule() {
       {/* Tab 1: Global Settings */}
       {activeTab === 'settings' && (
         <form onSubmit={handleSaveSeo} className="space-y-6">
-          <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-6 space-y-5 text-xs font-mono text-slate-900">
-            <h3 className="text-sm font-serif font-bold text-slate-900 pb-3 border-b border-slate-200">
+          <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-6 space-y-5 text-xs font-sans text-slate-900">
+            <h3 className="text-sm font-sans font-bold text-slate-900 pb-3 border-b border-slate-200">
               Default Meta &amp; Canonical Configuration
             </h3>
 
@@ -186,7 +186,7 @@ export default function SeoModule() {
                   rows="3"
                   value={seo.robots_txt_content}
                   onChange={(e) => setSeo({ ...seo, robots_txt_content: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 outline-none focus:border-indigo-600 font-mono"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 outline-none focus:border-indigo-600 font-sans"
                 />
               </div>
 
@@ -199,7 +199,7 @@ export default function SeoModule() {
                   className="rounded bg-white border-slate-300 text-indigo-600 w-4 h-4"
                 />
                 <label htmlFor="sm-en" className="text-slate-700 cursor-pointer font-sans">
-                  Generate and publish dynamic XML sitemap at <code className="text-indigo-600 font-mono font-semibold">/sitemap.xml</code>
+                  Generate and publish dynamic XML sitemap at <code className="text-indigo-600 font-sans font-semibold">/sitemap.xml</code>
                 </label>
               </div>
             </div>
@@ -221,7 +221,7 @@ export default function SeoModule() {
       {activeTab === 'redirects' && (
         <div className="space-y-6">
           {/* Add Redirect Form */}
-          <form onSubmit={handleAddRedirect} className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs font-mono text-slate-900">
+          <form onSubmit={handleAddRedirect} className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs font-sans text-slate-900">
             <div>
               <label className="text-slate-700 font-semibold block mb-1">SOURCE PATH</label>
               <input
@@ -268,7 +268,7 @@ export default function SeoModule() {
           {/* Redirects Table */}
           <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-mono">
+              <table className="w-full text-left text-xs font-sans">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
                     <th className="py-3 px-4 font-semibold">Source Route</th>

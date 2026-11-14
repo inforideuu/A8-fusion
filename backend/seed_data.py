@@ -311,9 +311,11 @@ def run_seed():
 
     # 9. Career Vacancies & Applications
     vacancies_data = [
-        ('Principal Distributed Systems Architect', 'principal-distributed-systems-architect', 'Core Architecture', 'Bangalore, India / Hybrid', 'Full-Time', '10+ Years', 2, 'Lead architecture of high-throughput transactional backends and microservice fabrics.'),
-        ('Senior Cryptography & Security Engineer', 'senior-cryptography-security-engineer', 'Information Security', 'Global / Remote', 'Full-Time', '6+ Years', 1, 'Design hardware-anchored identity primitives, Zero-Knowledge proofs, and zero-trust verification engines.'),
-        ('Enterprise ERP Technical Lead', 'enterprise-erp-technical-lead', 'Enterprise Platforms', 'Bangalore, India', 'Full-Time', '8+ Years', 3, 'Spearhead database modeling, multi-branch transactional engines, and financial reconciliation systems.'),
+        ('Lead Enterprise Systems Architect', 'lead-enterprise-systems-architect', 'Architecture & Engineering', 'Singapore / Hybrid', 'Full-Time Executive', '10+ Years', 2, 'Seeking an exceptional Principal Architect to oversee multi-tenant enterprise core platforms and mission-critical cloud topologies for international banking and government clients.'),
+        ('Senior AI / ML Research Engineer (Private LLMs & RAG)', 'senior-ai-ml-research-engineer', 'Artificial Intelligence Practice', 'London, UK / Remote EMEA', 'Full-Time', '6+ Years', 2, 'Join our Sovereign AI team to fine-tune open-weights models and architect enterprise retrieval-augmented generation (RAG) pipelines operating on air-gapped VPCs.'),
+        ('Enterprise ERP Implementation Lead', 'enterprise-erp-implementation-lead', 'Enterprise Solutions', 'Dubai, UAE / On-Site Client Engagements', 'Full-Time', '8+ Years', 3, 'Lead the scoping, gap analysis, and deployment of A8 Enterprise ERP across multinational industrial conglomerates and state utilities.'),
+        ('Senior Cybersecurity & Zero-Trust Engineer', 'senior-cybersecurity-zero-trust-engineer', 'Cybersecurity Practice', 'Singapore / Remote APAC', 'Full-Time', '7+ Years', 2, 'Architect and audit zero-trust security postures, PKI infrastructure, and identity governance across multi-cloud and sovereign deployments.'),
+        ('Senior Frontend Systems Engineer (React & TypeScript)', 'senior-frontend-systems-engineer', 'Architecture & Engineering', 'Global Remote', 'Full-Time', '5+ Years', 2, 'Craft pixel-perfect, high-performance web workstations, data visualizers, and institutional portals engineered with uncompromising accessibility and speed.'),
     ]
     for title, slug, dept, loc, jtype, exp, openings, ov in vacancies_data:
         vac, _ = JobVacancy.objects.get_or_create(slug=slug, defaults={

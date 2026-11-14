@@ -46,7 +46,7 @@ export default function ReportsModule() {
     } else if (type === 'careers') {
       window.open('http://127.0.0.1:8000/api/careers/applications/export_csv/', '_blank');
     } else {
-      alert(`Exporting ${type} dataset from MySQL database.`);
+      alert(`Exporting ${type} dataset.`);
     }
   };
 
@@ -66,7 +66,7 @@ export default function ReportsModule() {
           <span className="text-xs font-sans font-semibold uppercase tracking-wider text-indigo-600 block mb-1">
             Business Intelligence &amp; Analytics
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             Institutional Reports &amp; Exports
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
@@ -83,7 +83,7 @@ export default function ReportsModule() {
           </button>
           <button
             onClick={() => handleExportCSV('enquiries')}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-mono font-bold uppercase tracking-wider text-white shadow-sm shadow-indigo-600/30 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-sans font-bold uppercase tracking-wider text-white shadow-sm shadow-indigo-600/30 transition-colors"
           >
             <FileDown className="w-4 h-4" />
             <span>Export Enquiries CSV</span>
@@ -96,14 +96,14 @@ export default function ReportsModule() {
         {/* Industry-wise Enquiries */}
         <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-serif font-bold text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm font-sans font-bold text-slate-900 flex items-center gap-2">
               <Building2 className="w-4 h-4 text-indigo-600" />
               <span>Industry-Wise Influx</span>
             </h3>
-            <span className="text-[10px] font-mono text-slate-500 font-bold">Total Enquiries</span>
+            <span className="text-[10px] font-sans text-slate-500 font-bold">Total Enquiries</span>
           </div>
 
-          <div className="space-y-3 text-xs font-mono">
+          <div className="space-y-3 text-xs font-sans">
             {reportData.by_industry.map((item, idx) => {
               const max = 8;
               const pct = Math.round((item.total / max) * 100);
@@ -125,14 +125,14 @@ export default function ReportsModule() {
         {/* Territory / Country-wise */}
         <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-serif font-bold text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm font-sans font-bold text-slate-900 flex items-center gap-2">
               <Globe className="w-4 h-4 text-emerald-600" />
               <span>Country &amp; Jurisdiction Distribution</span>
             </h3>
-            <span className="text-[10px] font-mono text-slate-500 font-bold">Territories</span>
+            <span className="text-[10px] font-sans text-slate-500 font-bold">Territories</span>
           </div>
 
-          <div className="space-y-3 text-xs font-mono">
+          <div className="space-y-3 text-xs font-sans">
             {reportData.by_country.map((item, idx) => {
               const max = 8;
               const pct = Math.round((item.total / max) * 100);
@@ -154,14 +154,14 @@ export default function ReportsModule() {
         {/* Classification / Service Wise */}
         <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-serif font-bold text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm font-sans font-bold text-slate-900 flex items-center gap-2">
               <Layers className="w-4 h-4 text-purple-600" />
               <span>Enquiry Classification Breakdown</span>
             </h3>
-            <span className="text-[10px] font-mono text-slate-500 font-bold">Portal Streams</span>
+            <span className="text-[10px] font-sans text-slate-500 font-bold">Portal Streams</span>
           </div>
 
-          <div className="space-y-3 text-xs font-mono">
+          <div className="space-y-3 text-xs font-sans">
             {reportData.by_type.map((item, idx) => {
               const max = 15;
               const pct = Math.round((item.total / max) * 100);
@@ -183,20 +183,20 @@ export default function ReportsModule() {
         {/* Career Application Pipeline */}
         <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-serif font-bold text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm font-sans font-bold text-slate-900 flex items-center gap-2">
               <Briefcase className="w-4 h-4 text-rose-600" />
               <span>Career Pipeline Funnel</span>
             </h3>
             <button
               onClick={() => handleExportCSV('careers')}
-              className="text-[10px] font-mono text-rose-600 hover:underline flex items-center gap-1 font-bold"
+              className="text-[10px] font-sans text-rose-600 hover:underline flex items-center gap-1 font-bold"
             >
               <span>Export CSV</span>
               <FileDown className="w-3 h-3" />
             </button>
           </div>
 
-          <div className="space-y-3 text-xs font-mono">
+          <div className="space-y-3 text-xs font-sans">
             {reportData.by_career_status.map((item, idx) => {
               const max = 10;
               const pct = Math.round((item.total / max) * 100);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../context/AdminAuthContext';
+import NotificationBell from './NotificationBell';
 import {
   LayoutDashboard, Users, ShieldCheck, FileText, Cpu,
   Layers, Building2, MessageSquare, Briefcase, BookOpen,
@@ -37,25 +38,31 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col lg:flex-row antialiased font-sans">
+    <div className="admin-console min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col lg:flex-row antialiased font-sans">
       {/* Mobile Top Header */}
       <div className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-50 shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-serif font-bold shadow-xs">
-            A8
-          </div>
-          <div>
-            <span className="font-serif font-bold text-sm tracking-wide text-slate-900">A8FUSION</span>
-            <span className="text-[10px] font-sans font-semibold block text-indigo-600">Admin Console</span>
-          </div>
-        </div>
+        <Link to="/admin" className="flex items-center gap-2">
+          <img src="/a8logo.png" alt="A8Fusion Logo" className="h-7 w-auto object-contain" />
+          <span className="text-[10px] font-sans font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded">
+            Console
+          </span>
+        </Link>
 
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded-lg bg-slate-100 text-slate-700 hover:text-slate-900"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationBell
+            onSelectModule={(mod) => {
+              setActiveTab(mod);
+              setMobileMenuOpen(false);
+            }}
+          />
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-lg bg-slate-100 text-slate-700 hover:text-slate-900"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Sidebar Navigation with Dedicated Scroll */}
@@ -67,21 +74,11 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
         <div className="flex flex-col h-full overflow-hidden">
           {/* Brand Header */}
           <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-            <Link to="/admin" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
-                <Shield className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="font-serif font-bold text-slate-900 tracking-wider flex items-center gap-1.5">
-                  <span>A8FUSION</span>
-                  <span className="text-[10px] font-sans bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-bold">
-                    PRO
-                  </span>
-                </div>
-                <div className="text-[11px] font-sans text-slate-500 font-medium">
-                  Enterprise Backend
-                </div>
-              </div>
+            <Link to="/admin" className="flex items-center gap-2.5">
+              <img src="/a8logo.png" alt="A8Fusion Corporate Logo" className="h-8 w-auto object-contain" />
+              <span className="text-[9px] font-sans px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 font-bold border border-indigo-200">
+                PRO
+              </span>
             </Link>
           </div>
 
@@ -89,9 +86,9 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
           <div className="px-5 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs font-sans">
             <div className="flex items-center gap-2 text-emerald-700 font-semibold">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>MySQL 8.0 · Ready</span>
+              <span>Database · Connected</span>
             </div>
-            <span className="text-slate-500 font-medium text-[11px]">Django v5.2</span>
+            <span className="text-slate-500 font-medium text-[11px]">API Engine v2.4</span>
           </div>
 
           {/* Scrollable Nav List */}
@@ -200,6 +197,9 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
             </a>
 
             <div className="h-4 w-px bg-slate-200" />
+
+            {/* Role-Based Live Notification Bell */}
+            <NotificationBell onSelectModule={(mod) => setActiveTab(mod)} />
 
             <div className="flex items-center gap-2">
               <span className="text-xs font-sans font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">

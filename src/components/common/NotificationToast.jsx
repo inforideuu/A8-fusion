@@ -5,7 +5,7 @@ import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 export default function NotificationToast() {
   const { notification, showNotification } = useEnquiry();
 
-  if (!notification) return null;
+  if (!notification || !notification.message) return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 max-w-md w-full animate-in slide-in-from-bottom-5 duration-300">

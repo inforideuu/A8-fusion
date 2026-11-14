@@ -67,14 +67,14 @@ export default function AuditLogsModule() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 block mb-1">
+          <span className="text-xs font-sans font-bold uppercase tracking-wider text-indigo-600 block mb-1">
             STATUTORY COMPLIANCE &amp; FORENSICS
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             Institutional Audit Trail &amp; Access Logs
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
-            Tamper-evident record of privileged logins, failed authentication attempts, data exports, and content mutations in MySQL.
+            Tamper-evident record of privileged logins, failed authentication attempts, data exports, and content mutations across the secure system.
           </p>
         </div>
 
@@ -114,7 +114,7 @@ export default function AuditLogsModule() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search action, username, IP, or details..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-600 outline-none font-mono"
+            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-600 outline-none font-sans"
           />
         </div>
 
@@ -122,7 +122,7 @@ export default function AuditLogsModule() {
           <select
             value={moduleFilter}
             onChange={(e) => setModuleFilter(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:border-indigo-600 outline-none font-mono"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:border-indigo-600 outline-none font-sans"
           >
             {modules.map((m) => (
               <option key={m} value={m}>Module Filter: {m}</option>
@@ -134,7 +134,7 @@ export default function AuditLogsModule() {
       {/* Audit Logs Table */}
       <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-mono">
+          <table className="w-full text-left text-xs font-sans">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
                 <th className="py-3.5 px-4 font-semibold">Timestamp</th>
@@ -160,7 +160,7 @@ export default function AuditLogsModule() {
                       {log.module}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-slate-900 font-bold whitespace-nowrap font-mono">
+                  <td className="py-3.5 px-4 text-slate-900 font-bold whitespace-nowrap font-sans">
                     @{log.username || 'System'}
                   </td>
                   <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap">
@@ -182,7 +182,7 @@ export default function AuditLogsModule() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan="7" className="py-8 text-center text-slate-500 font-mono text-xs">
+                  <td colSpan="7" className="py-8 text-center text-slate-500 font-sans text-xs">
                     No matching audit records found.
                   </td>
                 </tr>

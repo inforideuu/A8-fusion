@@ -209,7 +209,7 @@ export default function ServiceDetailPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert(`Service specification for "${defaultService.title}" saved and synchronized with MySQL!`);
+      alert(`Service specification for "${defaultService.title}" saved and synchronized successfully!`);
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);

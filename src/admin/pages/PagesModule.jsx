@@ -62,10 +62,10 @@ export default function PagesModule() {
     try {
       if (editingPage) {
         await adminApi.patchResource('pages', editingPage.id, formData);
-        alert('Page updated in MySQL.');
+        alert('Page updated successfully.');
       } else {
         await adminApi.postResource('pages', formData);
-        alert('Page created in MySQL.');
+        alert('Page created successfully.');
       }
       setModalOpen(false);
       loadPages();
@@ -161,9 +161,9 @@ export default function PagesModule() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <span className="text-xs font-sans font-semibold uppercase tracking-wider text-indigo-600 block mb-1">
-            Module 03 · Content Management
+             Content Management
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             Page Management &amp; Navigation Hierarchy
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
@@ -190,7 +190,7 @@ export default function PagesModule() {
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-sm font-serif font-bold text-slate-900">
+            <h4 className="text-sm font-sans font-bold text-slate-900">
               Live In-Context Visual Editor
             </h4>
             <p className="text-xs text-slate-600 font-sans">
@@ -301,14 +301,14 @@ export default function PagesModule() {
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-serif font-bold text-slate-900 mb-1">
+            <h3 className="text-xl font-sans font-bold text-slate-900 mb-1">
               {editingPage ? `Edit Page: ${editingPage.title}` : 'Create New Page'}
             </h3>
             <p className="text-xs text-slate-500 font-sans mb-5">
               Specify content, hero layout, navigation placement, and SEO canonical metadata.
             </p>
 
-            <form onSubmit={handleSavePage} className="space-y-4 text-xs font-mono">
+            <form onSubmit={handleSavePage} className="space-y-4 text-xs font-sans">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-slate-600 font-bold block mb-1">PAGE TITLE</label>

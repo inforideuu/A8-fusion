@@ -246,7 +246,7 @@ export function generateStructuredData(pathname, seo) {
     name: 'A8Fusion',
     legalName: 'A8Fusion Enterprise Technology Corporation',
     url: SITE_URL,
-    logo: `${SITE_URL}/aboutus.png`,
+    logo: `${SITE_URL}/a8logo.png`,
     description: DEFAULT_SEO.description,
     foundingDate: '2020',
     address: [

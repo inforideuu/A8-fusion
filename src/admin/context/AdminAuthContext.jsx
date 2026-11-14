@@ -13,15 +13,31 @@ const DEFAULT_PERMISSIONS = {
 };
 
 export function AdminAuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem('a8_admin_token') || null);
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem('a8_admin_token') || null;
+    } catch {
+      return null;
+    }
+  });
   const [user, setUser] = useState(() => {
-    const cached = localStorage.getItem('a8_admin_user');
-    return cached ? JSON.parse(cached) : null;
+    try {
+      const cached = localStorage.getItem('a8_admin_user');
+      return cached ? JSON.parse(cached) : null;
+    } catch (e) {
+      console.warn('Failed parsing a8_admin_user:', e);
+      return null;
+    }
   });
   const [loading, setLoading] = useState(false);
   const [permissionsMatrix, setPermissionsMatrix] = useState(() => {
-    const cached = localStorage.getItem('a8_rbac_matrix');
-    return cached ? JSON.parse(cached) : DEFAULT_PERMISSIONS;
+    try {
+      const cached = localStorage.getItem('a8_rbac_matrix');
+      return cached ? JSON.parse(cached) : DEFAULT_PERMISSIONS;
+    } catch (e) {
+      console.warn('Failed parsing a8_rbac_matrix:', e);
+      return DEFAULT_PERMISSIONS;
+    }
   });
 
   const reloadPermissions = async () => {

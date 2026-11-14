@@ -101,6 +101,8 @@ export default function Footer({ hidePreFooterCard = false }) {
                 <span className="font-bold text-xs">git</span>
               </a>
             </div>
+
+            
           </div>
 
           {/* Column: Core Services */}
@@ -295,13 +297,31 @@ export default function Footer({ hidePreFooterCard = false }) {
 
       {/* Compliance, Legal & Copyright Strip */}
       <div className="border-t border-slate-800/80 bg-[#050A13] py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-400">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 text-xs text-slate-400">
           <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
             <span>&copy; {currentYear} A8Fusion International. All rights reserved.</span>
             <span className="hidden sm:inline text-slate-700">•</span>
             <span className="text-slate-400">
               Tagline: <span className="text-slate-200 font-medium">Made for Global.</span>
             </span>
+          </div>
+
+          {/* Zenelait Infotech Powered By Emblem */}
+          <div className="flex items-center gap-2.5">
+            <span className="text-[11px] text-slate-400 font-sans">Powered by</span>
+            <a
+              href="https://zenelaitinfotech.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center group transition-transform hover:scale-105 cursor-pointer"
+              title="Zenelait Infotech - https://zenelaitinfotech.com/"
+            >
+              <img
+                src="/zenelaitinfotech_logo.png"
+                alt="Zenelait Infotech Logo"
+                className="h-6 sm:h-7 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-xs"
+              />
+            </a>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
@@ -317,9 +337,7 @@ export default function Footer({ hidePreFooterCard = false }) {
             <Link to="/contact" className="hover:text-slate-200 transition-colors">
               Cookie Preferences
             </Link>
-            <Link to="/admin" className="text-indigo-400 hover:text-indigo-300 font-mono text-[11px] transition-colors">
-              Console Access
-            </Link>
+            
           </div>
         </div>
       </div>

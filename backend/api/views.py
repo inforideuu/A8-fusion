@@ -1,5 +1,5 @@
 import csv
-from datetime import timedelta
+from datetime import datetime, timedelta
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.utils import timezone
@@ -150,15 +150,27 @@ def dashboard_overview(request):
     total_solutions = Solution.objects.filter(is_published=True).count()
     total_industries = Industry.objects.filter(is_published=True).count()
 
-    # Monthly trends (last 6 months)
-    today = timezone.now().date()
+    # Monthly trends (last 6 months) using precise datetime range boundaries (MySQL compatible)
+    tz = timezone.get_current_timezone()
+    now_dt = timezone.now()
+    curr_year = now_dt.year
+    curr_month = now_dt.month
     monthly_data = []
     month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     for i in range(5, -1, -1):
-        m_date = today - timedelta(days=i * 30)
-        m_name = f"{month_names[m_date.month - 1]} {m_date.year}"
-        count = Enquiry.objects.filter(created_at__year=m_date.year, created_at__month=m_date.month).count()
-        app_count = JobApplication.objects.filter(applied_at__year=m_date.year, applied_at__month=m_date.month).count()
+        m = curr_month - i
+        y = curr_year
+        while m <= 0:
+            m += 12
+            y -= 1
+        start_dt = datetime(y, m, 1, 0, 0, 0, tzinfo=tz)
+        if m == 12:
+            end_dt = datetime(y + 1, 1, 1, 0, 0, 0, tzinfo=tz)
+        else:
+            end_dt = datetime(y, m + 1, 1, 0, 0, 0, tzinfo=tz)
+        m_name = f"{month_names[m - 1]} {y}"
+        count = Enquiry.objects.filter(created_at__gte=start_dt, created_at__lt=end_dt).count()
+        app_count = JobApplication.objects.filter(applied_at__gte=start_dt, applied_at__lt=end_dt).count()
         monthly_data.append({
             'month': m_name,
             'enquiries': count,
@@ -211,6 +223,208 @@ def dashboard_overview(request):
         'industry_distribution': industry_dist,
         'recent_activity': recent_logs_data,
         'recent_enquiries': recent_enq_data,
+    })
+
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def notifications_view(request):
+    """
+    Role-based dynamic live notifications generated directly from database tables.
+    Returns targeted alerts for SUPER_ADMIN, WEBSITE_ADMIN, SALES_MANAGER, HR_MANAGER, CONTENT_MANAGER, BD_MANAGER.
+    """
+    user = request.user if request.user.is_authenticated else None
+    role = request.query_params.get('role') or (user.role if user else 'SUPER_ADMIN')
+
+    notifications = []
+    now = timezone.now()
+
+    def format_time_ago(dt):
+        if not dt:
+            return 'Just now'
+        diff = now - dt
+        seconds = int(diff.total_seconds())
+        if seconds < 60:
+            return 'Just now'
+        elif seconds < 3600:
+            mins = max(1, seconds // 60)
+            return f"{mins}m ago"
+        elif seconds < 86400:
+            hours = max(1, seconds // 3600)
+            return f"{hours}h ago"
+        elif seconds < 604800:
+            days = max(1, seconds // 86400)
+            return f"{days}d ago"
+        else:
+            return dt.strftime('%b %d')
+
+    # 1. CRM ENQUIRIES NOTIFICATIONS (Super Admin, Website Admin, Sales Manager, BD Manager)
+    if role in ['SUPER_ADMIN', 'WEBSITE_ADMIN', 'SALES_MANAGER', 'BD_MANAGER']:
+        # A. New Enquiries
+        crm_qs = Enquiry.objects.filter(status='New')
+        if role in ['SALES_MANAGER', 'BD_MANAGER'] and user:
+            crm_qs = crm_qs.filter(Q(assigned_to=user) | Q(assigned_to__isnull=True))
+
+        for enq in crm_qs.order_by('-created_at')[:6]:
+            notifications.append({
+                'id': f"enq-new-{enq.id}",
+                'title': f"New Stakeholder Enquiry: {enq.full_name}",
+                'message': f"{enq.organization or 'Private Stakeholder'} submitted a {enq.get_enquiry_type_display()} enquiry. Estimated Budget: {enq.estimated_budget or 'Custom Scope'}.",
+                'category': 'CRM',
+                'priority': 'urgent' if enq.priority == 'Urgent' else ('high' if enq.priority == 'High' else 'normal'),
+                'module': 'crm',
+                'action_id': enq.id,
+                'reference_code': enq.reference_code,
+                'created_at': enq.created_at.isoformat(),
+                'time_ago': format_time_ago(enq.created_at)
+            })
+
+        # B. Urgent / High Priority Enquiries needing attention
+        urgent_enqs = Enquiry.objects.filter(priority='Urgent').exclude(status__in=['Won', 'Lost'])
+        for u_enq in urgent_enqs.order_by('-created_at')[:4]:
+            notif_id = f"enq-urgent-{u_enq.id}"
+            if not any(n['id'] == notif_id or n['id'] == f"enq-new-{u_enq.id}" for n in notifications):
+                notifications.append({
+                    'id': notif_id,
+                    'title': f"Urgent Mandate: {u_enq.reference_code}",
+                    'message': f"High-velocity triage required for {u_enq.full_name} ({u_enq.organization or 'Enterprise'}). Current status: {u_enq.status}.",
+                    'category': 'CRM',
+                    'priority': 'urgent',
+                    'module': 'crm',
+                    'action_id': u_enq.id,
+                    'reference_code': u_enq.reference_code,
+                    'created_at': u_enq.created_at.isoformat(),
+                    'time_ago': format_time_ago(u_enq.created_at)
+                })
+
+        # C. Follow-up Target Dates Due Today or Overdue
+        today = timezone.now().date()
+        due_enqs = Enquiry.objects.filter(follow_up_date__lte=today).exclude(status__in=['Won', 'Lost'])
+        if role in ['SALES_MANAGER', 'BD_MANAGER'] and user:
+            due_enqs = due_enqs.filter(assigned_to=user)
+
+        for d_enq in due_enqs.order_by('follow_up_date')[:4]:
+            notifications.append({
+                'id': f"enq-due-{d_enq.id}",
+                'title': f"Follow-Up Due: {d_enq.full_name}",
+                'message': f"Scheduled touchpoint due with {d_enq.organization or d_enq.full_name} (Target: {d_enq.follow_up_date}).",
+                'category': 'CRM',
+                'priority': 'high',
+                'module': 'crm',
+                'action_id': d_enq.id,
+                'reference_code': d_enq.reference_code,
+                'created_at': d_enq.created_at.isoformat(),
+                'time_ago': 'Action due'
+            })
+
+    # 2. CAREERS & TALENT NOTIFICATIONS (Super Admin, Website Admin, HR Manager)
+    if role in ['SUPER_ADMIN', 'WEBSITE_ADMIN', 'HR_MANAGER']:
+        # A. New Job Applications
+        new_apps = JobApplication.objects.filter(status='New').select_related('vacancy').order_by('-applied_at')[:6]
+        for app in new_apps:
+            vac_title = app.vacancy.title if app.vacancy else 'General Technical Requisition'
+            notifications.append({
+                'id': f"app-new-{app.id}",
+                'title': f"New Candidate Dossier: {app.candidate_name}",
+                'message': f"Submitted application for {vac_title} ({app.experience_years or 'Experienced'}). Ready for initial screening.",
+                'category': 'Careers',
+                'priority': 'normal',
+                'module': 'careers',
+                'action_id': app.id,
+                'created_at': app.applied_at.isoformat(),
+                'time_ago': format_time_ago(app.applied_at)
+            })
+
+        # B. Applications in Interview Stage
+        interview_apps = JobApplication.objects.filter(status='Interview').select_related('vacancy').order_by('-updated_at')[:3]
+        for app in interview_apps:
+            notifications.append({
+                'id': f"app-interview-{app.id}",
+                'title': f"Interview Pipeline: {app.candidate_name}",
+                'message': f"Active technical evaluation underway for {app.vacancy.title if app.vacancy else 'Role'}.",
+                'category': 'Careers',
+                'priority': 'high',
+                'module': 'careers',
+                'action_id': app.id,
+                'created_at': app.updated_at.isoformat(),
+                'time_ago': format_time_ago(app.updated_at)
+            })
+
+        # C. Vacancies with zero applicants or high openings
+        urgent_vacancies = JobVacancy.objects.filter(status='Published', openings__gte=2)[:2]
+        for vac in urgent_vacancies:
+            if vac.applications.count() == 0:
+                notifications.append({
+                    'id': f"vac-open-{vac.id}",
+                    'title': f"Open Requisition: {vac.title}",
+                    'message': f"{vac.openings} open positions in {vac.department} with no candidate dossiers submitted yet.",
+                    'category': 'Careers',
+                    'priority': 'normal',
+                    'module': 'careers',
+                    'action_id': vac.id,
+                    'created_at': vac.created_at.isoformat(),
+                    'time_ago': format_time_ago(vac.created_at)
+                })
+
+    # 3. SECURITY & AUDIT TRAIL NOTIFICATIONS (Super Admin, Website Admin)
+    if role in ['SUPER_ADMIN', 'WEBSITE_ADMIN']:
+        # A. Warning or Critical Audit Logs
+        security_logs = AuditLog.objects.filter(status__in=['WARNING', 'FAILURE']).order_by('-created_at')[:5]
+        for log in security_logs:
+            notifications.append({
+                'id': f"audit-{log.id}",
+                'title': f"Security Event: {log.action}",
+                'message': f"[{log.module}] {log.details} recorded for user {log.username} (IP: {log.ip_address}).",
+                'category': 'Security',
+                'priority': 'urgent' if log.status == 'FAILURE' else 'high',
+                'module': 'audit-logs',
+                'action_id': log.id,
+                'created_at': log.created_at.isoformat(),
+                'time_ago': format_time_ago(log.created_at)
+            })
+
+        # B. Disabled user accounts notice
+        disabled_users = User.objects.filter(is_disabled=True)
+        if disabled_users.exists():
+            usernames = ", ".join([u.username for u in disabled_users[:3]])
+            notifications.append({
+                'id': 'users-disabled-warning',
+                'title': f"Account Governance: {disabled_users.count()} Locked Account(s)",
+                'message': f"Administrative access currently suspended for {usernames}.",
+                'category': 'Security',
+                'priority': 'high',
+                'module': 'users',
+                'action_id': 'disabled-users',
+                'created_at': now.isoformat(),
+                'time_ago': 'Active status'
+            })
+
+    # 4. CONTENT & EDITORIAL NOTIFICATIONS (Super Admin, Website Admin, Content Manager)
+    if role in ['SUPER_ADMIN', 'WEBSITE_ADMIN', 'CONTENT_MANAGER']:
+        # A. Draft Articles awaiting review
+        drafts = Article.objects.filter(status='Draft').order_by('-created_at')[:4]
+        for draft in drafts:
+            notifications.append({
+                'id': f"draft-art-{draft.id}",
+                'title': f"Draft Insight: {draft.title}",
+                'message': f"Executive paper in '{draft.category}' authored by {draft.author_name} is saved as Draft and pending review.",
+                'category': 'Content',
+                'priority': 'normal',
+                'module': 'pages',
+                'action_id': draft.id,
+                'created_at': draft.created_at.isoformat(),
+                'time_ago': format_time_ago(draft.created_at)
+            })
+
+    # Sort notifications by priority: urgent first, then high, then normal
+    priority_order = {'urgent': 0, 'high': 1, 'normal': 2, 'low': 3}
+    notifications.sort(key=lambda n: priority_order.get(n['priority'], 4))
+
+    return Response({
+        'role': role,
+        'count': len(notifications),
+        'unread_count': len(notifications),
+        'notifications': notifications
     })
 
 
@@ -484,6 +698,15 @@ class EnquiryViewSet(viewsets.ModelViewSet):
         create_audit(self.request, 'CREATE_ENQUIRY', 'CRM', f"Received enquiry {enquiry.reference_code} from {enquiry.full_name}")
 
     def perform_update(self, serializer):
+        user = self.request.user
+        if 'assigned_to' in serializer.validated_data:
+            if user.is_authenticated and not user.is_superuser:
+                user_role = getattr(user, 'role', '')
+                if user_role not in ['SUPER_ADMIN', 'WEBSITE_ADMIN']:
+                    original_instance = self.get_object()
+                    if serializer.validated_data.get('assigned_to') != original_instance.assigned_to:
+                        from rest_framework.exceptions import PermissionDenied
+                        raise PermissionDenied("Only Super Admin and Website Admin are authorized to assign or reassign staff.")
         enquiry = serializer.save()
         create_audit(self.request, 'UPDATE_ENQUIRY', 'CRM', f"Updated enquiry {enquiry.reference_code} status: {enquiry.status}")
 
@@ -542,6 +765,22 @@ class EnquiryViewSet(viewsets.ModelViewSet):
                 enq.created_at.strftime('%Y-%m-%d %H:%M')
             ])
         return response
+
+    @action(detail=False, methods=['delete', 'post'])
+    def delete_all(self, request):
+        count = Enquiry.objects.count()
+        Enquiry.objects.all().delete()
+        create_audit(request, 'DELETE_ALL_ENQUIRIES', 'CRM', f"Purged all {count} enquiry records from CRM", 'WARNING')
+        return Response({'detail': f'Successfully deleted {count} enquiries.', 'deleted_count': count}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['delete', 'post'])
+    def bulk_delete(self, request):
+        ids = request.data.get('ids', [])
+        if ids:
+            deleted_count, _ = Enquiry.objects.filter(id__in=ids).delete()
+            create_audit(request, 'BULK_DELETE_ENQUIRIES', 'CRM', f"Deleted {deleted_count} selected enquiries", 'WARNING')
+            return Response({'detail': f'Successfully deleted {deleted_count} enquiries.', 'deleted_count': deleted_count}, status=status.HTTP_200_OK)
+        return Response({'detail': 'No ids provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # =============================================================================

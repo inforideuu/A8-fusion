@@ -147,7 +147,7 @@ export default function SolutionsPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Solutions platforms saved and synchronized with MySQL!');
+      alert('Solutions platforms saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);

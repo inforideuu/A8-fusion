@@ -346,26 +346,26 @@ const DEFAULT_INSIGHTS = [
     id: 'ins-1',
     slug: 'architecting-sovereign-cloud-infrastructure',
     title: 'Architecting Sovereign Cloud Infrastructure for High-Security Environments',
-    category: 'Architecture',
+    category: 'Enterprise Technology',
     readTime: '8 min read',
     coverImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
     excerpt: 'A comprehensive engineering framework for achieving complete data residency, air-gapped cryptographic vaults, and immutable auditability under domestic compliance regimes.',
     author: {
       name: 'Dr. Marcus Vance',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80'
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80'
     }
   },
   {
     id: 'ins-2',
     slug: 'migrating-monolithic-core-banking-systems',
     title: 'Migrating Monolithic Core Banking: Non-Invasive Strangler Patterns',
-    category: 'Enterprise Tech',
+    category: 'Enterprise Technology',
     readTime: '12 min read',
     coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
     excerpt: 'Tactical methodologies for incrementally decommissioning legacy mainframe backbones without disrupting active customer transaction flows or ledger reconciliations.',
     author: {
       name: 'Elena Rostova',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80'
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80'
     }
   },
   {
@@ -374,11 +374,11 @@ const DEFAULT_INSIGHTS = [
     title: 'Private On-Premise LLM Deployment: RAG Architectures & Security',
     category: 'Artificial Intelligence',
     readTime: '10 min read',
-    coverImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80',
     excerpt: 'Preventing proprietary intellectual property leakage through containerized on-premise model execution, deterministic vector retrieval, and output guardrails.',
     author: {
       name: 'Tariq Al-Mansoor',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80'
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80'
     }
   }
 ];
@@ -531,7 +531,14 @@ export default function HomePage() {
           if (parsed.whyA8FusionPoints) setWhyA8FusionPoints(parsed.whyA8FusionPoints);
           if (parsed.lifecycleStagesList) setLifecycleStagesList(parsed.lifecycleStagesList);
           if (parsed.globalPillars) setGlobalPillars(parsed.globalPillars);
-          if (parsed.insightsList) setInsightsList(parsed.insightsList);
+          if (parsed.insightsList) {
+            setInsightsList(parsed.insightsList.map(item => {
+              if (item.slug === 'private-on-premise-llm-deployment') {
+                return { ...item, coverImage: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80' };
+              }
+              return item;
+            }));
+          }
           if (parsed.sectionHeadings) setSectionHeadings(prev => ({ ...prev, ...parsed.sectionHeadings }));
         }
 
@@ -553,7 +560,14 @@ export default function HomePage() {
             if (ld.whyA8FusionPoints) setWhyA8FusionPoints(ld.whyA8FusionPoints);
             if (ld.lifecycleStagesList) setLifecycleStagesList(ld.lifecycleStagesList);
             if (ld.globalPillars) setGlobalPillars(ld.globalPillars);
-            if (ld.insightsList) setInsightsList(ld.insightsList);
+            if (ld.insightsList) {
+              setInsightsList(ld.insightsList.map(item => {
+                if (item.slug === 'private-on-premise-llm-deployment') {
+                  return { ...item, coverImage: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80' };
+                }
+                return item;
+              }));
+            }
             if (ld.sectionHeadings) setSectionHeadings(prev => ({ ...prev, ...ld.sectionHeadings }));
             localStorage.setItem('a8_live_home_content', JSON.stringify(ld));
           }
@@ -609,7 +623,7 @@ export default function HomePage() {
 
       if (res.ok) {
         setIsDirty(false);
-        alert('Home Page live visual changes permanently saved to MySQL and published!');
+        alert('Home Page live visual changes permanently saved and published!');
       } else {
         alert('Changes saved locally.');
       }

@@ -25,12 +25,12 @@ export function LiveEditorToolbar({
           Editing: <strong className="text-white">{pageName}</strong>
         </span>
         {isDirty ? (
-          <span className="text-[10px] font-bold font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full animate-pulse">
+          <span className="text-[10px] font-bold font-sans bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full animate-pulse">
             Unsaved Changes
           </span>
         ) : (
-          <span className="text-[10px] font-mono text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-full hidden md:inline">
-            MySQL Synchronized
+          <span className="text-[10px] font-sans text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded-full hidden md:inline">
+            Synchronized
           </span>
         )}
       </div>
@@ -71,7 +71,7 @@ export function LiveEditorToolbar({
           }`}
         >
           <Save className="w-3.5 h-3.5" />
-          <span>{saving ? 'Saving...' : 'Save to MySQL'}</span>
+          <span>{saving ? 'Saving...' : 'Save Changes'}</span>
         </button>
 
         <button
@@ -94,7 +94,7 @@ export function CardActionOverlay({ onEdit, onDelete, detailUrl, title = 'Card' 
         <a
           href={detailUrl}
           onClick={(e) => e.stopPropagation()}
-          className="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 hover:text-emerald-800 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono font-bold px-2"
+          className="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 hover:text-emerald-800 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-sans font-bold px-2"
           title={`Open Live Editor for ${title} detail page`}
         >
           <Sparkles className="w-3.5 h-3.5" />
@@ -140,7 +140,7 @@ export function AddCardButton({ onClick, label = 'Add New Item', subtitle = 'Add
         <Plus className="w-6 h-6" />
       </div>
       <div>
-        <span className="font-serif font-bold text-slate-900 block text-base group-hover:text-indigo-700">
+        <span className="font-sans font-bold text-slate-900 block text-base group-hover:text-indigo-700">
           + {label}
         </span>
         {subtitle && (
@@ -177,7 +177,7 @@ export function LiveEditorModal({ isOpen, onClose, onSave, title, children }) {
             <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200">
               <Sparkles className="w-4 h-4" />
             </div>
-            <h3 className="text-lg font-serif font-bold text-slate-900">{title}</h3>
+            <h3 className="text-lg font-sans font-bold text-slate-900">{title}</h3>
           </div>
           <button
             type="button"

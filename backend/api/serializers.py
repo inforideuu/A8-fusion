@@ -88,6 +88,7 @@ class EnquirySerializer(serializers.ModelSerializer):
 
 class JobVacancySerializer(serializers.ModelSerializer):
     applications_count = serializers.SerializerMethodField()
+    slug = serializers.SlugField(required=False, allow_blank=True)
 
     class Meta:
         model = JobVacancy

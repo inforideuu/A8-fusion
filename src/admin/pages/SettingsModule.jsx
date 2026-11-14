@@ -6,7 +6,7 @@ export default function SettingsModule() {
   const [settings, setSettings] = useState({
     company_name: 'A8Fusion Private Limited',
     tagline: 'Enterprise Software Platforms & Engineering Architecture',
-    logo_url: '',
+    logo_url: '/a8logo.png',
     support_email: 'contact@a8fusion.com',
     phone_primary: '+91 80 4123 4567',
     phone_secondary: '+91 80 4123 4568',
@@ -45,11 +45,11 @@ export default function SettingsModule() {
     e.preventDefault();
     try {
       await adminApi.patchResource('settings/website', 1, settings);
-      alert('Corporate website settings persisted to MySQL.');
+      alert('Corporate website settings saved successfully.');
     } catch (err) {
       try {
         await adminApi.postResource('settings/website', settings);
-        alert('Corporate website settings persisted to MySQL.');
+        alert('Corporate website settings saved successfully.');
       } catch (err2) {
         alert('Settings saved.');
       }
@@ -61,10 +61,10 @@ export default function SettingsModule() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 block mb-1">
+          <span className="text-xs font-sans font-bold uppercase tracking-wider text-indigo-600 block mb-1">
            INSTITUTIONAL IDENTITY &amp; SYSTEM CONFIG
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             Corporate Website Settings
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
@@ -80,10 +80,10 @@ export default function SettingsModule() {
         </button>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6 text-xs font-mono">
+      <form onSubmit={handleSave} className="space-y-6 text-xs font-sans">
         {/* Section 1: Company Profile */}
         <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-6 space-y-4">
-          <h3 className="text-sm font-serif font-bold text-slate-900 pb-3 border-b border-slate-200 flex items-center gap-2">
+          <h3 className="text-sm font-sans font-bold text-slate-900 pb-3 border-b border-slate-200 flex items-center gap-2">
             <Shield className="w-4 h-4 text-indigo-600" />
             <span>Corporate Entity Details</span>
           </h3>
@@ -123,7 +123,7 @@ export default function SettingsModule() {
 
         {/* Section 2: Contact Telemetry */}
         <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-6 space-y-4">
-          <h3 className="text-sm font-serif font-bold text-slate-900 pb-3 border-b border-slate-200 flex items-center gap-2">
+          <h3 className="text-sm font-sans font-bold text-slate-900 pb-3 border-b border-slate-200 flex items-center gap-2">
             <Mail className="w-4 h-4 text-indigo-600" />
             <span>Contact Telemetry &amp; Social Links</span>
           </h3>
@@ -192,7 +192,7 @@ export default function SettingsModule() {
 
         {/* Section 3: Legal, Cookie & Analytics */}
         <div className="bg-white border border-slate-200/90 shadow-xs rounded-2xl p-6 space-y-4">
-          <h3 className="text-sm font-serif font-bold text-slate-900 pb-3 border-b border-slate-200 flex items-center gap-2">
+          <h3 className="text-sm font-sans font-bold text-slate-900 pb-3 border-b border-slate-200 flex items-center gap-2">
             <Globe className="w-4 h-4 text-indigo-600" />
             <span>Compliance, Cookie Banner &amp; Analytics</span>
           </h3>

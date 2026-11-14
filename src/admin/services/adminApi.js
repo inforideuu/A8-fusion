@@ -98,7 +98,7 @@ export const adminApi = {
         { id: 2, action: 'LOGIN', module: 'Auth', username: 'admin', details: 'Administrator session initiated', status: 'SUCCESS', created_at: '2026-11-12T10:30:00' },
         { id: 3, action: 'CREATE_ENQUIRY', module: 'CRM', username: 'System', details: 'New government enquiry from Federal Ministry', status: 'SUCCESS', created_at: '2026-11-12T09:15:00' },
         { id: 4, action: 'UPDATE_ARTICLE', module: 'Insights', username: 'contentmgr', details: 'Published Architectural Rigor in Sovereign Cloud', status: 'SUCCESS', created_at: '2026-11-12T08:20:00' },
-        { id: 5, action: 'SYSTEM_INIT', module: 'System', username: 'admin', details: 'MySQL Database & RBAC initialized', status: 'SUCCESS', created_at: '2026-11-12T08:00:00' },
+        { id: 5, action: 'SYSTEM_INIT', module: 'System', username: 'admin', details: 'Core Database & RBAC initialized', status: 'SUCCESS', created_at: '2026-11-12T08:00:00' },
       ],
       recent_enquiries: [
         { id: 1, reference_code: 'ENQ-2026-001', full_name: 'Dr. Alexander Vance', organization: 'Nordic Apex Infrastructure AB', enquiry_type: 'project', status: 'Negotiation', priority: 'Urgent', created_at: '2026-11-12 10:45' },
@@ -126,7 +126,19 @@ export const adminApi = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    if (!res.ok) throw new Error(`Failed creating item in ${endpoint}`);
+    if (!res.ok) {
+      let msg = `Failed creating item in ${endpoint}`;
+      try {
+        const json = await res.json();
+        if (json.detail) {
+          msg = json.detail;
+        } else if (typeof json === 'object') {
+          const parts = Object.entries(json).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(' ') : v}`);
+          if (parts.length > 0) msg = parts.join(' | ');
+        }
+      } catch (_) {}
+      throw new Error(msg);
+    }
     return res.json();
   },
 
@@ -136,7 +148,19 @@ export const adminApi = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    if (!res.ok) throw new Error(`Failed updating item in ${endpoint}`);
+    if (!res.ok) {
+      let msg = `Failed updating item in ${endpoint}`;
+      try {
+        const json = await res.json();
+        if (json.detail) {
+          msg = json.detail;
+        } else if (typeof json === 'object') {
+          const parts = Object.entries(json).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(' ') : v}`);
+          if (parts.length > 0) msg = parts.join(' | ');
+        }
+      } catch (_) {}
+      throw new Error(msg);
+    }
     return res.json();
   },
 
@@ -145,7 +169,14 @@ export const adminApi = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    if (!res.ok) throw new Error(`Failed deleting item in ${endpoint}`);
+    if (!res.ok) {
+      let msg = `Failed deleting item in ${endpoint}`;
+      try {
+        const json = await res.json();
+        if (json.detail) msg = json.detail;
+      } catch (_) {}
+      throw new Error(msg);
+    }
     return true;
   },
 

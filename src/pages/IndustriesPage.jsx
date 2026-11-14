@@ -144,7 +144,7 @@ export default function IndustriesPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Industries catalog specifications saved and synchronized with MySQL!');
+      alert('Industries catalog specifications saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);

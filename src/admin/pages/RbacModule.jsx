@@ -97,10 +97,10 @@ export default function RbacModule() {
         localStorage.setItem('a8_rbac_matrix', JSON.stringify(matrix));
       }
       setIsDirty(false);
-      alert('RBAC Clearance Matrix successfully saved in MySQL and enforced system-wide.');
+      alert('RBAC Clearance Matrix successfully saved and enforced system-wide.');
     } catch (err) {
       console.error(err);
-      alert('Failed to save permissions to MySQL database.');
+      alert('Failed to save permissions to database.');
     } finally {
       setSaving(false);
     }
@@ -145,13 +145,13 @@ export default function RbacModule() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <span className="text-xs font-sans font-semibold uppercase tracking-wider text-indigo-600 block mb-1">
-            Module 02 · Institutional Access &amp; Permissions
+            Institutional Access &amp; Permissions
           </span>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-slate-900 tracking-tight">
             Role-Based Access Control (RBAC) Governance
           </h1>
           <p className="text-xs text-slate-500 font-sans mt-1">
-            Configure who can do what: Super Admin grants or revokes operational module access dynamically in MySQL.
+            Configure who can do what: Super Admin grants or revokes operational module access dynamically across the platform.
           </p>
         </div>
 
@@ -160,7 +160,7 @@ export default function RbacModule() {
             onClick={handleReload}
             disabled={loading}
             className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 shadow-xs hover:bg-slate-50 cursor-pointer"
-            title="Reload from MySQL"
+            title="Reload Permissions"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -187,7 +187,7 @@ export default function RbacModule() {
                 }`}
               >
                 <Save className="w-4 h-4" />
-                <span>{saving ? 'Saving...' : isDirty ? 'Save Permission Matrix' : 'Saved in MySQL'}</span>
+                <span>{saving ? 'Saving...' : isDirty ? 'Save Permission Matrix' : 'Saved in Database'}</span>
               </button>
             </div>
           ) : (
@@ -210,7 +210,7 @@ export default function RbacModule() {
               Super Admin Governance Authority Active
             </div>
             <p className="text-slate-600">
-              You are authenticated with sovereign administrative clearance. Click any checkbox below to grant or revoke module access for other organizational roles, or use the column quick-actions. Click <span className="font-bold text-indigo-700">"Save Permission Matrix"</span> to commit changes permanently to MySQL.
+              You are authenticated with sovereign administrative clearance. Click any checkbox below to grant or revoke module access for other organizational roles, or use the column quick-actions. Click <span className="font-bold text-indigo-700">"Save Permission Matrix"</span> to commit changes permanently to the platform database.
             </p>
           </div>
         </div>
@@ -256,7 +256,7 @@ export default function RbacModule() {
       <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
         <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-serif font-bold text-slate-900">
+            <h3 className="text-sm font-sans font-bold text-slate-900">
               Interactive Clearance &amp; Module Permission Grid
             </h3>
             <p className="text-xs text-slate-500 font-sans mt-0.5">
@@ -280,7 +280,7 @@ export default function RbacModule() {
                 {roles.map((r) => (
                   <th key={r.code} className="py-3 px-3 text-center min-w-[130px]">
                     <div className="font-bold text-slate-900 truncate">{r.name}</div>
-                    <div className="text-[10px] text-slate-400 font-mono font-normal">{r.code}</div>
+                    <div className="text-[10px] text-slate-400 font-sans font-normal">{r.code}</div>
 
                     {/* Column Quick Action Buttons for Super Admin */}
                     {isSuperAdmin && r.code !== 'SUPER_ADMIN' && (
@@ -304,7 +304,7 @@ export default function RbacModule() {
                       </div>
                     )}
                     {r.code === 'SUPER_ADMIN' && (
-                      <div className="mt-2 text-[10px] text-indigo-600 font-mono font-semibold flex items-center justify-center gap-1">
+                      <div className="mt-2 text-[10px] text-indigo-600 font-sans font-semibold flex items-center justify-center gap-1">
                         <Lock className="w-2.5 h-2.5" />
                         <span>Sovereign</span>
                       </div>
@@ -371,7 +371,7 @@ export default function RbacModule() {
 
           {isSuperAdmin && (
             <div className="flex items-center gap-3">
-              <span>{isDirty ? 'Changes pending commitment' : 'All permissions committed to MySQL database'}</span>
+              <span>{isDirty ? 'Changes pending commitment' : 'All permissions committed to database'}</span>
               {isDirty && (
                 <button
                   onClick={handleSave}

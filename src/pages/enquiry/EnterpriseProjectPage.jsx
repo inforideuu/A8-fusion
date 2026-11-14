@@ -136,9 +136,10 @@ export default function EnterpriseProjectPage() {
     projectCategory: preselectedService || preselectedSolution || 'Enterprise Software Development',
     description: '',
     timeline: '3 – 6 Months',
-    budgetRange: '₹50 Lakhs – ₹1 Crore',
     consent: false
   });
+  const [isCustomIndustry, setIsCustomIndustry] = useState(false);
+  const [customIndustryValue, setCustomIndustryValue] = useState('');
 
   const industries = [
     'Banking & Financial Services',
@@ -150,7 +151,7 @@ export default function EnterpriseProjectPage() {
     'Education & Universities',
     'Real Estate & Asset Portfolios',
     'Energy & Public Utilities',
-    'Conglomerate / Other'
+    'Custom'
   ];
 
   const categories = [
@@ -261,7 +262,7 @@ export default function EnterpriseProjectPage() {
       });
       if (!res.ok) throw new Error('Failed to save to backend');
       setIsDirty(false);
-      alert('Enterprise Project Scope specifications saved and synchronized with MySQL!');
+      alert('Enterprise Project Scope specifications saved and synchronized successfully!');
     } catch (e) {
       console.warn('Backend save issue:', e);
       setIsDirty(false);
@@ -349,9 +350,15 @@ export default function EnterpriseProjectPage() {
       alert('Please confirm the non-disclosure and project authorization statement.');
       return;
     }
+    const resolvedIndustry = isCustomIndustry
+      ? (customIndustryValue.trim() || 'Custom Industry Sector')
+      : formData.industry;
+
     const ref = submitEnquiry({
       ...formData,
-      type: 'Enterprise Project'
+      industry: resolvedIndustry,
+      type: 'Enterprise Project',
+      enquiry_type: 'project'
     });
     setSubmittedRef(ref);
   };
@@ -481,77 +488,6 @@ export default function EnterpriseProjectPage() {
                   )}
                 </div>
               </div>
-
-              {/* Institutional Assurance & Compliance Box */}
-              <div className="p-5 rounded-2xl bg-[#0B1424] text-white border border-slate-800 space-y-4 shadow-xl card-hover-security-covenant relative group">
-                {isLive && (
-                  <div className="absolute top-3 right-3 z-20">
-                    <button
-                      type="button"
-                      onClick={() => openModal('covenants', { ...covenants })}
-                      className="p-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium cursor-pointer shadow-sm flex items-center gap-1"
-                    >
-                      <Edit2 className="w-3 h-3" />
-                      <span>Edit Covenants</span>
-                    </button>
-                  </div>
-                )}
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <div className="flex items-center gap-2 text-indigo-400 font-serif font-bold text-sm">
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>{covenants.title}</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">
-                    {covenants.badge}
-                  </span>
-                </div>
-
-                <div className="space-y-2.5 text-xs text-slate-300 font-sans leading-relaxed">
-                  <div className="flex items-start gap-2">
-                    <Lock className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>{covenants.covenant1Label}:</strong> {covenants.covenant1Desc}</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Scale className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>{covenants.covenant2Label}:</strong> {covenants.covenant2Desc}</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Building2 className="w-3.5 h-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>{covenants.covenant3Label}:</strong> {covenants.covenant3Desc}</span>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-800">
-                  <Link
-                    to="/government/enquiry"
-                    className="inline-flex items-center gap-2 text-xs font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
-                  >
-                    <span>Switch to Government Tender Portal</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Verified Physical Corridors Notice */}
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-sans text-slate-600 flex items-center justify-between card-hover-corridor-notice relative group">
-                {isLive && (
-                  <div className="absolute top-2 right-12 z-20">
-                    <button
-                      type="button"
-                      onClick={() => openModal('hubs', { ...hubsNotice })}
-                      className="p-1 rounded bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs cursor-pointer"
-                      title="Edit Notice"
-                    >
-                      <Edit2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                )}
-                <div>
-                  <div className="font-bold text-slate-900 font-serif">{hubsNotice.title}</div>
-                  <div className="font-mono text-[11px] text-slate-500 mt-0.5">{hubsNotice.desc}</div>
-                </div>
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-              </div>
             </div>
 
             {/* ================================================================= */}
@@ -587,7 +523,11 @@ export default function EnterpriseProjectPage() {
                   <div className="pt-2">
                     <button
                       type="button"
-                      onClick={() => setSubmittedRef(null)}
+                      onClick={() => {
+                        setSubmittedRef(null);
+                        setIsCustomIndustry(false);
+                        setCustomIndustryValue('');
+                      }}
                       className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
                     >
                       Submit Additional Technical Scope
@@ -672,16 +612,43 @@ export default function EnterpriseProjectPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-700 font-bold mb-1">Primary Industry Sector</label>
+                        <label className="block text-slate-700 font-bold mb-1">Primary Industry Sector *</label>
                         <select
-                          value={formData.industry}
-                          onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 focus:outline-hidden focus:border-indigo-600 text-xs text-slate-800"
+                          value={isCustomIndustry ? 'Custom' : formData.industry}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === 'Custom') {
+                              setIsCustomIndustry(true);
+                            } else {
+                              setIsCustomIndustry(false);
+                              setFormData({ ...formData, industry: val });
+                            }
+                          }}
+                          className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 focus:outline-hidden focus:border-indigo-600 text-xs text-slate-800 cursor-pointer font-sans"
                         >
                           {industries.map(ind => (
-                            <option key={ind} value={ind}>{ind}</option>
+                            <option key={ind} value={ind}>
+                              {ind === 'Custom' ? 'Custom Industry Sector (Specify)' : ind}
+                            </option>
                           ))}
                         </select>
+
+                        {isCustomIndustry && (
+                          <div className="mt-2 space-y-1">
+                            <input
+                              type="text"
+                              required
+                              placeholder="e.g. Aerospace & Defense, Biotechnology, Telecommunications, E-Commerce..."
+                              value={customIndustryValue}
+                              onChange={(e) => setCustomIndustryValue(e.target.value)}
+                              className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-indigo-500 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 font-sans shadow-2xs"
+                              autoFocus
+                            />
+                            <span className="text-[11px] text-slate-500 font-sans block">
+                              Specify your customized corporate industry vertical.
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -732,11 +699,24 @@ export default function EnterpriseProjectPage() {
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            setFormData({
-                              ...formData,
-                              attachedFileName: file.name,
-                              attachedFileSize: `${Math.round(file.size / 1024)} KB`
-                            });
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                attachedFileName: file.name,
+                                attachedFileSize: `${Math.round(file.size / 1024)} KB`,
+                                attachedFileData: event.target.result,
+                                attachedFileType: file.type || 'application/pdf',
+                                document_attachments: [{
+                                  name: file.name,
+                                  size: `${Math.round(file.size / 1024)} KB`,
+                                  type: file.type || 'application/pdf',
+                                  data: event.target.result,
+                                  uploaded_at: new Date().toISOString()
+                                }]
+                              }));
+                            };
+                            reader.readAsDataURL(file);
                           }
                         }}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -788,6 +768,94 @@ export default function EnterpriseProjectPage() {
               )}
             </div>
 
+          </div>
+
+          {/* Institutional Security Covenants & Verified Delivery Hubs Strip */}
+          <div className="mt-12 pt-8 border-t border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Institutional Assurance & Compliance Box */}
+            <div className="lg:col-span-8 p-6 rounded-2xl bg-[#0B1424] text-white border border-slate-800 space-y-4 shadow-xl card-hover-security-covenant relative group flex flex-col justify-between">
+              {isLive && (
+                <div className="absolute top-3 right-3 z-20">
+                  <button
+                    type="button"
+                    onClick={() => openModal('covenants', { ...covenants })}
+                    className="p-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium cursor-pointer shadow-sm flex items-center gap-1"
+                  >
+                    <Edit2 className="w-3 h-3" />
+                    <span>Edit Covenants</span>
+                  </button>
+                </div>
+              )}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-2 text-indigo-400 font-serif font-bold text-sm">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>{covenants.title}</span>
+                </div>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">
+                  {covenants.badge}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300 font-sans leading-relaxed">
+                <div className="flex items-start gap-2">
+                  <Lock className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0 mt-0.5" />
+                  <span><strong>{covenants.covenant1Label}:</strong> {covenants.covenant1Desc}</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Scale className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <span><strong>{covenants.covenant2Label}:</strong> {covenants.covenant2Desc}</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Building2 className="w-3.5 h-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span><strong>{covenants.covenant3Label}:</strong> {covenants.covenant3Desc}</span>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                <Link
+                  to="/government"
+                  className="inline-flex items-center gap-2 text-xs font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                  <span>Switch to Government Tender Portal</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  SIAC &amp; LCIA Legal Governance Frameworks
+                </span>
+              </div>
+            </div>
+
+            {/* Verified Physical Corridors Notice */}
+            <div className="lg:col-span-4 p-6 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans text-slate-600 flex flex-col justify-between card-hover-corridor-notice relative group shadow-sm">
+              {isLive && (
+                <div className="absolute top-3 right-3 z-20">
+                  <button
+                    type="button"
+                    onClick={() => openModal('hubs', { ...hubsNotice })}
+                    className="p-1 rounded bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs cursor-pointer"
+                    title="Edit Notice"
+                  >
+                    <Edit2 className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-600">
+                    OPERATIONAL JURISDICTIONS
+                  </span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                </div>
+                <div className="font-bold text-slate-900 font-serif text-sm">{hubsNotice.title}</div>
+                <div className="font-mono text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200">{hubsNotice.desc}</div>
+              </div>
+              <div className="pt-3 border-t border-slate-200 mt-4 flex items-center justify-between text-[11px] text-slate-500 font-sans">
+                <span>Active Physical Deployment</span>
+                <Link to="/global-business" className="text-indigo-600 font-bold hover:underline">
+                  Global Hubs &rarr;
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -15,6 +15,8 @@ import {
 export default function PartnershipPage() {
   const { submitEnquiry } = useEnquiry();
   const [submittedRef, setSubmittedRef] = useState(null);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
+  const [customCategoryValue, setCustomCategoryValue] = useState('');
 
   const [formData, setFormData] = useState({
     organization: '',
@@ -22,17 +24,19 @@ export default function PartnershipPage() {
     country: '',
     email: '',
     phone: '',
-    partnershipCategory: 'Systems Integration & Co-Delivery',
+    partnershipCategory: 'Systems Integration & Global Co-Delivery',
     proposedCollaboration: '',
     consent: false
   });
 
   const categories = [
-    'Systems Integration & Co-Delivery',
-    'Sovereign Cloud & Infrastructure Provider',
-    'Independent Software Vendor (ISV) Ecosystem',
-    'Accredited Cybersecurity & SOC Audit Partner',
-    'Academic & AI Research Consortium'
+    'Systems Integration & Global Co-Delivery',
+    'Sovereign Cloud & Infrastructure Provider (AWS / Azure / Sovereign DC)',
+    'Independent Software Vendor (ISV) & Solution Partner',
+    'Accredited Cybersecurity, SOC & Zero-Trust Partner',
+    'Enterprise ERP & Financial Systems Implementation Alliance',
+    'Academic, Applied AI & Research Consortium',
+    'Custom'
   ];
 
   const handleSubmit = (e) => {
@@ -41,10 +45,17 @@ export default function PartnershipPage() {
       alert('Please confirm your authorization to propose an institutional partnership.');
       return;
     }
+    const resolvedCategory = isCustomCategory
+      ? (customCategoryValue.trim() || 'Custom Partnership Category')
+      : formData.partnershipCategory;
+
     const ref = submitEnquiry({
       ...formData,
+      partnershipCategory: resolvedCategory,
       type: 'Strategic Partnership',
-      description: `[Category: ${formData.partnershipCategory}] ${formData.proposedCollaboration}`
+      enquiry_type: 'partnership',
+      description: `[Category: ${resolvedCategory}] ${formData.proposedCollaboration}`,
+      message: `[Category: ${resolvedCategory}] ${formData.proposedCollaboration}`
     });
     setSubmittedRef(ref);
   };
@@ -82,7 +93,18 @@ export default function PartnershipPage() {
               <div className="inline-block p-4 rounded-xl bg-slate-950 border border-slate-800 text-indigo-400 font-mono text-sm font-bold">
                 Alliance Reference Code: {submittedRef}
               </div>
-              <div className="pt-4 flex justify-center gap-3">
+              <div className="pt-4 flex flex-wrap justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSubmittedRef(null);
+                    setIsCustomCategory(false);
+                    setCustomCategoryValue('');
+                  }}
+                  className="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                >
+                  Submit Another Proposal
+                </button>
                 <Link
                   to="/"
                   className="px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider"
@@ -154,14 +176,41 @@ export default function PartnershipPage() {
                 <div className="sm:col-span-2">
                   <label className="block text-slate-700 font-bold mb-1">Partnership Category *</label>
                   <select
-                    value={formData.partnershipCategory}
-                    onChange={(e) => setFormData({ ...formData, partnershipCategory: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 focus:outline-none focus:border-indigo-600 text-xs"
+                    value={isCustomCategory ? 'Custom' : formData.partnershipCategory}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === 'Custom') {
+                        setIsCustomCategory(true);
+                      } else {
+                        setIsCustomCategory(false);
+                        setFormData({ ...formData, partnershipCategory: val });
+                      }
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 focus:outline-none focus:border-indigo-600 text-xs font-sans cursor-pointer"
                   >
-                    {categories.map((c, i) => (
-                      <option key={i} value={c}>{c}</option>
+                    {categories.map((c) => (
+                      <option key={c} value={c}>
+                        {c === 'Custom' ? 'Custom Partnership Category (Specify)' : c}
+                      </option>
                     ))}
                   </select>
+
+                  {isCustomCategory && (
+                    <div className="mt-2.5 space-y-1">
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Regional Telemetry Reseller, Hardware OEM Alliance, Specialist Co-Delivery..."
+                        value={customCategoryValue}
+                        onChange={(e) => setCustomCategoryValue(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-indigo-500 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 font-sans shadow-2xs"
+                        autoFocus
+                      />
+                      <span className="text-[11px] text-slate-500 font-sans block">
+                        Specify your exact institutional alliance model or cooperative scope.
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">
@@ -186,11 +235,24 @@ export default function PartnershipPage() {
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        setFormData({
-                          ...formData,
-                          attachedFileName: file.name,
-                          attachedFileSize: `${Math.round(file.size / 1024)} KB`
-                        });
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            attachedFileName: file.name,
+                            attachedFileSize: `${Math.round(file.size / 1024)} KB`,
+                            attachedFileData: event.target.result,
+                            attachedFileType: file.type || 'application/pdf',
+                            document_attachments: [{
+                              name: file.name,
+                              size: `${Math.round(file.size / 1024)} KB`,
+                              type: file.type || 'application/pdf',
+                              data: event.target.result,
+                              uploaded_at: new Date().toISOString()
+                            }]
+                          }));
+                        };
+                        reader.readAsDataURL(file);
                       }
                     }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
