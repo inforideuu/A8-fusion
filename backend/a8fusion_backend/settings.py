@@ -56,20 +56,72 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'a8fusion_backend.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'a8fusion',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+try:
+    import certifi
+    CA_PATH = certifi.where()
+except ImportError:
+    CA_PATH = None
+
+# ==============================================================================
+# ENVIRONMENT-AWARE DATABASE CONFIGURATION
+# ==============================================================================
+# Localhost / Dev: Uses local MySQL (127.0.0.1:3306, a8fusion, root/root)
+# Live / Production: Uses TiDB Cloud Serverless MySQL (port 4000, SSL enabled)
+#
+# To activate TiDB Cloud (Live), set any of the following environment variables:
+#   - IS_LIVE=true
+#   - ENVIRONMENT=production
+#   - DJANGO_ENV=production
+#   - USE_TIDB=true
+# Or deploy to Render, Railway, Vercel, PythonAnywhere, etc.
+# ==============================================================================
+IS_LIVE = (
+    os.environ.get('IS_LIVE', '').lower() in ('true', '1', 'yes') or
+    os.environ.get('ENVIRONMENT', '').lower() in ('production', 'prod', 'live') or
+    os.environ.get('DJANGO_ENV', '').lower() in ('production', 'prod', 'live') or
+    os.environ.get('USE_TIDB', '').lower() in ('true', '1', 'yes') or
+    'RENDER' in os.environ or
+    'RAILWAY_ENVIRONMENT' in os.environ or
+    'VERCEL' in os.environ or
+    'PYTHONANYWHERE_DOMAIN' in os.environ
+)
+
+if IS_LIVE:
+    # Live Environment: TiDB Cloud Serverless MySQL
+    tidb_options = {
+        'charset': 'utf8mb4',
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
     }
-}
+    if CA_PATH:
+        tidb_options['ssl'] = {'ca': CA_PATH}
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('TIDB_DATABASE', os.environ.get('DB_NAME', 'sys')),
+            'USER': os.environ.get('TIDB_USER', os.environ.get('DB_USER', '4G7bcrR8u73nZ6w.root')),
+            'PASSWORD': os.environ.get('TIDB_PASSWORD', os.environ.get('DB_PASSWORD', 'UlByP7IIAKpIhNhD')),
+            'HOST': os.environ.get('TIDB_HOST', os.environ.get('DB_HOST', 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com')),
+            'PORT': int(os.environ.get('TIDB_PORT', os.environ.get('DB_PORT', 4000))),
+            'OPTIONS': tidb_options,
+        }
+    }
+else:
+    # Local Environment: Local MySQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('LOCAL_DB_NAME', 'a8fusion'),
+            'USER': os.environ.get('LOCAL_DB_USER', 'root'),
+            'PASSWORD': os.environ.get('LOCAL_DB_PASSWORD', 'root'),
+            'HOST': os.environ.get('LOCAL_DB_HOST', '127.0.0.1'),
+            'PORT': os.environ.get('LOCAL_DB_PORT', '3306'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
 
 AUTH_USER_MODEL = 'api.User'
 
