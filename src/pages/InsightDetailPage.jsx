@@ -184,8 +184,43 @@ export default function InsightDetailPage() {
       setTags([...(art.tags || [])]);
     }
 
-    // 2. Fetch live content from backend or local overrides
+    // 2. Fetch live content from backend database /api/insights/${slug}/ or local overrides
     const loadContent = async () => {
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/api/insights/${slug}/`);
+        if (res.ok) {
+          const apiArt = await res.json();
+          if (apiArt && apiArt.title) {
+            setPageHeader({
+              badge: apiArt.category || 'Enterprise Technology',
+              title: apiArt.title,
+              subtitle: apiArt.excerpt || '',
+              bgImage: apiArt.cover_image || '/insight.png',
+              coverImage: apiArt.cover_image || '/insight.png',
+              primaryCtaText: 'Discuss With Authoring Team',
+              primaryCtaLink: '/request-project',
+              secondaryCtaText: 'All Insights',
+              secondaryCtaLink: '/insights'
+            });
+            setMetadata({
+              authorName: apiArt.author_name || 'Principal Systems Architect',
+              authorRole: apiArt.author_role || 'A8Fusion Global Research',
+              authorAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+              publishedAt: apiArt.published_date || '2026',
+              readTime: apiArt.read_time || '8 min read'
+            });
+            setTakeaway({
+              tag: 'Executive Strategic Mandate',
+              quote: apiArt.excerpt
+            });
+            if (apiArt.content) setContentBody(apiArt.content);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Backend /api/insights/ lookup unavailable:', e);
+      }
+
       try {
         const res = await fetch(`http://127.0.0.1:8000/api/pages/get_live_content/?slug=${backendSlug}`);
         if (res.ok) {

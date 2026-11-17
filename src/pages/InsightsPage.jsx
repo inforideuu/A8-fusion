@@ -77,27 +77,63 @@ export default function InsightsPage() {
     }
   }, [location.search]);
 
-  // Load Content from Backend / LocalStorage
+  // Load Content dynamically from Backend / LocalStorage
   useEffect(() => {
     const loadContent = async () => {
+      // 1. Primary: load live published articles directly from backend /api/insights/
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/insights/');
+        if (res.ok) {
+          const apiArticles = await res.json();
+          if (Array.isArray(apiArticles) && apiArticles.length > 0) {
+            const mapped = apiArticles
+              .filter(a => a.status === 'Published' || !a.status)
+              .map(a => ({
+                id: a.id,
+                slug: a.slug,
+                title: a.title,
+                category: a.category || 'Architecture',
+                readTime: a.read_time || '6 min read',
+                excerpt: a.excerpt || '',
+                content: a.content || '',
+                coverImage: a.cover_image || '/insight.png',
+                image: a.cover_image || '/insight.png',
+                author: {
+                  name: a.author_name || 'Principal Systems Architect',
+                  role: a.author_role || 'A8Fusion Global Research'
+                },
+                publishedAt: a.published_date || '2026',
+                date: a.published_date || '2026',
+                status: a.status || 'Published',
+                featured: true
+              }));
+            if (mapped.length > 0) {
+              setArticlesList(mapped);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Backend /api/insights/ unavailable, evaluating fallbacks:', e);
+      }
+
+      // 2. Load pageHeader if customized via live editor
       try {
         const res = await fetch('http://127.0.0.1:8000/api/pages/get_live_content/?slug=insights');
         if (res.ok) {
           const json = await res.json();
-          if (json.live_data && Object.keys(json.live_data).length > 0) {
-            applyLoadedData(json.live_data);
-            return;
+          if (json.live_data && json.live_data.pageHeader) {
+            setPageHeader(json.live_data.pageHeader);
           }
         }
       } catch (e) {
-        console.warn('Backend unavailable, checking localStorage...', e);
+        console.warn('Backend page header unavailable, checking localStorage...', e);
       }
 
       try {
         const local = localStorage.getItem('a8_live_insights_content');
         if (local) {
           const parsed = JSON.parse(local);
-          applyLoadedData(parsed);
+          if (parsed.pageHeader) setPageHeader(parsed.pageHeader);
         }
       } catch (err) {
         console.error('Error loading local data', err);

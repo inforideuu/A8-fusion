@@ -4,12 +4,12 @@ import { adminApi } from '../services/adminApi';
 const AdminAuthContext = createContext(null);
 
 const DEFAULT_PERMISSIONS = {
-  'SUPER_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs'],
-  'WEBSITE_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs'],
-  'CONTENT_MANAGER': ['dashboard', 'pages', 'seo'],
-  'SALES_MANAGER': ['dashboard', 'crm', 'reports', 'audit-logs'],
-  'HR_MANAGER': ['dashboard', 'careers', 'reports'],
-  'BD_MANAGER': ['dashboard', 'crm', 'reports'],
+  'SUPER_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs', 'security-recovery'],
+  'WEBSITE_ADMIN': ['dashboard', 'users', 'rbac', 'pages', 'crm', 'careers', 'seo', 'settings', 'reports', 'audit-logs', 'security-recovery'],
+  'CONTENT_MANAGER': ['dashboard', 'pages', 'seo', 'security-recovery'],
+  'SALES_MANAGER': ['dashboard', 'crm', 'reports', 'audit-logs', 'security-recovery'],
+  'HR_MANAGER': ['dashboard', 'careers', 'reports', 'security-recovery'],
+  'BD_MANAGER': ['dashboard', 'crm', 'reports', 'security-recovery'],
 };
 
 export function AdminAuthProvider({ children }) {
@@ -103,6 +103,8 @@ export function AdminAuthProvider({ children }) {
 
   const hasPermission = (moduleName) => {
     if (!user) return false;
+    // Security & Recovery and Dashboard are universal personal tools for all authenticated roles
+    if (moduleName === 'security-recovery' || moduleName === 'dashboard') return true;
     if (user.role === 'SUPER_ADMIN' || user.is_superuser) return true;
 
     const allowed = permissionsMatrix[user.role] || DEFAULT_PERMISSIONS[user.role] || [];

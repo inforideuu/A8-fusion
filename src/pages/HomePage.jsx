@@ -480,6 +480,28 @@ export default function HomePage() {
   const videoRef = useRef(null);
   const [activeSceneIndex, setActiveSceneIndex] = useState(0);
 
+  // Unique Interactive 3D Cursor Tilt for Our Engineering Approach
+  const [approachTilt, setApproachTilt] = useState({ x: 0, y: 0, active: false, mouseX: 50, mouseY: 50 });
+
+  const handleApproachMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    // Calculate subtle, luxurious 3D tilt response (degrees)
+    const rotateX = ((y - centerY) / centerY) * -6; // max -6deg to +6deg
+    const rotateY = ((x - centerX) / centerX) * 6;  // max -6deg to +6deg
+    const mouseXPct = Math.round((x / rect.width) * 100);
+    const mouseYPct = Math.round((y / rect.height) * 100);
+
+    setApproachTilt({ x: rotateX, y: rotateY, active: true, mouseX: mouseXPct, mouseY: mouseYPct });
+  };
+
+  const handleApproachMouseLeave = () => {
+    setApproachTilt({ x: 0, y: 0, active: false, mouseX: 50, mouseY: 50 });
+  };
+
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
@@ -1510,7 +1532,7 @@ export default function HomePage() {
               return (
                 <div
                   key={cap.id || idx}
-                  className="bg-white rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 card-hover-tech flex flex-col justify-between group relative overflow-hidden"
+                  className="bg-white rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-2xl transition-all duration-400 card-hover-tech flex flex-col justify-between group relative overflow-hidden"
                 >
                   {/* Visual Editor Hover Actions */}
                   {isLiveActive && (
@@ -1521,21 +1543,24 @@ export default function HomePage() {
                     />
                   )}
 
+                  {/* Dynamic Prismatic Light Sweep Glint */}
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-indigo-100/40 to-transparent transition-transform duration-1000 ease-out pointer-events-none z-2" />
+
                   {/* Ambient corner glow */}
-                  <div className="absolute -top-10 -right-10 w-44 h-44 bg-gradient-to-br from-indigo-100/40 via-indigo-50/20 to-transparent rounded-full blur-2xl pointer-events-none group-hover:from-indigo-200/50 group-hover:scale-125 transition-all duration-500" />
+                  <div className="absolute -top-12 -right-12 w-48 h-48 bg-gradient-to-br from-indigo-200/40 via-cyan-100/30 to-transparent rounded-full blur-3xl pointer-events-none group-hover:from-indigo-400/30 group-hover:via-cyan-300/20 group-hover:scale-130 transition-all duration-500" />
 
                   <div className="space-y-5 relative z-10">
                     <div className="flex items-center justify-between">
-                      <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-indigo-50 via-slate-50 to-white border border-indigo-100/80 text-indigo-700 flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-500 transition-all duration-300">
-                        <IconComp className="w-6 h-6" />
+                      <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-slate-50 to-white border border-indigo-100/80 text-indigo-700 flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:-translate-y-1 group-hover:bg-gradient-to-br group-hover:from-indigo-600 group-hover:to-blue-600 group-hover:text-white group-hover:border-indigo-500 group-hover:shadow-lg group-hover:shadow-indigo-500/35 transition-all duration-400">
+                        <IconComp className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
                       </div>
-                      <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase bg-indigo-50/90 text-indigo-700 border border-indigo-200/70 shadow-xs group-hover:border-indigo-300 transition-colors">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase bg-indigo-50/90 text-indigo-700 border border-indigo-200/70 shadow-xs group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 group-hover:shadow-sm group-hover:shadow-indigo-600/25 transition-all duration-300">
                         {cap.tag}
                       </span>
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-serif font-bold text-slate-900 group-hover:text-indigo-600 transition-colors tracking-tight">
+                      <h3 className="text-xl font-serif font-bold text-slate-900 group-hover:text-indigo-600 transition-colors duration-300 tracking-tight">
                         {cap.title}
                       </h3>
                       <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-sans pt-2">
@@ -1544,15 +1569,17 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div className="pt-6 mt-6 border-t border-slate-100 relative z-10 flex items-center justify-between">
+                  <div className="pt-6 mt-6 border-t border-slate-100 group-hover:border-indigo-100/80 relative z-10 flex items-center justify-between transition-colors duration-300">
                     <Link
                       to={cap.link || '/services'}
-                      className="text-xs font-bold uppercase tracking-wider text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1.5"
+                      className="text-xs font-bold uppercase tracking-wider text-indigo-600 group-hover:text-indigo-700 flex items-center gap-2 group/link"
                     >
                       <span>Explore Capability</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                      <span className="w-6 h-6 rounded-full bg-indigo-50 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:translate-x-1 shadow-2xs">
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </span>
                     </Link>
-                    <span className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 font-semibold tracking-wider">
+                    <span className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 group-hover:text-slate-600 font-semibold tracking-wider transition-colors">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                       ACTIVE
                     </span>
@@ -1859,20 +1886,20 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8">
             {lifecycleStagesList.map((stage) => (
               <button
                 key={stage.step}
                 type="button"
                 onClick={() => setActiveLifecycleStep(stage.step)}
-                className={`p-3 min-w-[110px] rounded-lg text-center transition-all border cursor-pointer ${
+                className={`p-3 min-w-[110px] rounded-xl text-center transition-all duration-300 border cursor-pointer transform hover:-translate-y-1.5 hover:shadow-lg active:translate-y-0 ${
                   activeLifecycleStep === stage.step
-                    ? 'bg-[#0B172A] text-white border-[#0B172A] shadow-md'
-                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+                    ? 'bg-[#0B172A] text-white border-indigo-500/80 shadow-xl shadow-indigo-950/30 scale-105 ring-2 ring-indigo-500/30'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300 hover:shadow-indigo-500/10'
                 }`}
               >
                 <div className={`text-[10px] font-mono uppercase ${
-                  activeLifecycleStep === stage.step ? 'text-indigo-400' : 'text-slate-400'
+                  activeLifecycleStep === stage.step ? 'text-indigo-400 font-bold' : 'text-slate-400'
                 }`}>
                   0{stage.step}
                 </div>
@@ -1884,7 +1911,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={openAddStage}
-                className="p-3 min-w-[110px] rounded-lg text-center transition-all border-2 border-dashed border-indigo-400 hover:border-indigo-600 bg-indigo-50/50 hover:bg-indigo-50 text-indigo-700 cursor-pointer flex flex-col items-center justify-center gap-0.5"
+                className="p-3 min-w-[110px] rounded-xl text-center transition-all duration-300 border-2 border-dashed border-indigo-400 hover:border-indigo-600 bg-indigo-50/50 hover:bg-indigo-50 text-indigo-700 cursor-pointer flex flex-col items-center justify-center gap-0.5 hover:-translate-y-1"
                 title="Add new lifecycle milestone stage"
               >
                 <Plus className="w-3.5 h-3.5 text-indigo-600" />
@@ -1898,9 +1925,27 @@ export default function HomePage() {
             const safeIdx = currentIdx !== -1 ? currentIdx : 0;
             const currentStage = lifecycleStagesList[safeIdx] || lifecycleStagesList[0] || DEFAULT_LIFECYCLE_STAGES[0];
             return (
-              <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
+              <div
+                onMouseMove={handleApproachMouseMove}
+                onMouseLeave={handleApproachMouseLeave}
+                style={{
+                  transform: approachTilt.active
+                    ? `perspective(1100px) rotateX(${approachTilt.x.toFixed(2)}deg) rotateY(${approachTilt.y.toFixed(2)}deg) scale3d(1.015, 1.015, 1.015)`
+                    : 'perspective(1100px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+                  transition: approachTilt.active
+                    ? 'transform 0.08s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease'
+                    : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease, border-color 0.3s ease',
+                  transformStyle: 'preserve-3d',
+                }}
+                className={`bg-white rounded-3xl p-8 lg:p-12 border transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative overflow-hidden group select-none ${
+                  approachTilt.active
+                    ? 'border-indigo-500/70 shadow-[0_35px_70px_-15px_rgba(79,70,229,0.22),0_15px_30px_-10px_rgba(6,182,212,0.18),0_0_0_1.5px_rgba(99,102,241,0.5)]'
+                    : 'border-slate-200/90 shadow-lg shadow-slate-200/50'
+                }`}
+              >
+                {/* Visual Editor Action Overlay */}
                 {isLiveActive && (
-                  <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5">
+                  <div className="absolute top-4 right-4 z-40 flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={() => openEditStage(currentStage, safeIdx)}
@@ -1921,39 +1966,123 @@ export default function HomePage() {
                     )}
                   </div>
                 )}
-                <div className="lg:col-span-7 space-y-4">
-                  <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest">
-                    {currentStage.phase}
-                  </span>
-                  <h3 className="text-2xl font-serif font-bold text-slate-900">
+
+                {/* Unique Cursor-Tracking Radial 3D Spotlight */}
+                <div
+                  className="absolute inset-0 pointer-events-none transition-opacity duration-300 z-1"
+                  style={{
+                    opacity: approachTilt.active ? 1 : 0,
+                    background: `radial-gradient(650px circle at ${approachTilt.mouseX}% ${approachTilt.mouseY}%, rgba(99, 102, 241, 0.16) 0%, rgba(6, 182, 212, 0.08) 35%, transparent 70%)`
+                  }}
+                />
+
+                {/* Cybernetic CAD Blueprint Engineering Dot Grid */}
+                <div 
+                  className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-0 bg-[radial-gradient(#4f46e5_1.2px,transparent_1.2px)] [background-size:28px_28px] [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_90%)]"
+                  style={{ opacity: approachTilt.active ? 0.4 : 0.08 }}
+                />
+
+                {/* 3D Blueprint Corner Crosshairs (Targeting Reticles) */}
+                <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-indigo-500/0 group-hover:border-indigo-500/80 transition-colors duration-400 z-10 pointer-events-none" />
+                <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-indigo-500/0 group-hover:border-indigo-500/80 transition-colors duration-400 z-10 pointer-events-none" />
+                <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-indigo-500/0 group-hover:border-indigo-500/80 transition-colors duration-400 z-10 pointer-events-none" />
+                <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-indigo-500/0 group-hover:border-indigo-500/80 transition-colors duration-400 z-10 pointer-events-none" />
+
+                {/* Giant 3D Embossed Stage Watermark (Parallax Background) */}
+                <div 
+                  className="absolute -bottom-8 -right-4 font-mono font-black text-[200px] lg:text-[260px] text-slate-100/80 group-hover:text-indigo-100/70 select-none pointer-events-none leading-none z-0 tracking-tighter transition-all duration-500"
+                  style={{
+                    transform: approachTilt.active ? 'translateZ(-20px)' : 'none'
+                  }}
+                >
+                  0{currentStage.step}
+                </div>
+
+                {/* Left Panel: 3D Floating Content Layer */}
+                <div 
+                  className="lg:col-span-7 space-y-5 relative z-10"
+                  style={{
+                    transform: approachTilt.active ? 'translateZ(25px)' : 'none',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.12s ease-out'
+                  }}
+                >
+                  <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 border border-indigo-200/80 shadow-xs group-hover:from-indigo-600 group-hover:to-blue-600 group-hover:text-white group-hover:border-indigo-600 group-hover:shadow-md group-hover:shadow-indigo-500/25 transition-all duration-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 group-hover:bg-white animate-pulse" />
+                    <span>{currentStage.phase}</span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 group-hover:text-indigo-950 transition-colors duration-300 tracking-tight">
                     Phase {currentStage.step}: {currentStage.name}
                   </h3>
-                  <p className="text-sm text-slate-600 leading-relaxed font-sans">
+                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-sans max-w-xl">
                     {currentStage.summary}
                   </p>
                   <div className="pt-2">
                     <Link
                       to={sectionHeadings.approach?.bottomLinkUrl || '/company/our-approach'}
-                      className="text-xs font-bold uppercase tracking-wider text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5"
+                      className="text-xs font-bold uppercase tracking-wider text-indigo-600 hover:text-indigo-800 flex items-center gap-2 group/cta"
                     >
                       <span>{sectionHeadings.approach?.bottomLinkText || 'Read Complete 8-Stage Governance Framework'}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <span className="w-6 h-6 rounded-full bg-indigo-50 group-hover/cta:bg-indigo-600 group-hover/cta:text-white flex items-center justify-center transition-all duration-300 group-hover/cta:translate-x-1 shadow-2xs">
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </span>
                     </Link>
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-3">
-                  <div className="text-xs font-bold font-mono uppercase text-slate-700">
-                    Mandatory Audit Deliverables
+                {/* Right Panel: Elevated 3D Floating Deliverables Cockpit */}
+                <div 
+                  className="lg:col-span-5 bg-gradient-to-br from-slate-50/95 via-indigo-50/30 to-white p-7 rounded-2xl border border-slate-200/90 hover:border-indigo-300 shadow-md hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 space-y-4 relative z-10 overflow-hidden group/audit"
+                  style={{
+                    transform: approachTilt.active ? 'translateZ(45px)' : 'none',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.12s ease-out, box-shadow 0.3s ease'
+                  }}
+                >
+                  {/* Subtle Ambient Light Wash on Hover */}
+                  <div className="absolute -top-10 -right-10 w-36 h-36 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none group-hover/audit:bg-indigo-500/20 group-hover/audit:scale-125 transition-all duration-500" />
+
+                  {/* Header Bar */}
+                  <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 relative z-10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-xs font-bold font-mono uppercase text-slate-800 tracking-wider">
+                        Mandatory Audit Deliverables
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-emerald-700 font-mono font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shadow-2xs flex items-center gap-1.5">
+                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                      <span>STAGE GATED</span>
+                    </span>
                   </div>
-                  <ul className="space-y-2.5">
+
+                  {/* Enhanced Deliverables Checklist with Interactive Row Hover */}
+                  <ul className="space-y-2.5 relative z-10">
                     {(currentStage.deliverables || []).map((item, i) => (
-                      <li key={i} className="flex items-center gap-2.5 text-xs text-slate-600">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                        <span>{item}</span>
+                      <li 
+                        key={i} 
+                        className="p-3 rounded-xl bg-white border border-slate-200/80 hover:border-indigo-400 hover:bg-gradient-to-r hover:from-indigo-50/70 hover:via-white hover:to-white shadow-2xs hover:shadow-md hover:shadow-indigo-500/10 transition-all duration-250 flex items-center gap-3 group/item cursor-default hover:translate-x-2"
+                      >
+                        <div className="w-5 h-5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover/item:scale-110 group-hover/item:bg-emerald-600 group-hover/item:text-white group-hover/item:border-emerald-600 transition-all duration-250 shadow-2xs">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-xs sm:text-[13px] text-slate-700 group-hover/item:text-slate-950 font-medium transition-colors leading-relaxed">
+                          {item}
+                        </span>
                       </li>
                     ))}
                   </ul>
+
+                  {/* Footer Validation Status */}
+                  <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] font-mono text-slate-500 relative z-10">
+                    <span className="flex items-center gap-1.5 text-slate-600">
+                      <Lock className="w-3 h-3 text-indigo-600" />
+                      <span>Milestone Gate Validation</span>
+                    </span>
+                    <span className="text-emerald-700 font-bold tracking-wider">
+                      100% Gate Verified
+                    </span>
+                  </div>
                 </div>
               </div>
             );

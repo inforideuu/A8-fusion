@@ -68,9 +68,11 @@ export default function Footer({ hidePreFooterCard = false }) {
       )}
 
       {/* Main Multi-Column Directory */}
-      <footer className="bg-[#030712] text-slate-300 font-sans relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
+      <footer className="text-slate-300 font-sans relative">
+        {/* Top Directory Section: Deep Executive Midnight Navy */}
+        <div className="bg-[#0B1528] border-t border-slate-800/80">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
           {/* Brand & Corporate Overview (Spans 2 columns) */}
           <div className="lg:col-span-2 space-y-5">
             <Logo variant="light" size="lg" />
@@ -292,17 +294,18 @@ export default function Footer({ hidePreFooterCard = false }) {
               </li>
             </ul>
           </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Compliance, Legal & Copyright Strip */}
-      <div className="border-t border-slate-800/80 bg-[#050A13] py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 text-xs text-slate-400">
+        {/* Bottom Section (After Horizontal Line): Pitch Obsidian Black */}
+        <div className="border-t border-slate-700/80 bg-[#020617] py-8 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 text-xs text-slate-400">
           <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
             <span>&copy; {currentYear} A8Fusion International. All rights reserved.</span>
             <span className="hidden sm:inline text-slate-700">•</span>
             <span className="text-slate-400">
-              Tagline: <span className="text-slate-200 font-medium">Made for Global.</span>
+              <span className="text-slate-200 font-medium">Made for Global.</span>
             </span>
           </div>
 
@@ -313,8 +316,8 @@ export default function Footer({ hidePreFooterCard = false }) {
               href="https://zenelaitinfotech.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center group transition-transform hover:scale-105 cursor-pointer"
-              title="Zenelait Infotech - https://zenelaitinfotech.com/"
+              className="inline-flex items-center group transition-transform hover:scale-150 cursor-pointer"
+              title="Zenelait Infotech"
             >
               <img
                 src="/zenelaitinfotech_logo.png"

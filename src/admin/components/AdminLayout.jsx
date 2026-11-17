@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import NotificationBell from './NotificationBell';
+import { SYSTEM_ROLES } from '../utils/recoveryCredentials';
 import {
   LayoutDashboard, Users, ShieldCheck, FileText, Cpu,
   Layers, Building2, MessageSquare, Briefcase, BookOpen,
   Image as ImageIcon, Search, Settings, BarChart3, History,
-  LogOut, Menu, X, ExternalLink, ChevronRight, Shield
+  LogOut, Menu, X, ExternalLink, ChevronRight, Shield, KeyRound
 } from 'lucide-react';
 
 export default function AdminLayout({ activeTab, setActiveTab, children }) {
@@ -22,6 +23,8 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard Overview', icon: LayoutDashboard, module: 'dashboard' },
+    { type: 'divider', label: 'PERSONAL SECURITY' },
+    { id: 'security-recovery', label: 'Security & Recovery', icon: KeyRound, module: 'security-recovery' },
     { type: 'divider', label: 'CORE ADMINISTRATION' },
     { id: 'users', label: 'User Management', icon: Users, module: 'users', count: null },
     { id: 'rbac', label: 'Role-Based Access', icon: ShieldCheck, module: 'rbac' },
@@ -150,10 +153,12 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs font-bold text-slate-900 truncate font-sans">
-                    {user?.first_name ? `${user.first_name} ${user.last_name}` : user?.username}
+                    {user?.first_name && !user.first_name.includes('@')
+                      ? `${user.first_name}${user.last_name ? ` ${user.last_name}` : ''}`.trim()
+                      : (user?.username || 'Administrator')}
                   </div>
                   <div className="text-[11px] font-sans text-indigo-700 font-semibold truncate">
-                    {user?.role_display || user?.role}
+                    {user?.role_display || (SYSTEM_ROLES.find(r => r.code === user?.role)?.name) || user?.role}
                   </div>
                 </div>
               </div>

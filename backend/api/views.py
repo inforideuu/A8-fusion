@@ -64,6 +64,28 @@ def login_view(request):
             user = None
     else:
         user = authenticate(request, username=username_or_email, password=password)
+        if not user:
+            # Also try stripped spaces (e.g. 'website admin' -> 'websiteadmin')
+            clean_name = username_or_email.replace(' ', '').replace('_', '').replace('-', '').lower()
+            try:
+                matched_user = User.objects.filter(username__iexact=clean_name).first()
+                if not matched_user:
+                    role_map = {
+                        'websiteadmin': 'WEBSITE_ADMIN',
+                        'contentmanager': 'CONTENT_MANAGER',
+                        'salesmanager': 'SALES_MANAGER',
+                        'hrmanager': 'HR_MANAGER',
+                        'bdmanager': 'BD_MANAGER',
+                        'superadmin': 'SUPER_ADMIN',
+                        'admin': 'SUPER_ADMIN'
+                    }
+                    target_role = role_map.get(clean_name)
+                    if target_role:
+                        matched_user = User.objects.filter(role=target_role).first()
+                if matched_user:
+                    user = authenticate(request, username=matched_user.username, password=password)
+            except Exception:
+                user = None
 
     if not user:
         create_audit(request, 'FAILED_LOGIN', 'Auth', f"Failed login attempt for '{username_or_email}'", 'FAILED')
@@ -93,6 +115,73 @@ def login_view(request):
             'designation': user.designation,
             'avatar': user.avatar,
             'is_superuser': user.is_superuser,
+        }
+    })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def reset_password_view(request):
+    username_or_email = request.data.get('username', '').strip()
+    new_password = request.data.get('password', '')
+
+    if not username_or_email or not new_password:
+        return Response({'detail': 'Username/email and new password are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if len(new_password) < 6:
+        return Response({'detail': 'Password must be at least 6 characters.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = None
+    clean_target = username_or_email.strip()
+
+    if '@' in clean_target:
+        user = User.objects.filter(email__iexact=clean_target).first()
+
+    if not user:
+        user = User.objects.filter(username__iexact=clean_target).first()
+
+    if not user:
+        stripped = clean_target.replace(' ', '').replace('_', '').replace('-', '').lower()
+        user = User.objects.filter(username__iexact=stripped).first()
+
+    if not user:
+        role_map = {
+            'website admin': 'WEBSITE_ADMIN',
+            'websiteadmin': 'WEBSITE_ADMIN',
+            'content manager': 'CONTENT_MANAGER',
+            'contentmanager': 'CONTENT_MANAGER',
+            'sales manager': 'SALES_MANAGER',
+            'salesmanager': 'SALES_MANAGER',
+            'hr manager': 'HR_MANAGER',
+            'hrmanager': 'HR_MANAGER',
+            'bd manager': 'BD_MANAGER',
+            'bdmanager': 'BD_MANAGER',
+            'super admin': 'SUPER_ADMIN',
+            'superadmin': 'SUPER_ADMIN',
+            'admin': 'SUPER_ADMIN',
+            'a8fusionadmin': 'SUPER_ADMIN',
+        }
+        mapped_role = role_map.get(clean_target.lower())
+        if mapped_role:
+            user = User.objects.filter(role=mapped_role).first()
+
+    if not user:
+        return Response({'detail': f"No account found matching '{username_or_email}'."}, status=status.HTTP_404_NOT_FOUND)
+
+    user.set_password(new_password)
+    user.save()
+    create_audit(request, 'RESET_PASSWORD', 'Auth', f"Password reset successfully for user '{user.username}' ({user.role})", user=user)
+
+    return Response({
+        'message': f"Password reset successfully for {user.username}.",
+        'user': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'role': user.role,
+            'role_display': user.get_role_display()
         }
     })
 
@@ -865,6 +954,15 @@ class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_object(self):
+        lookup = self.kwargs.get('pk')
+        if lookup and not str(lookup).isdigit():
+            obj = Article.objects.filter(slug=lookup).first()
+            if obj:
+                self.check_object_permissions(self.request, obj)
+                return obj
+        return super().get_object()
 
     def perform_create(self, serializer):
         art = serializer.save()

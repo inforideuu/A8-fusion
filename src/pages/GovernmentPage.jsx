@@ -19,6 +19,7 @@ import {
   Scale,
   GitBranch,
   GraduationCap,
+  ChevronDown,
   Edit2,
   Trash2,
   Plus,
@@ -702,8 +703,12 @@ export default function GovernmentPage() {
       </section>
 
       {/* 11 & 12. DEDICATED GOVERNMENT ENQUIRY & TENDER FORM */}
-      <section id="government-tender-form" className="py-20 bg-[#0B172A] text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="government-tender-form" className="py-24 bg-gradient-to-b from-[#F8FAFC] via-[#EEF2F6] to-[#E2E8F0] relative overflow-hidden">
+        {/* Subtle Sovereign Ambient Gradients */}
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 left-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 space-y-3 relative group/theader">
             {isLive && (
               <div className="flex justify-center mb-2">
@@ -713,30 +718,32 @@ export default function GovernmentPage() {
                 />
               </div>
             )}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-950 border border-indigo-700/60 text-xs font-mono text-indigo-300">
-              <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
-              <span>{tenderHeader.tag}</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 shadow-2xs">
+              <ShieldCheck className="w-4 h-4 text-indigo-600" />
+              <span className="text-[11px] font-mono font-bold uppercase text-indigo-700 tracking-wider">
+                {tenderHeader.tag}
+              </span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-normal text-white">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight">
               {tenderHeader.title}
             </h2>
-            <p className="text-sm text-slate-300 font-sans max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-slate-600 font-sans max-w-2xl mx-auto leading-relaxed">
               {tenderHeader.desc}
             </p>
           </div>
 
           {submittedRef ? (
-            <div className="p-8 rounded-2xl bg-slate-900 border border-emerald-500/50 text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-6 h-6" />
+            <div className="p-10 rounded-[32px] bg-white border border-emerald-200 shadow-[0_25px_60px_-15px_rgba(16,185,129,0.15)] text-center space-y-5">
+              <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-sm">
+                <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-serif font-bold text-white">
+              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 tracking-tight">
                 Official Enquiry Registered Successfully
               </h3>
-              <p className="text-sm text-slate-300 max-w-lg mx-auto font-sans">
+              <p className="text-sm text-slate-600 max-w-lg mx-auto font-sans leading-relaxed">
                 Your submission has been cataloged under sovereign protocol. Our senior public sector lead and compliance director have been alerted.
               </p>
-              <div className="inline-block p-4 rounded-xl bg-slate-950 border border-slate-800 text-indigo-400 font-mono text-sm font-bold">
+              <div className="inline-block px-5 py-3 rounded-xl bg-slate-900 text-indigo-300 font-mono text-sm font-bold shadow-md">
                 Tender Reference ID: {submittedRef}
               </div>
               <p className="text-xs text-slate-500 font-mono">
@@ -752,18 +759,55 @@ export default function GovernmentPage() {
                     setIsCustomCivicClass(false);
                     setCustomCivicClassValue('');
                   }}
-                  className="px-6 py-2.5 rounded-lg bg-slate-800 text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-700 uppercase tracking-wider"
+                  className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md"
                 >
                   Submit Another Government Enquiry
                 </button>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="bg-slate-900/90 rounded-2xl p-8 sm:p-10 border border-slate-800 shadow-2xl space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <form
+              onSubmit={handleSubmit}
+              className="relative bg-white rounded-[32px] p-8 sm:p-12 border border-slate-200/90 shadow-[0_30px_70px_-15px_rgba(79,70,229,0.12),0_12px_32px_-8px_rgba(0,0,0,0.04)] overflow-hidden space-y-7"
+            >
+              {/* Top-Left Curved Gradient Arc */}
+              <svg className="absolute -top-[1px] -left-[1px] w-32 h-32 pointer-events-none z-10" viewBox="0 0 128 128" fill="none">
+                <path
+                  d="M 128 4 H 36 C 18 4 4 18 4 36 V 128"
+                  stroke="url(#govTenderCornerGradient)"
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                />
+                <defs>
+                  <linearGradient id="govTenderCornerGradient" x1="0" y1="128" x2="128" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#1E40AF" />
+                    <stop offset="50%" stopColor="#4F46E5" />
+                    <stop offset="100%" stopColor="#7C3AED" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              {/* Form Header Banner */}
+              <div>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
+                  <span className="text-[11px] font-bold tracking-wider text-indigo-700 uppercase font-sans">
+                    OFFICIAL TENDER & PROCUREMENT CONDUIT
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-3">
+                  Procurement & Tender Enquiries
+                </h3>
+                <p className="text-xs text-slate-500 font-sans mt-1">
+                  Direct government discovery, EOI, and formal sovereign technology RFP submission.
+                </p>
+                <div className="w-full h-px bg-slate-200/90 mt-5" />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs font-sans">
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Department or Organisation *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Department or Organisation <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -771,13 +815,13 @@ export default function GovernmentPage() {
                     placeholder="e.g. Ministry of Transport & Civil Registry"
                     value={formData.organization}
                     onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Contact Person Name *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Contact Person Name <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -785,13 +829,13 @@ export default function GovernmentPage() {
                     placeholder="e.g. Director Hamad Al-Fahim"
                     value={formData.contactPerson}
                     onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Official Designation *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Official Designation <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -799,13 +843,13 @@ export default function GovernmentPage() {
                     placeholder="e.g. Director General of Information Systems"
                     value={formData.designation}
                     onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Official Government Email *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Official Government Email <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -813,13 +857,13 @@ export default function GovernmentPage() {
                     placeholder="official.name@ministry.gov.xx"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Direct Phone / Secure Extension *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Direct Phone / Secure Extension <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="tel"
@@ -827,13 +871,13 @@ export default function GovernmentPage() {
                     placeholder="+1 (555) 019-2834"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Jurisdiction / Sovereign State *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Jurisdiction / Sovereign State <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -841,48 +885,51 @@ export default function GovernmentPage() {
                     placeholder="e.g. United Kingdom, Singapore, UAE, India"
                     value={formData.country}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Civic Project Classification *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Civic Project Classification <span className="text-rose-500">*</span>
                   </label>
-                  <select
-                    value={isCustomCivicClass ? 'Custom' : formData.projectCategory}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === 'Custom') {
-                        setIsCustomCivicClass(true);
-                      } else {
-                        setIsCustomCivicClass(false);
-                        setFormData({ ...formData, projectCategory: val });
-                      }
-                    }}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans cursor-pointer"
-                  >
-                    {civicClassifications.map((c) => (
-                      <option key={c} value={c}>
-                        {c === 'Custom' ? 'Custom Civic Project Classification (Specify)' : c}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={isCustomCivicClass ? 'Custom' : formData.projectCategory}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === 'Custom') {
+                          setIsCustomCivicClass(true);
+                        } else {
+                          setIsCustomCivicClass(false);
+                          setFormData({ ...formData, projectCategory: val });
+                        }
+                      }}
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs font-sans cursor-pointer appearance-none pr-10"
+                    >
+                      {civicClassifications.map((c) => (
+                        <option key={c} value={c}>
+                          {c === 'Custom' ? 'Custom Civic Project Classification (Specify)' : c}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
 
                   {isCustomCivicClass && (
                     <div className="mt-2.5 space-y-1">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          required
-                          placeholder="e.g. Sovereign Satellite Telemetry, National Border Grid, Civil Drone Defense..."
-                          value={customCivicClassValue}
-                          onChange={(e) => setCustomCivicClassValue(e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-indigo-500/80 text-white text-xs focus:outline-none focus:border-indigo-400 font-sans placeholder:text-slate-500 shadow-inner"
-                          autoFocus
-                        />
-                      </div>
-                      <span className="text-[11px] text-slate-400 font-mono block">
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Sovereign Satellite Telemetry, National Border Grid, Civil Drone Defense..."
+                        value={customCivicClassValue}
+                        onChange={(e) => setCustomCivicClassValue(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-indigo-500 text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-200 font-sans shadow-inner"
+                        autoFocus
+                      />
+                      <span className="text-[11px] text-slate-500 font-mono block">
                         Specify your custom government ministry directive or municipal scope.
                       </span>
                     </div>
@@ -890,44 +937,47 @@ export default function GovernmentPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
+                  <label className="block text-slate-800 font-bold mb-1.5">
                     Estimated Procurement Envelope
                   </label>
-                  <select
-                    value={isCustomBudget ? 'Custom' : formData.estimatedBudget}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === 'Custom') {
-                        setIsCustomBudget(true);
-                      } else {
-                        setIsCustomBudget(false);
-                        setFormData({ ...formData, estimatedBudget: val });
-                      }
-                    }}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans cursor-pointer"
-                  >
-                    <option value="₹10,000 – ₹15,000">₹10,000 – ₹15,000</option>
-                    <option value="₹15,000 – ₹20,000">₹15,000 – ₹20,000</option>
-                    <option value="₹20,000 – ₹25,000">₹20,000 – ₹25,000</option>
-                    <option value="₹25,000+">₹25,000+</option>
-                    <option value="To Be Determined / Formal RFP Stage">To Be Determined / Formal RFP Stage</option>
-                    <option value="Custom">Custom Budget Envelope (Specify Amount)</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={isCustomBudget ? 'Custom' : formData.estimatedBudget}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === 'Custom') {
+                          setIsCustomBudget(true);
+                        } else {
+                          setIsCustomBudget(false);
+                          setFormData({ ...formData, estimatedBudget: val });
+                        }
+                      }}
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs font-sans cursor-pointer appearance-none pr-10"
+                    >
+                      <option value="₹10,000 – ₹15,000">₹10,000 – ₹15,000</option>
+                      <option value="₹15,000 – ₹20,000">₹15,000 – ₹20,000</option>
+                      <option value="₹20,000 – ₹25,000">₹20,000 – ₹25,000</option>
+                      <option value="₹25,000+">₹25,000+</option>
+                      <option value="To Be Determined / Formal RFP Stage">To Be Determined / Formal RFP Stage</option>
+                      <option value="Custom">Custom Budget Envelope (Specify Amount)</option>
+                    </select>
+                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
 
                   {isCustomBudget && (
                     <div className="mt-2.5 space-y-1">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          required
-                          placeholder="e.g. ₹50,000, ₹10 Crores, $25K USD, or custom grant"
-                          value={customBudgetValue}
-                          onChange={(e) => setCustomBudgetValue(e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-indigo-500/80 text-white text-xs focus:outline-none focus:border-indigo-400 font-sans placeholder:text-slate-500 shadow-inner"
-                          autoFocus
-                        />
-                      </div>
-                      <span className="text-[11px] text-slate-400 font-mono block">
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. ₹50,000, ₹10 Crores, $25K USD, or custom grant"
+                        value={customBudgetValue}
+                        onChange={(e) => setCustomBudgetValue(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-indigo-500 text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-200 font-sans shadow-inner"
+                        autoFocus
+                      />
+                      <span className="text-[11px] text-slate-500 font-mono block">
                         Specify exact budget allocation, sovereign grant, or custom threshold figure.
                       </span>
                     </div>
@@ -935,21 +985,21 @@ export default function GovernmentPage() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Official RFP / Tender Reference ID (Optional)
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Official RFP / Tender Reference ID <span className="text-slate-400 font-normal font-sans">(Optional)</span>
                   </label>
                   <input
                     type="text"
                     placeholder="e.g. RFP-GOV-2026-TRANS-0482"
                     value={formData.tenderReference}
                     onChange={(e) => setFormData({ ...formData, tenderReference: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">
-                    Mandate Overview & Scope Summary *
+                  <label className="block text-slate-800 font-bold mb-1.5">
+                    Mandate Overview & Scope Summary <span className="text-rose-500">*</span>
                   </label>
                   <textarea
                     rows={4}
@@ -957,12 +1007,12 @@ export default function GovernmentPage() {
                     placeholder="Detail the civic requirements, desired in-country residency bounds, timeline, and current technical systems..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-indigo-500 font-sans leading-relaxed"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs sm:text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 transition-all shadow-xs leading-relaxed"
                   />
                 </div>
 
                 {/* Tender Document Upload Field */}
-                <div className="sm:col-span-2 p-4 rounded-xl border border-dashed border-slate-700 bg-slate-950/60 text-center relative hover:border-indigo-500 transition-colors">
+                <div className="sm:col-span-2 p-6 rounded-2xl border-2 border-dashed border-indigo-200/90 bg-indigo-50/30 hover:bg-indigo-50/70 hover:border-indigo-500 transition-all text-center relative group/dropzone">
                   <input
                     type="file"
                     id="gov-tender-file"
@@ -992,30 +1042,36 @@ export default function GovernmentPage() {
                     }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <Upload className="w-5 h-5 text-indigo-400 mx-auto mb-2" />
+                  <div className="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-2.5 shadow-2xs group-hover/dropzone:scale-105 transition-transform">
+                    <Upload className="w-5 h-5" />
+                  </div>
                   {formData.attachedFileName ? (
                     <div className="space-y-1">
-                      <span className="text-xs text-emerald-400 font-bold block">
+                      <span className="text-xs text-emerald-600 font-bold block">
                         Attached: {formData.attachedFileName} ({formData.attachedFileSize})
                       </span>
-                      <span className="text-[10px] text-slate-400 font-mono">Click to replace file</span>
+                      <span className="text-[11px] text-slate-500 font-mono">Click or drag new document to replace</span>
                     </div>
                   ) : (
                     <>
-                      <span className="text-xs text-slate-300 font-semibold block">Attach Official RFP or Scope Documentation</span>
-                      <span className="text-[10px] text-slate-500 font-mono">Supported formats: PDF, DOCX, ZIP (Up to 25MB)</span>
+                      <span className="text-xs sm:text-[13px] text-slate-800 font-bold block">
+                        Attach Official RFP, EOI, or Scope Documentation
+                      </span>
+                      <span className="text-[11px] text-slate-500 font-mono mt-0.5 block">
+                        Supported formats: PDF, DOC, DOCX, ZIP (Up to 25MB)
+                      </span>
                     </>
                   )}
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="flex items-start gap-3 cursor-pointer text-xs text-slate-300">
+                  <label className="flex items-start gap-3 cursor-pointer text-xs text-slate-600 leading-relaxed">
                     <input
                       type="checkbox"
                       required
                       checked={formData.consent}
                       onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-                      className="mt-1 rounded bg-slate-950 border-slate-800 text-indigo-600 focus:ring-0"
+                      className="mt-1 rounded-md border-slate-300 text-indigo-600 focus:ring-indigo-500"
                     />
                     <span>
                       I hereby certify that I am an authorized representative of the designated public authority or government department, and request formal communication regarding this sovereign inquiry under corporate confidentiality standards.
@@ -1024,16 +1080,17 @@ export default function GovernmentPage() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <span className="text-[11px] text-slate-500 font-mono">
-                  All government enquiries are audited and encrypted.
-                </span>
+              <div className="pt-6 border-t border-slate-200/90 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
+                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                  <span>Audited & Encrypted Under Sovereign Protocol</span>
+                </div>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 hover:from-indigo-500 hover:to-purple-600 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-xl shadow-indigo-600/25 flex items-center justify-center gap-2.5 active:scale-98 cursor-pointer"
                 >
                   <span>Submit Sovereign Enquiry</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 text-indigo-200" />
                 </button>
               </div>
             </form>

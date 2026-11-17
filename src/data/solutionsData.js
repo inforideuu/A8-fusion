@@ -6,6 +6,7 @@ export const solutionsData = [
     tagline: 'Unified resource planning engine for multi-entity, multi-country organizations.',
     badge: 'Flagship Platform',
     status: 'Core Enterprise Offering',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'A comprehensive, modular ERP platform connecting financial ledgers, international procurement, warehousing, personnel, and operational logistics under a unified data model.',
     modules: [
       { name: 'Core Financials', desc: 'Multi-currency general ledger, automated reconciliation, and international GAAP/IFRS tax reporting.' },
@@ -34,6 +35,7 @@ export const solutionsData = [
     tagline: 'Strategic client lifecycle and institutional relationship intelligence.',
     badge: 'Enterprise Platform',
     status: 'Core Enterprise Offering',
+    image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'A secure, high-touch customer relationship platform designed for long sales cycles, government stakeholder relations, and high-value B2B enterprise agreements.',
     modules: [
       { name: 'Account & Institutional Hierarchy', desc: 'Deep organizational charts, parent-subsidiary mappings, and multi-stakeholder contacts.' },
@@ -61,6 +63,7 @@ export const solutionsData = [
     tagline: 'Global workforce management, automated compliance, and talent analytics.',
     badge: 'Human Capital Platform',
     status: 'Core Enterprise Offering',
+    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Streamlining cross-border talent acquisition, sovereign payroll compliance, time and attendance, performance metrics, and employee self-service portals.',
     modules: [
       { name: 'Employee Information Hub', desc: 'Centralized biographical records, document archives, digital contracts, and family benefits.' },
@@ -88,6 +91,7 @@ export const solutionsData = [
     tagline: 'Sovereign accounting, multi-currency ledgers, and forensic audit capability.',
     badge: 'Financial Architecture',
     status: 'Core Enterprise Offering',
+    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'An institutional accounting and financial planning platform engineered for enterprise controllers, providing immutable audit trails and real-time fiscal intelligence.',
     modules: [
       { name: 'Multi-Currency General Ledger', desc: 'Automated currency revaluation, sub-ledger reconciliation, and real-time trial balance generation.' },
@@ -115,6 +119,7 @@ export const solutionsData = [
     tagline: 'Executive decision command centers with real-time operational telemetry.',
     badge: 'Analytics Suite',
     status: 'Core Enterprise Offering',
+    image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'A high-performance business intelligence and data visualization suite that aggregates enterprise data into actionable executive dashboards and predictive forecasts.',
     modules: [
       { name: 'Executive Command Cockpit', desc: 'Unified C-suite dashboards aggregating revenue, cash flow, operational throughput, and incident alerts.' },
@@ -141,6 +146,7 @@ export const solutionsData = [
     tagline: 'Encrypted document vaults, cryptographic versioning, and compliance workflows.',
     badge: 'Information Governance',
     status: 'Core Enterprise Offering',
+    image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'A secure digital repository for enterprise contracts, official circulars, architectural blueprints, and institutional records with legally-binding approval workflows.',
     modules: [
       { name: 'Zero-Knowledge Encrypted Vault', desc: 'Client-side encrypted file storage ensuring even infrastructure administrators cannot view classified payloads.' },
@@ -167,6 +173,7 @@ export const solutionsData = [
     tagline: 'Private, localized cognitive assistants and deterministic RAG systems.',
     badge: 'Cognitive Platform',
     status: 'Advanced Capability',
+    image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'Self-hosted AI infrastructure providing internal knowledge synthesis, automated regulatory compliance checks, and secure document intelligence with zero external data leakage.',
     modules: [
       { name: 'Private Knowledge Retrieval (RAG)', desc: 'Grounding LLM responses exclusively in your verified enterprise documentation with pinpoint source citations.' },
@@ -193,6 +200,7 @@ export const solutionsData = [
     tagline: 'Capital project planning, contractor telemetry, and field analytics.',
     badge: 'Industrial Platform',
     status: 'Sector-Specific Suite',
+    image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'A specialized platform connecting site supervisors, quantity surveyors, sub-contractors, and developers on multi-year infrastructure and high-rise developments.',
     modules: [
       { name: 'Capital Budgeting & BoQ Tracking', desc: 'Real-time reconciliation of Bill of Quantities against actual site procurement and certified works.' },
@@ -219,6 +227,7 @@ export const solutionsData = [
     tagline: 'Clinical hospital administration, patient records, and health informatics.',
     badge: 'Healthcare Suite',
     status: 'Sector-Specific Suite',
+    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
     shortDesc: 'An integrated clinical and administrative management platform engineered for tertiary hospitals, regional clinic networks, and diagnostic centers.',
     modules: [
       { name: 'Electronic Medical Records (EMR)', desc: 'Standardized clinical charting, diagnostic history, allergy flags, and physician order entry.' },

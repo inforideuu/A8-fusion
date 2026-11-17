@@ -17,6 +17,7 @@ import SeoModule from './SeoModule';
 import SettingsModule from './SettingsModule';
 import ReportsModule from './ReportsModule';
 import AuditLogsModule from './AuditLogsModule';
+import SecurityRecoveryModule from './SecurityRecoveryModule';
 
 export default function AdminDashboardMaster() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -35,6 +36,12 @@ export default function AdminDashboardMaster() {
         return (
           <AdminProtectedRoute module="rbac">
             <RbacModule />
+          </AdminProtectedRoute>
+        );
+      case 'security-recovery':
+        return (
+          <AdminProtectedRoute module="security-recovery">
+            <SecurityRecoveryModule />
           </AdminProtectedRoute>
         );
       case 'pages':

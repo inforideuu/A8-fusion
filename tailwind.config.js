@@ -9,8 +9,10 @@ export default {
       fontFamily: {
         serif: ['"Times New Roman"', 'Times', 'Georgia', 'Baskerville', 'serif'],
         display: ['"Times New Roman"', 'Georgia', 'serif'],
+        lora: ['"Lora"', 'Georgia', '"Times New Roman"', 'serif'],
+        editorial: ['"Lora"', 'Georgia', '"Times New Roman"', 'serif'],
         sans: ['"Plus Jakarta Sans"', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+        mono: ['"Plus Jakarta Sans"', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       colors: {
         navy: {

@@ -376,22 +376,25 @@ export default function ContactPage() {
               </div>
 
               {/* Direct Practice Email Inboxes */}
-              <div className="p-5 rounded-xl bg-[#0B172A] text-white border border-slate-800 space-y-3 card-hover-dedicated-inbox">
-                <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                  Dedicated Inboxes
-                </span>
-                <div className="space-y-2 text-xs font-mono text-slate-300">
-                  <div className="flex items-center justify-between">
-                    <span>Executive Secretariat:</span>
-                    <a href="mailto:corporate@a8fusion.com" className="text-white hover:text-indigo-300 underline">corporate@a8fusion.com</a>
+              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 card-hover-dedicated-inbox">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
+                  <span className="text-xs font-mono font-bold text-indigo-700 uppercase tracking-wider">
+                    Dedicated Inboxes
+                  </span>
+                </div>
+                <div className="space-y-2.5 text-xs font-mono text-slate-600">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="font-sans font-medium text-slate-700">Executive Secretariat:</span>
+                    <a href="mailto:corporate@a8fusion.com" className="text-indigo-600 hover:text-indigo-700 font-bold underline">corporate@a8fusion.com</a>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span>Sovereign &amp; Government:</span>
-                    <a href="mailto:sovereign@a8fusion.com" className="text-white hover:text-indigo-300 underline">sovereign@a8fusion.com</a>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="font-sans font-medium text-slate-700">Sovereign &amp; Government:</span>
+                    <a href="mailto:sovereign@a8fusion.com" className="text-indigo-600 hover:text-indigo-700 font-bold underline">sovereign@a8fusion.com</a>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span>Strategic Alliances:</span>
-                    <a href="mailto:partners@a8fusion.com" className="text-white hover:text-indigo-300 underline">partners@a8fusion.com</a>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="font-sans font-medium text-slate-700">Strategic Alliances:</span>
+                    <a href="mailto:partners@a8fusion.com" className="text-indigo-600 hover:text-indigo-700 font-bold underline">partners@a8fusion.com</a>
                   </div>
                 </div>
               </div>

@@ -263,6 +263,7 @@ export default function IndustriesPage() {
           title={pageHeader.title}
           subtitle={pageHeader.subtitle}
           bgImage={pageHeader.bgImage}
+          titleMaxWidth="max-w-2xl"
           breadcrumbs={[
             { label: 'Industries' }
           ]}

@@ -12,7 +12,9 @@ export default function PageHeader({
   secondaryCtaText,
   secondaryCtaLink,
   align = 'left', // 'left' or 'center'
-  bgImage
+  bgImage,
+  titleMaxWidth = 'max-w-3xl',
+  titleClassName = ''
 }) {
   return (
     <section className={`relative bg-[#070D18] text-white overflow-hidden border-b border-slate-800 flex items-center ${
@@ -28,6 +30,8 @@ export default function PageHeader({
             alt={`${title || 'A8Fusion Enterprise'} Architecture Header`}
             className="w-full h-full object-cover object-center"
           />
+          {/* Gentle left vignette: keeps hero image 100% visible while preserving crisp text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#070D18]/60 via-[#070D18]/20 to-transparent" />
         </div>
       )}
 
@@ -40,7 +44,7 @@ export default function PageHeader({
         </>
       )}
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Breadcrumbs */}
         <nav className="flex items-center space-x-2 text-xs text-slate-400 mb-6 font-mono">
           <Link to="/" className="hover:text-white transition-colors">Home</Link>
@@ -63,13 +67,13 @@ export default function PageHeader({
         </div>
 
         {/* Title & Subtitle with Times New Roman */}
-        <div className={align === 'center' ? 'text-center max-w-3xl mx-auto' : 'max-w-4xl'}>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-normal tracking-tight text-white leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+        <div className={align === 'center' ? `text-center ${titleMaxWidth} mx-auto` : titleMaxWidth}>
+          <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-normal tracking-tight text-white leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] ${titleClassName}`}>
             {title}
           </h1>
 
           {subtitle && (
-            <p className="mt-5 text-base sm:text-lg text-slate-100 font-sans font-normal leading-relaxed max-w-3xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+            <p className="mt-5 text-base sm:text-lg text-slate-100 font-sans font-normal leading-relaxed max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
               {subtitle}
             </p>
           )}

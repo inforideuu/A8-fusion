@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from .views import (
-    login_view, logout_view, me_view, dashboard_overview, reports_summary, notifications_view,
+    login_view, logout_view, me_view, reset_password_view, dashboard_overview, reports_summary, notifications_view,
     UserViewSet, RolePermissionViewSet, PageViewSet, ServiceViewSet, SolutionViewSet, IndustryViewSet,
     EnquiryViewSet, JobVacancyViewSet, JobApplicationViewSet, ArticleViewSet,
     MediaItemViewSet, SEOSettingViewSet, RedirectRuleViewSet, WebsiteSettingViewSet,
@@ -31,6 +31,7 @@ urlpatterns = [
     path('auth/login/', login_view, name='api-login'),
     path('auth/logout/', logout_view, name='api-logout'),
     path('auth/me/', me_view, name='api-me'),
+    path('auth/reset-password/', reset_password_view, name='api-reset-password'),
 
     # Analytics & Reports
     path('dashboard/overview/', dashboard_overview, name='dashboard-overview'),

@@ -773,7 +773,7 @@ export default function EnterpriseProjectPage() {
           {/* Institutional Security Covenants & Verified Delivery Hubs Strip */}
           <div className="mt-12 pt-8 border-t border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             {/* Institutional Assurance & Compliance Box */}
-            <div className="lg:col-span-8 p-6 rounded-2xl bg-[#0B1424] text-white border border-slate-800 space-y-4 shadow-xl card-hover-security-covenant relative group flex flex-col justify-between">
+            <div className="lg:col-span-8 p-6 rounded-2xl bg-white border border-slate-200 space-y-4 shadow-sm card-hover-security-covenant relative group flex flex-col justify-between">
               {isLive && (
                 <div className="absolute top-3 right-3 z-20">
                   <button
@@ -786,40 +786,40 @@ export default function EnterpriseProjectPage() {
                   </button>
                 </div>
               )}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div className="flex items-center gap-2 text-indigo-400 font-serif font-bold text-sm">
-                  <ShieldCheck className="w-4 h-4" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-slate-900 font-serif font-bold text-sm">
+                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
                   <span>{covenants.title}</span>
                 </div>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">
+                <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">
                   {covenants.badge}
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300 font-sans leading-relaxed">
-                <div className="flex items-start gap-2">
-                  <Lock className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0 mt-0.5" />
-                  <span><strong>{covenants.covenant1Label}:</strong> {covenants.covenant1Desc}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-600 font-sans leading-relaxed">
+                <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50/70 border border-slate-100">
+                  <Lock className="w-4 h-4 text-indigo-600 flex-shrink-0 mt-0.5" />
+                  <span><strong className="text-slate-900 font-semibold">{covenants.covenant1Label}:</strong> {covenants.covenant1Desc}</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <Scale className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
-                  <span><strong>{covenants.covenant2Label}:</strong> {covenants.covenant2Desc}</span>
+                <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50/70 border border-slate-100">
+                  <Scale className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <span><strong className="text-slate-900 font-semibold">{covenants.covenant2Label}:</strong> {covenants.covenant2Desc}</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <Building2 className="w-3.5 h-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
-                  <span><strong>{covenants.covenant3Label}:</strong> {covenants.covenant3Desc}</span>
+                <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50/70 border border-slate-100">
+                  <Building2 className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
+                  <span><strong className="text-slate-900 font-semibold">{covenants.covenant3Label}:</strong> {covenants.covenant3Desc}</span>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
+              <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
                 <Link
                   to="/government"
-                  className="inline-flex items-center gap-2 text-xs font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
                 >
                   <span>Switch to Government Tender Portal</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-slate-500 font-mono">
                   SIAC &amp; LCIA Legal Governance Frameworks
                 </span>
               </div>

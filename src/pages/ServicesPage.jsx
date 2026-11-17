@@ -13,6 +13,7 @@ import {
   Boxes, 
   Layers, 
   CheckCircle2, 
+  Check,
   ExternalLink,
   Edit2,
   Trash2,
@@ -269,10 +270,14 @@ export default function ServicesPage() {
         />
       </div>
 
-      {/* Services Directory Catalog */}
-      <section className="py-20 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-12 pb-4 border-b border-slate-200">
+      {/* Services Directory Catalog (Styled to Match Reference Design) */}
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-[#F8FAFC] via-[#EEF2FF]/40 to-[#F8FAFC] border-b border-slate-200">
+        {/* Soft Ambient Background Blur Orbs */}
+        <div className="absolute top-10 left-10 w-[500px] h-[500px] bg-purple-200/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-12 pb-4 border-b border-slate-200/80">
             <div>
               <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-widest block">
                 Practice Areas · {servicesList.length} Active Practices
@@ -293,14 +298,48 @@ export default function ServicesPage() {
             )}
           </div>
 
-          <div className="space-y-12">
+          <div className="space-y-10">
             {servicesList.map((service, index) => {
               const IconComp = iconMap[service.slug] || Server;
               return (
                 <div
                   key={service.id || index}
-                  className="relative bg-slate-50 hover:bg-white rounded-2xl p-8 lg:p-10 border border-slate-200 card-hover-service-catalog grid grid-cols-1 lg:grid-cols-12 gap-8 items-start group transition-all"
+                  className="relative bg-white rounded-[28px] p-8 sm:p-10 border border-slate-100 shadow-[0_15px_45px_-10px_rgba(79,70,229,0.08),0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_25px_60px_-12px_rgba(79,70,229,0.14)] transition-all duration-300 hover:-translate-y-1 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch group"
                 >
+                  {/* Top-Right Curved Gradient Arc */}
+                  <svg className="absolute -top-[1px] -right-[1px] w-28 h-28 pointer-events-none z-10" viewBox="0 0 112 112" fill="none">
+                    <path
+                      d="M 0 3 H 80 C 96 3 109 16 109 32 V 112"
+                      stroke={`url(#srvTopRightArc-${index})`}
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                    />
+                    <defs>
+                      <linearGradient id={`srvTopRightArc-${index}`} x1="0" y1="0" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#38BDF8" />
+                        <stop offset="50%" stopColor="#6366F1" />
+                        <stop offset="100%" stopColor="#A855F7" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+
+                  {/* Bottom-Left Curved Gradient Arc */}
+                  <svg className="absolute -bottom-[1px] -left-[1px] w-28 h-28 pointer-events-none z-10" viewBox="0 0 112 112" fill="none">
+                    <path
+                      d="M 3 0 V 80 C 3 96 16 109 32 109 H 112"
+                      stroke={`url(#srvBottomLeftArc-${index})`}
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                    />
+                    <defs>
+                      <linearGradient id={`srvBottomLeftArc-${index}`} x1="0" y1="0" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#818CF8" />
+                        <stop offset="50%" stopColor="#6366F1" />
+                        <stop offset="100%" stopColor="#3B82F6" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+
                   {/* Live Action Overlay */}
                   {isLive && (
                     <CardActionOverlay
@@ -314,56 +353,87 @@ export default function ServicesPage() {
                     />
                   )}
 
-                  <div className="lg:col-span-5 space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md">
-                        <IconComp className="w-6 h-6" />
+                  {/* Left Column: Icon + Title + Tagline + Overview + CTA */}
+                  <div className="lg:col-span-5 flex flex-col justify-between space-y-5 relative z-10">
+                    <div>
+                      {/* Icon + Title Block */}
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2563EB] via-[#6366F1] to-[#7C3AED] text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 shrink-0 group-hover:scale-105 transition-transform duration-300">
+                          <IconComp className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-wider block">
+                            PRACTICE AREA {index + 1}
+                          </span>
+                          <h3 className="text-2xl sm:text-[26px] font-serif font-bold text-slate-900 group-hover:text-indigo-950 transition-colors leading-tight mt-0.5">
+                            {service.title}
+                          </h3>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-[11px] font-mono font-bold text-indigo-600 uppercase tracking-wider">
-                          Practice Area 0{index + 1}
-                        </span>
-                        <h3 className="text-2xl font-serif font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                          {service.title}
-                        </h3>
-                      </div>
+
+                      {/* Tagline Italic Quote */}
+                      {service.tagline && (
+                        <p className="text-sm sm:text-[15px] font-serif italic text-slate-900 font-semibold leading-snug mt-4">
+                          “{service.tagline}”
+                        </p>
+                      )}
+
+                      {/* Overview */}
+                      <p className="text-xs sm:text-[13px] text-slate-600 font-sans leading-relaxed mt-2.5">
+                        {service.overview}
+                      </p>
                     </div>
 
-                    {service.tagline && (
-                      <p className="text-sm font-serif italic text-slate-700">
-                        "{service.tagline}"
-                      </p>
-                    )}
-
-                    <p className="text-xs text-slate-600 leading-relaxed font-sans">
-                      {service.overview}
-                    </p>
-
+                    {/* Dedicated CTA Button */}
                     <div className="pt-2">
                       <Link
                         to={`/services/${service.slug}`}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#0B172A] hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider transition-all"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0B1528] hover:bg-indigo-950 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md active:scale-95 cursor-pointer"
                       >
-                        <span>View Dedicated Specification</span>
-                        <ArrowRight className="w-4 h-4 text-indigo-300" />
+                        <span>VIEW DEDICATED PROPOSITION</span>
+                        <ArrowRight className="w-4 h-4 text-white" />
                       </Link>
                     </div>
                   </div>
 
-                  {/* Capabilities Column */}
-                  <div className="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-200/90 shadow-sm space-y-4">
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-500 font-mono flex items-center justify-between border-b border-slate-100 pb-2">
-                      <span>Core Capabilities &amp; Architecture</span>
-                      <span className="text-indigo-600">Enterprise Standard</span>
+                  {/* Right Area: Core Capabilities & Architecture + Enterprise Standards */}
+                  <div className="lg:col-span-7 lg:border-l lg:border-slate-200/80 lg:pl-8 grid grid-cols-1 sm:grid-cols-2 gap-6 items-start relative z-10">
+                    {/* Sub-Column 1: Core Capabilities & Architecture */}
+                    <div>
+                      <div className="pb-3 border-b border-slate-200/80 mb-4">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 font-sans">
+                          Core Capabilities &amp; Architecture
+                        </h4>
+                      </div>
+                      <div className="space-y-3.5">
+                        {service.capabilities && service.capabilities.slice(0, 4).map((cap, i) => (
+                          <div key={i} className="flex items-start gap-2.5 text-xs sm:text-[13px] text-slate-700">
+                            <div className="w-4 h-4 rounded-full bg-[#7C3AED] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                              <Check className="w-2.5 h-2.5 stroke-[3]" />
+                            </div>
+                            <span className="leading-snug">{cap}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {service.capabilities && service.capabilities.slice(0, 8).map((cap, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs text-slate-700">
-                          <CheckCircle2 className="w-4 h-4 text-indigo-600 flex-shrink-0 mt-0.5" />
-                          <span>{cap}</span>
-                        </div>
-                      ))}
+                    {/* Sub-Column 2: Enterprise Standards */}
+                    <div>
+                      <div className="pb-3 border-b border-purple-200/70 mb-4">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-[#9333EA] font-sans">
+                          Enterprise Standards
+                        </h4>
+                      </div>
+                      <div className="space-y-3.5">
+                        {service.capabilities && service.capabilities.slice(4, 8).map((cap, i) => (
+                          <div key={i} className="flex items-start gap-2.5 text-xs sm:text-[13px] text-slate-700">
+                            <div className="w-4 h-4 rounded-full bg-[#7C3AED] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                              <Check className="w-2.5 h-2.5 stroke-[3]" />
+                            </div>
+                            <span className="leading-snug">{cap}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

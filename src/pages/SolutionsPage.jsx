@@ -48,6 +48,18 @@ const DEFAULT_INTEGRITY = {
   desc: 'In accordance with our strict corporate governance principles, all software modules and platforms are disclosed accurately as verified enterprise capabilities or planned components tailored during contractual architectural discovery. We never misrepresent static mockups as already-commissioned production deployments.'
 };
 
+const SOLUTION_DEFAULT_IMAGES = {
+  'enterprise-erp': 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+  'enterprise-crm': 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80',
+  'enterprise-hrms': 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
+  'financial-management': 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
+  'business-intelligence': 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&q=80',
+  'document-management': 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80',
+  'enterprise-ai': 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80',
+  'construction-intelligence': 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80',
+  'healthcare-technology': 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80'
+};
+
 export default function SolutionsPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -307,85 +319,115 @@ export default function SolutionsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {solutionsList.map((sol, index) => (
-              <div
-                key={sol.id || index}
-                className="relative bg-slate-50 hover:bg-white rounded-2xl p-7 border border-slate-200 card-hover-platform-catalog flex flex-col justify-between group transition-all"
-              >
-                {/* In-Context Card Actions */}
-                {isLive && (
-                  <CardActionOverlay
-                    title={sol.title}
-                    detailUrl={`/solutions/${sol.slug}?live_edit=true`}
-                    onEdit={() => openModal('solution_edit', {
-                      ...sol,
-                      modules: Array.isArray(sol.modules) ? sol.modules.map(m => m.name || m).join('\n') : ''
-                    }, index)}
-                    onDelete={() => handleDeleteSolution(index)}
-                  />
-                )}
+            {solutionsList.map((sol, index) => {
+              const cardImage = sol.image || SOLUTION_DEFAULT_IMAGES[sol.slug] || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80';
 
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded uppercase">
-                      {sol.badge}
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-400">
-                      {sol.modules ? sol.modules.length : 0} Core Modules
-                    </span>
-                  </div>
+              return (
+                <div
+                  key={sol.id || index}
+                  className="relative bg-white rounded-2xl border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06),0_1px_3px_rgba(15,23,42,0.04)] hover:shadow-[0_20px_40px_-10px_rgba(79,70,229,0.12)] hover:border-indigo-300/80 transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col justify-between group"
+                >
+                  {/* In-Context Card Actions */}
+                  {isLive && (
+                    <CardActionOverlay
+                      title={sol.title}
+                      detailUrl={`/solutions/${sol.slug}?live_edit=true`}
+                      onEdit={() => openModal('solution_edit', {
+                        ...sol,
+                        image: cardImage,
+                        modules: Array.isArray(sol.modules) ? sol.modules.map(m => m.name || m).join('\n') : ''
+                      }, index)}
+                      onDelete={() => handleDeleteSolution(index)}
+                    />
+                  )}
 
                   <div>
-                    <h3 className="text-xl font-serif font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                      {sol.title}
-                    </h3>
-                    {sol.tagline && (
-                      <p className="text-xs font-serif italic text-slate-600 mt-1">
-                        "{sol.tagline}"
-                      </p>
-                    )}
-                  </div>
+                    {/* Topic-Related Header Image */}
+                    <div className="h-48 w-full overflow-hidden relative bg-slate-900">
+                      <img
+                        src={cardImage}
+                        alt={sol.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 block"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80';
+                        }}
+                      />
+                      {/* Gradient Vignette Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent pointer-events-none" />
 
-                  <p className="text-xs text-slate-600 leading-relaxed font-sans line-clamp-3">
-                    {sol.shortDesc}
-                  </p>
+                      {/* Top Badges */}
+                      <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none z-10">
+                        <span className="text-[10px] font-mono font-bold text-white bg-slate-950/70 backdrop-blur-md border border-white/20 px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs">
+                          {sol.badge}
+                        </span>
+                        <span className="text-[10px] font-mono font-semibold text-slate-200 bg-slate-950/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 shadow-xs">
+                          {sol.modules ? sol.modules.length : 0} Core Modules
+                        </span>
+                      </div>
 
-                  {/* Modules Preview Pills */}
-                  {sol.modules && sol.modules.length > 0 && (
-                    <div className="pt-2">
-                      <span className="text-[10px] font-mono font-bold uppercase text-slate-400 block mb-1.5">
-                        Integrated Modules Include:
-                      </span>
-                      <div className="flex flex-wrap gap-1">
-                        {sol.modules.slice(0, 4).map((mod, i) => (
-                          <span key={i} className="text-[10px] font-sans bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded">
-                            {mod.name || mod}
-                          </span>
-                        ))}
-                        {sol.modules.length > 4 && (
-                          <span className="text-[10px] font-mono text-indigo-600 font-semibold px-1 py-0.5">
-                            +{sol.modules.length - 4} more
-                          </span>
-                        )}
+                      {/* Bottom Status Tag on Image */}
+                      <div className="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between z-10 pointer-events-none">
+                        <span className="text-[10px] font-mono font-medium text-emerald-300 bg-slate-950/80 backdrop-blur-md px-2.5 py-0.5 rounded-md border border-emerald-500/30 flex items-center gap-1.5 shadow-2xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>{sol.status || 'Active Production Deployment'}</span>
+                        </span>
                       </div>
                     </div>
-                  )}
-                </div>
 
-                <div className="pt-6 mt-6 border-t border-slate-200/80 flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-emerald-600 font-medium">
-                    {sol.status || 'Active Production Deployment'}
-                  </span>
-                  <Link
-                    to={`/solutions/${sol.slug}`}
-                    className="text-xs font-bold uppercase tracking-wider text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1"
-                  >
-                    <span>View Architecture</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                    {/* Card Body Content */}
+                    <div className="p-6 space-y-3.5">
+                      <div>
+                        <h3 className="text-xl font-serif font-bold text-slate-900 group-hover:text-indigo-900 transition-colors leading-snug">
+                          {sol.title}
+                        </h3>
+                        {sol.tagline && (
+                          <p className="text-xs font-serif italic text-slate-600 mt-1 leading-normal">
+                            "{sol.tagline}"
+                          </p>
+                        )}
+                      </div>
+
+                      <p className="text-xs text-slate-600 leading-relaxed font-sans line-clamp-3">
+                        {sol.shortDesc}
+                      </p>
+
+                      {/* Integrated Modules Preview Pills */}
+                      {sol.modules && sol.modules.length > 0 && (
+                        <div className="pt-2">
+                          <span className="text-[10px] font-mono font-bold uppercase text-slate-400 block mb-1.5">
+                            Integrated Modules Include:
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {sol.modules.slice(0, 4).map((mod, i) => (
+                              <span key={i} className="text-[10px] font-sans bg-slate-100 border border-slate-200/80 text-slate-700 px-2.5 py-0.5 rounded-md font-medium">
+                                {mod.name || mod}
+                              </span>
+                            ))}
+                            {sol.modules.length > 4 && (
+                              <span className="text-[10px] font-mono text-indigo-700 font-bold px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-100">
+                                +{sol.modules.length - 4} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Card Bottom Action */}
+                  <div className="p-6 pt-0">
+                    <Link
+                      to={`/solutions/${sol.slug}`}
+                      className="w-full inline-flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50/80 border border-slate-200/80 hover:border-indigo-200 text-xs font-bold uppercase tracking-wider text-slate-800 hover:text-indigo-700 transition-all group/btn cursor-pointer"
+                    >
+                      <span>View Architecture</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover/btn:text-indigo-600 group-hover/btn:translate-x-1 transition-all" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* In Live Edit Mode: Add Solution Platform Button */}
             {isLive && (
@@ -578,6 +620,17 @@ export default function SolutionsPage() {
                 value={modalData.tagline || ''}
                 onChange={(e) => setModalData({ ...modalData, tagline: e.target.value })}
                 placeholder="Institutional financial accounting and double-entry ledger..."
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Topic Cover Image URL</label>
+              <input
+                type="text"
+                value={modalData.image || ''}
+                onChange={(e) => setModalData({ ...modalData, image: e.target.value })}
+                placeholder="https://images.unsplash.com/..."
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
               />
             </div>

@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import PageHeader from '../../components/common/PageHeader';
-import { 
-  CheckCircle2, 
-  FileCode, 
-  ShieldCheck, 
-  Workflow, 
-  ArrowRight, 
-  Terminal, 
-  Cpu, 
-  Server, 
-  Lock, 
+import {
+  CheckCircle2,
+  FileCode,
+  ShieldCheck,
+  Workflow,
+  ArrowRight,
+  ChevronRight,
+  Terminal,
+  Cpu,
+  Server,
+  Lock,
   FileText,
   BarChart3,
+  Briefcase,
+  Network,
+  Monitor,
+  Cloud,
+  Headphones,
   RefreshCw,
   Search,
   Layers,
@@ -177,6 +183,128 @@ const DEFAULT_STANDARDS = [
     desc: 'Our team conducts structured technical training sessions and hands over complete CI/CD configuration scripts, ensuring zero vendor hostage scenarios.'
   }
 ];
+
+const STAGE_THEMES = {
+  1: {
+    accentColor: '#E11D48',
+    svgGradient: ['#E11D48', '#FB7185'],
+    badgeBg: 'bg-[#FFE4E6]',
+    badgeText: 'text-[#E11D48]',
+    iconBg: 'bg-[#FFE4E6]/70',
+    iconColor: 'text-[#E11D48]',
+    arrowBg: 'bg-[#E11D48]',
+    Icon: BarChart3
+  },
+  2: {
+    accentColor: '#7C3AED',
+    svgGradient: ['#6D28D9', '#A855F7'],
+    badgeBg: 'bg-[#EDE9FE]',
+    badgeText: 'text-[#7C3AED]',
+    iconBg: 'bg-[#EDE9FE]/70',
+    iconColor: 'text-[#7C3AED]',
+    arrowBg: 'bg-[#7C3AED]',
+    Icon: Briefcase
+  },
+  3: {
+    accentColor: '#2563EB',
+    svgGradient: ['#1D4ED8', '#60A5FA'],
+    badgeBg: 'bg-[#DBEAFE]',
+    badgeText: 'text-[#2563EB]',
+    iconBg: 'bg-[#DBEAFE]/70',
+    iconColor: 'text-[#2563EB]',
+    arrowBg: 'bg-[#2563EB]',
+    Icon: Network
+  },
+  4: {
+    accentColor: '#059669',
+    svgGradient: ['#047857', '#34D399'],
+    badgeBg: 'bg-[#D1FAE5]',
+    badgeText: 'text-[#059669]',
+    iconBg: 'bg-[#D1FAE5]/70',
+    iconColor: 'text-[#059669]',
+    arrowBg: 'bg-[#059669]',
+    Icon: Monitor
+  },
+  5: {
+    accentColor: '#EA580C',
+    svgGradient: ['#C2410C', '#FB923C'],
+    badgeBg: 'bg-[#FFEDD5]',
+    badgeText: 'text-[#EA580C]',
+    iconBg: 'bg-[#FFEDD5]/70',
+    iconColor: 'text-[#EA580C]',
+    arrowBg: 'bg-[#EA580C]',
+    Icon: Rocket
+  },
+  6: {
+    accentColor: '#0D9488',
+    svgGradient: ['#0F766E', '#2DD4BF'],
+    badgeBg: 'bg-[#CCFBF1]',
+    badgeText: 'text-[#0D9488]',
+    iconBg: 'bg-[#CCFBF1]/70',
+    iconColor: 'text-[#0D9488]',
+    arrowBg: 'bg-[#0D9488]',
+    Icon: ShieldCheck
+  },
+  7: {
+    accentColor: '#4F46E5',
+    svgGradient: ['#4338CA', '#818CF8'],
+    badgeBg: 'bg-[#E0E7FF]',
+    badgeText: 'text-[#4F46E5]',
+    iconBg: 'bg-[#E0E7FF]/70',
+    iconColor: 'text-[#4F46E5]',
+    arrowBg: 'bg-[#4F46E5]',
+    Icon: Cloud
+  },
+  8: {
+    accentColor: '#65A30D',
+    svgGradient: ['#4D7C0F', '#A3E635'],
+    badgeBg: 'bg-[#ECFCCB]',
+    badgeText: 'text-[#65A30D]',
+    iconBg: 'bg-[#ECFCCB]/70',
+    iconColor: 'text-[#65A30D]',
+    arrowBg: 'bg-[#65A30D]',
+    Icon: Headphones
+  }
+};
+
+const STANDARD_THEMES = {
+  0: {
+    accentColor: '#2563EB',
+    svgGradient: ['#1D4ED8', '#60A5FA'],
+    badgeBg: 'bg-[#DBEAFE]',
+    badgeText: 'text-[#2563EB]',
+    iconBg: 'bg-[#EFF6FF]',
+    iconColor: 'text-[#2563EB]',
+    arrowBg: 'bg-[#2563EB]',
+    Icon: FileCode,
+    badgeLabel: 'STANDARD 01',
+    footerLabel: 'Audit Deliverable'
+  },
+  1: {
+    accentColor: '#059669',
+    svgGradient: ['#047857', '#34D399'],
+    badgeBg: 'bg-[#D1FAE5]',
+    badgeText: 'text-[#059669]',
+    iconBg: 'bg-[#ECFDF5]',
+    iconColor: 'text-[#059669]',
+    arrowBg: 'bg-[#059669]',
+    Icon: ShieldCheck,
+    badgeLabel: 'STANDARD 02',
+    footerLabel: 'Security Verified'
+  },
+  2: {
+    accentColor: '#7C3AED',
+    svgGradient: ['#6D28D9', '#A855F7'],
+    badgeBg: 'bg-[#EDE9FE]',
+    badgeText: 'text-[#7C3AED]',
+    iconBg: 'bg-[#F5F3FF]',
+    iconColor: 'text-[#7C3AED]',
+    arrowBg: 'bg-[#7C3AED]',
+    Icon: Workflow,
+    badgeLabel: 'STANDARD 03',
+    footerLabel: 'Zero Hostage'
+  }
+};
 
 export default function OurApproachPage() {
   const location = useLocation();
@@ -492,15 +620,13 @@ export default function OurApproachPage() {
                   key={phase.num}
                   type="button"
                   onClick={() => setSelectedPhase(phase.num)}
-                  className={`p-3 rounded-xl text-center transition-all border relative flex flex-col items-center cursor-pointer ${
-                    isActive
-                      ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-600/30'
-                      : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white'
-                  }`}
+                  className={`p-3 rounded-xl text-center transition-all border relative flex flex-col items-center cursor-pointer ${isActive
+                    ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-600/30'
+                    : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white'
+                    }`}
                 >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2 font-mono font-bold text-xs ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
-                  }`}>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2 font-mono font-bold text-xs ${isActive ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
+                    }`}>
                     0{phase.num}
                   </div>
                   <span className="text-[10px] font-mono uppercase tracking-wider block opacity-70">
@@ -514,79 +640,223 @@ export default function OurApproachPage() {
         </div>
       </section>
 
-      {/* Comprehensive All-Phases Narrative Table */}
-      <section className="py-20 bg-[#F8FAFC] border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      {/* Comprehensive All-Phases Narrative Table (Styled to Match Reference Design) */}
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-[#F8FAFC] via-[#EEF2FF]/40 to-[#F8FAFC] border-b border-slate-200">
+        {/* Soft Ambient Background Blur Orbs */}
+        <div className="absolute top-10 left-10 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Decorative Dot Grid in Top-Right Corner */}
+        <div className="absolute top-12 right-12 hidden lg:block pointer-events-none opacity-40">
+          <svg className="w-24 h-24 text-indigo-300" fill="currentColor" viewBox="0 0 100 100">
+            {[...Array(6)].map((_, r) =>
+              [...Array(6)].map((_, c) => (
+                <circle key={`grid-${r}-${c}`} cx={10 + c * 16} cy={10 + r * 16} r="2.5" />
+              ))
+            )}
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 relative z-10">
+          {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 font-serif">
-              Full Spectrum Execution
-            </span>
-            <h2 className="text-3xl font-serif font-normal text-slate-900">
+            <div className="inline-flex items-center px-4 py-1 rounded-full bg-[#EDE9FE] border border-[#DDD6FE]/80 shadow-2xs">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#7C3AED]">
+                FULL-SPECTRUM EXECUTION
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight">
               The 8 Pillars of Enterprise Delivery
             </h2>
-            <p className="text-sm text-slate-600 font-sans">
-              Review our complete end-to-end framework governing technical specifications, code verification, security, and continuous uptime.
+            <p className="text-sm text-slate-600 font-sans max-w-2xl mx-auto leading-relaxed">
+              Review our complete end-to-end framework covering technical specification, code-architecture, security, and continuous uptime.
             </p>
+            {/* Center Gradient Divider Line */}
+            <div className="w-16 h-1 bg-gradient-to-r from-[#E11D48] via-[#7C3AED] to-[#2563EB] rounded-full mx-auto mt-3" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {phases.map((p, idx) => (
-              <div key={p.num} className="relative bg-white rounded-xl p-6 border border-slate-200 space-y-3 card-hover-stage-pillar group">
-                {isLive && (
-                  <div className="absolute top-3 right-3">
-                    <button
-                      type="button"
-                      onClick={() => openModal('phase_edit', {
-                        ...p,
-                        activities: Array.isArray(p.activities) ? p.activities.join('\n') : p.activities
-                      }, idx)}
-                      className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-colors cursor-pointer"
-                      title={`Edit Stage 0${p.num}`}
-                    >
-                      <Edit2 className="w-3.5 h-3.5" />
-                    </button>
+          {/* The 8 Themed Stage Cards Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {phases.map((p, idx) => {
+              const theme = STAGE_THEMES[p.num] || STAGE_THEMES[1];
+              const IconComponent = theme.Icon;
+
+              return (
+                <div
+                  key={p.num}
+                  className="relative bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_-8px_rgba(0,0,0,0.09)] transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col justify-between group"
+                >
+                  {/* Top-Left Curved Gradient Arc */}
+                  <svg className="absolute -top-[1px] -left-[1px] w-20 h-20 pointer-events-none z-10" viewBox="0 0 80 80" fill="none">
+                    <path
+                      d="M 80 3 H 24 C 12 3 3 12 3 24 V 80"
+                      stroke={`url(#arcGradient-${p.num})`}
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                    />
+                    <defs>
+                      <linearGradient id={`arcGradient-${p.num}`} x1="0" y1="80" x2="80" y2="0" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor={theme.svgGradient[0]} />
+                        <stop offset="100%" stopColor={theme.svgGradient[1]} />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+
+                  {isLive && (
+                    <div className="absolute top-3 right-3 z-20">
+                      <button
+                        type="button"
+                        onClick={() => openModal('phase_edit', {
+                          ...p,
+                          activities: Array.isArray(p.activities) ? p.activities.join('\n') : p.activities
+                        }, idx)}
+                        className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-colors cursor-pointer"
+                        title={`Edit Stage 0${p.num}`}
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Top Content Row: Left Icon + Right Details */}
+                  <div className="flex items-start gap-4">
+                    {/* Left Icon inside Themed Rounded Square */}
+                    <div className={`w-14 h-14 rounded-2xl ${theme.iconBg} ${theme.iconColor} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform duration-300`}>
+                      <IconComponent className="w-7 h-7" />
+                    </div>
+
+                    {/* Right Header, Title & Objective */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`text-xs font-bold uppercase tracking-wider ${theme.badgeText} font-mono`}>
+                          STAGE 0{p.num}
+                        </span>
+                        <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${theme.badgeBg} ${theme.badgeText}`}>
+                          {p.duration}
+                        </span>
+                      </div>
+
+                      <h4 className="text-base sm:text-lg font-bold text-slate-900 mt-1 leading-snug">
+                        {p.title}
+                      </h4>
+
+                      <p className="text-xs text-slate-500 font-sans leading-relaxed mt-1.5">
+                        {p.objective}
+                      </p>
+                    </div>
                   </div>
-                )}
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <span className="text-xs font-mono font-bold text-indigo-600">STAGE 0{p.num}</span>
-                  <span className="text-xs font-mono text-slate-500">{p.duration}</span>
+
+                  {/* Bottom Deliverables Strip & Action Chevron */}
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-3 text-[11px]">
+                    <div className="text-slate-500 truncate sm:whitespace-normal">
+                      <strong className="text-slate-900 font-bold">Kickoff deliverables: </strong>
+                      <span>{p.gateCriteria}</span>
+                    </div>
+                    
+                  </div>
                 </div>
-                <h4 className="text-lg font-serif font-bold text-slate-900">{p.title}</h4>
-                <p className="text-xs text-slate-600 font-sans leading-relaxed">{p.objective}</p>
-                <div className="text-[11px] font-mono text-slate-500 pt-1">
-                  <strong>Exit Deliverable:</strong> {p.gateCriteria}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Milestone Documentation & QA Standards */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 relative overflow-hidden bg-white border-b border-slate-200">
+        {/* Soft Ambient Background Glow */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-indigo-100/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-100/25 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 relative z-10">
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <div className="inline-flex items-center px-4 py-1 rounded-full bg-[#EDE9FE] border border-[#DDD6FE]/80 shadow-2xs">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#7C3AED]">
+                GOVERNANCE &amp; INTEGRITY
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight">
+              Milestone Documentation &amp; <span className="text-[#2563EB]">QA Standards</span>
+            </h2>
+            <p className="text-sm text-slate-600 font-sans max-w-2xl mx-auto leading-relaxed">
+              Institutional compliance, reproducible build artifacts, and cryptographic provenance embedded into every production milestone.
+            </p>
+            {/* Center Gradient Divider Line */}
+            <div className="w-16 h-1 bg-gradient-to-r from-[#2563EB] via-[#7C3AED] to-[#059669] rounded-full mx-auto mt-3" />
+          </div>
+
+          {/* 3 Standards Cards Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {standards.map((std, idx) => (
-              <div key={std.id || idx} className="relative p-6 rounded-xl bg-slate-50 border border-slate-200 space-y-3 card-hover-qa-spec group">
-                {isLive && (
-                  <div className="absolute top-3 right-3">
-                    <button
-                      type="button"
-                      onClick={() => openModal('standard_edit', { ...std }, idx)}
-                      className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-colors cursor-pointer"
-                      title="Edit Standard"
-                    >
-                      <Edit2 className="w-3.5 h-3.5" />
-                    </button>
+            {standards.map((std, idx) => {
+              const theme = STANDARD_THEMES[idx] || STANDARD_THEMES[0];
+              const IconComponent = theme.Icon;
+
+              return (
+                <div
+                  key={std.id || idx}
+                  className="relative bg-white rounded-2xl p-6 sm:p-7 border border-slate-100 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_45px_-8px_rgba(0,0,0,0.09)] transition-all duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col justify-between group"
+                >
+                  {/* Top-Left Curved Gradient Arc */}
+                  <svg className="absolute -top-[1px] -left-[1px] w-20 h-20 pointer-events-none z-10" viewBox="0 0 80 80" fill="none">
+                    <path
+                      d="M 80 3 H 24 C 12 3 3 12 3 24 V 80"
+                      stroke={`url(#stdArcGradient-${idx})`}
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                    />
+                    <defs>
+                      <linearGradient id={`stdArcGradient-${idx}`} x1="0" y1="80" x2="80" y2="0" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor={theme.svgGradient[0]} />
+                        <stop offset="100%" stopColor={theme.svgGradient[1]} />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+
+                  {isLive && (
+                    <div className="absolute top-3 right-3 z-20">
+                      <button
+                        type="button"
+                        onClick={() => openModal('standard_edit', { ...std }, idx)}
+                        className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-colors cursor-pointer"
+                        title="Edit Standard"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+
+                  <div>
+                    {/* Top Row: Icon + Badge */}
+                    <div className="flex items-center justify-between">
+                      <div className={`w-14 h-14 rounded-2xl ${theme.iconBg} ${theme.iconColor} flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform duration-300`}>
+                        <IconComponent className="w-7 h-7" />
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${theme.badgeBg} ${theme.badgeText} font-mono tracking-wider`}>
+                        {theme.badgeLabel}
+                      </span>
+                    </div>
+
+                    {/* Title & Description */}
+                    <h3 className="text-lg sm:text-xl font-serif font-bold text-slate-900 group-hover:text-indigo-950 transition-colors mt-5 leading-snug">
+                      {std.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed mt-2.5">
+                      {std.desc}
+                    </p>
                   </div>
-                )}
-                <FileCode className="w-6 h-6 text-indigo-600" />
-                <h3 className="font-serif font-bold text-slate-900 text-lg">{std.title}</h3>
-                <p className="text-xs text-slate-600 font-sans leading-relaxed">
-                  {std.desc}
-                </p>
-              </div>
-            ))}
+
+                  {/* Bottom Verification Strip */}
+                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span className="font-semibold text-slate-500 text-[11px] uppercase tracking-wider">
+                      {theme.footerLabel}
+                    </span>
+                    <div className={`w-5 h-5 rounded-full ${theme.arrowBg} text-white flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 transition-transform`}>
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -598,8 +868,8 @@ export default function OurApproachPage() {
         onSave={handleModalSubmit}
         title={
           modalType === 'header' ? 'Edit Hero Header' :
-          modalType === 'phase_edit' ? `Edit Stage 0${modalData.num}: ${modalData.title || ''}` :
-          modalType === 'standard_edit' ? `Edit Standard: ${modalData.title || ''}` : 'Edit Section'
+            modalType === 'phase_edit' ? `Edit Stage 0${modalData.num}: ${modalData.title || ''}` :
+              modalType === 'standard_edit' ? `Edit Standard: ${modalData.title || ''}` : 'Edit Section'
         }
       >
         {/* Header Modal */}
